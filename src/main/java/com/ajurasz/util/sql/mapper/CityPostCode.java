@@ -1,4 +1,4 @@
-package com.ajurasz.util.object;
+package com.ajurasz.util.sql.mapper;
 
 import java.io.Serializable;
 

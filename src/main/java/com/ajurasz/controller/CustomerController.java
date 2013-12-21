@@ -2,28 +2,20 @@ package com.ajurasz.controller;
 
 import com.ajurasz.model.Customer;
 import com.ajurasz.service.ManagerService;
-import com.ajurasz.util.helper.JsonHelper;
-import com.ajurasz.util.object.CityPostCode;
-import org.json.JSONArray;
+import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

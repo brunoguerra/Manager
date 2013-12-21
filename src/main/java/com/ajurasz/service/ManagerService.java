@@ -1,7 +1,7 @@
 package com.ajurasz.service;
 
 import com.ajurasz.model.Customer;
-import com.ajurasz.util.object.CityPostCode;
+import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
