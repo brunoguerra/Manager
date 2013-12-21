@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.Locale;
 
 /**
- * @author Arek Jurasz
+ * @author ajurasz
  */
 @Configuration
 public class InternationalizationConfig {

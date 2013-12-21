@@ -1,8 +1,11 @@
 package com.ajurasz.service;
 
 import com.ajurasz.model.Customer;
-import com.ajurasz.repository.CustomerRepo;
+import com.ajurasz.repository.CustomerRepository;
+import com.ajurasz.util.object.CityPostCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * @author Arek Jurasz
+ * @author ajurasz
  */
 @Service("managerService")
 public class ManagerServiceImpl implements ManagerService {
 
     @Autowired
-    private CustomerRepo customerRepo;
+    private CustomerRepository customerRepo;
 
     @Override
     @Transactional
@@ -32,6 +35,12 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<Customer> findAll(Pageable pageable) {
+        return customerRepo.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Customer get(Long id) {
         Customer c = customerRepo.findOne(id);
         return c;
@@ -40,5 +49,10 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public void delete(Customer customer) {
         customerRepo.delete(customer);
+    }
+
+    @Override
+    public List<CityPostCode> findAllCitiesAndPostCodes(String cityName) {
+        return customerRepo.findAllCitiesAndPostCodes(cityName);
     }
 }

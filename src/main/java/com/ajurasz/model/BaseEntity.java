@@ -6,10 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
- * @author Arek Jurasz
+ * @author ajurasz
  */
 @MappedSuperclass
-abstract public class BaseEntity {
+public class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

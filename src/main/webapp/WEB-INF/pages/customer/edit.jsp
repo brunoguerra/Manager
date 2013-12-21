@@ -5,6 +5,8 @@
 <spring:message code="customer.edit.form.button.save" var="save" />
 <spring:message code="customer.edit.form.button.cancel" var="cancel"/>
 
+<%@include file="/WEB-INF/scripts/CityPostCodeAutocomplete.jsp"%>
+
 <section id="main" class="column">
 
     <article class="module width_full">
@@ -22,6 +24,7 @@
                     <sf:input path="lastName" cssStyle="width:92%;"/>
                     <sf:errors path="lastName" cssClass="error_text"/>
                 </fieldset><div class="clear"></div>
+
                 <%--<fieldset style="width:48%; float:left;">--%>
                     <%--<label><spring:message code="customer.edit.form.phone"/>:</label>--%>
                     <%--<sf:input path="phoneNumber" cssStyle="width:92%;"/>--%>
@@ -30,10 +33,7 @@
                     <%--<label><spring:message code="customer.edit.form.pesel"/>:</label>--%>
                     <%--<sf:input path="pesel" cssStyle="width:92%;"/>--%>
                 <%--</fieldset><div class="clear"></div>--%>
-                <fieldset style="width:48%; float:left;">
-                    <label><spring:message code="customer.edit.form.city"/>:</label>
-                    <sf:hidden path="address.id"/>
-                </fieldset><div class="clear"></div>
+
                 <fieldset style="width:48%; float:left;">
                     <label><spring:message code="customer.edit.form.city"/>:</label>
                     <sf:input path="address.city" cssStyle="width:92%;"/>
@@ -44,10 +44,12 @@
                     <sf:input path="address.street" cssStyle="width:92%;"/>
                     <sf:errors path="address.street" cssClass="error_text"/>
                 </fieldset><div class="clear"></div>
+
                 <%--<fieldset style="width:48%; float:left;">--%>
                     <%--<label><spring:message code="customer.edit.form.number"/>:</label>--%>
                     <%--<sf:input path="address.number" cssStyle="width:92%;"/>--%>
                 <%--</fieldset><div class="clear"></div>--%>
+
                 <fieldset style="width:48%; float:left;">
                     <label><spring:message code="customer.edit.form.postcode"/>:</label>
                     <sf:input path="address.postCode" cssStyle="width:92%;"/>

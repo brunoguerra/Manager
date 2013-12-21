@@ -5,7 +5,10 @@
 <spring:message code="customer.add.form.button.add" var="add" />
 <spring:message code="customer.add.form.button.reset" var="reset" />
 
+<%@include file="/WEB-INF/scripts/CityPostCodeAutocomplete.jsp"%>
+
 <script type="text/javascript">
+    //reset inputboxe values
     $(document).ready(function()
         {
             $("#reset").click(function()

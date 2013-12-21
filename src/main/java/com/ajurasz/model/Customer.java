@@ -6,6 +6,7 @@ import org.springframework.core.style.ToStringCreator;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Arek Jurasz
@@ -27,8 +28,8 @@ public class Customer extends BaseEntity {
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn
     @Valid
+    @NotNull
     private Address address;
 
     public String getFirstName() {

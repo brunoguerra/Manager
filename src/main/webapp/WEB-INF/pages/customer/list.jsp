@@ -2,21 +2,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="datatables" uri="http://github.com/dandelion/datatables" %>
+<%--<%@ taglib prefix="datatables" uri="http://github.com/dandelion/datatables" %>--%>
 <spring:message code="customer.list.msg.q.delete" var="qDelete"/>
 
 <script type="text/javascript">
     function confirmDelete() {
         if (confirm("${qDelete}")) {
-//            $("#deleteForm").submit();
-            alert('tak');
             return true;
         }
-        alert('nie');
         return false;
     }
 </script>
 <section id="main" class="column">
+    <c:set value="${not empty customersPage.content}" var="notEmptyContent"/>
     <c:if test="${customerAdded}">
         <h4 class="alert_success"><spring:message code="customer.add.form.msg.success"/></h4>
     </c:if>
@@ -27,7 +25,7 @@
         <h4 class="alert_success"><spring:message code="customer.delete.form.msg.success"/></h4>
     </c:if>
     <c:choose>
-        <c:when test="${not empty customers}">
+        <c:when test="${notEmptyContent}">
             <spring:message code="customer.list.table.action.edit" var="edit" />
             <spring:message code="customer.list.table.action.delete" var="delete" />
             <spring:message code="customer.list.table.secondandfirstname" var="secongandfirstname"/>
@@ -35,34 +33,19 @@
             <spring:message code="customer.list.table.city" var="city"/>
             <spring:message code="customer.list.table.street" var="street" />
             <spring:message code="customer.list.table.action" var="action" />
+            <spring:message code="customer.list.table.next" var="next" />
+            <spring:message code="customer.list.table.back" var="back" />
+            <spring:message code="customer.list.table.search" var="search" />
+
+            <form class="quick_search_custom">
+                <input type="text" value="${search}" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
+            </form>
+
             <article class="module width_full">
                 <header><h3 class="tabs_involved"><spring:message code="customer.list.title"/></h3></header>
 
                 <div class="tab_container">
                     <div id="tab1" class="tab_content">
-                        <%--<datatables:table id="customers" data="${customers}" cdn="true" row="customer" theme="bootstrap2" cssClass="tablesorter" paginate="true" info="false"  paginationType="two_button">--%>
-                            <%--<datatables:column title="${secongandfirstname}">--%>
-                                <%--<c:out value="${customer.firstName} ${customer.lastName}"></c:out>--%>
-                            <%--</datatables:column>--%>
-                            <%--<datatables:column title="${city}">--%>
-                                <%--<c:out value="${customer.address.city}"></c:out>--%>
-                            <%--</datatables:column>--%>
-                            <%--<datatables:column title="${postcode}">--%>
-                                <%--<c:out value="${customer.address.postCode}"></c:out>--%>
-                            <%--</datatables:column>--%>
-                            <%--<datatables:column title="${street}">--%>
-                                <%--<c:out value="${customer.address.street}"></c:out>--%>
-                            <%--</datatables:column>--%>
-                            <%--<datatables:column title="${action}">--%>
-                                <%--<a href="${contextPath}/customer/edit/${customer.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_edit.png"/>" title="${edit}"></a>--%>
-                                <%--<form id="deleteForm" method="post" action="${contextPath}/customer/delete">--%>
-                                <%--<input name="id" type="hidden" value="${customer.id}"/>--%>
-                                <%--<a href="#" onclick="confirmDelete();">--%>
-                                <%--<input id="delete" type="image" src="<c:url value="/resources/images/icn_trash.png"/>" title="${delete}">--%>
-                                <%--</a>--%>
-                                <%--</form>--%>
-                            <%--</datatables:column>--%>
-                        <%--</datatables:table>--%>
 
                         <table class="tablesorter" cellspacing="0">
                             <thead>
@@ -76,7 +59,7 @@
                                 <th><spring:message code="customer.list.table.action" /></th>
                             </tr>
                             </thead>
-                            <c:forEach var="customer" items="${customers}">
+                            <c:forEach var="customer" items="${customersPage.content}">
                                 <tbody>
                                     <tr>
                                         <td></td>
@@ -87,9 +70,9 @@
                                         <td></td>
                                         <td>
                                             <a href="${contextPath}/customer/edit/${customer.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_edit.png"/>" title="${edit}"></a>
-                                            <form id="deleteForm" method="post" action="${contextPath}/customer/delete">
+                                            <form id="deleteForm" method="post" action="${contextPath}/customer/delete" onsubmit="return confirmDelete();">
                                                 <input name="id" type="hidden" value="${customer.id}"/>
-                                                <a href="#" onclick="confirmDelete();">
+                                                <a href="#">
                                                     <input id="delete" type="image" src="<c:url value="/resources/images/icn_trash.png"/>" title="${delete}">
                                                 </a>
                                             </form>
@@ -100,7 +83,23 @@
                         </table>
                     </div><!-- end of #tab1 -->
                 </div><!-- end of .tab_container -->
+                <footer>
+                    <div class="submit_link">
+                        <spring:url value="" var="nextUrl">
+                            <spring:param name="page" value="${customersPage.number + 1}"></spring:param>
+                        </spring:url>
+                        <spring:url value="" var="prevUrl">
+                            <spring:param name="page" value="${customersPage.number - 1}"></spring:param>
+                        </spring:url>
 
+                        <c:if test="${customersPage.number != 0 && !customersPage.firstPage}">
+                            <a href="${prevUrl}"><input id="back" type="button" value="${back}"/></a>
+                        </c:if>
+                        <c:if test="${customersPage.totalPages > 1 && !customersPage.lastPage}">
+                            <a href="${nextUrl}"><input id="next" type="button" value="${next}"/></a>
+                        </c:if>
+                    </div>
+                </footer>
             </article><!-- end of content manager article -->
         </c:when>
         <c:otherwise>

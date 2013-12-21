@@ -4,6 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -11,12 +15,14 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 
+import java.util.List;
+
 /**
- * @author Arek Jurasz
+ * @author ajurasz
  */
 @EnableWebMvc
 @Import(value = {DatabaseConfig.class, InternationalizationConfig.class})
-@ComponentScan(basePackages = {"com.ajurasz.controller", "com.ajurasz.model", "com.ajurasz.service"})
+@ComponentScan(basePackages = {"com.ajurasz.controller", "com.ajurasz.service", "com.ajurasz.model"})
 @Configuration
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
@@ -38,5 +44,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/**");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver =
+                new PageableHandlerMethodArgumentResolver();
+        pageableHandlerMethodArgumentResolver.setFallbackPageable(new PageRequest(0, 2, new Sort(Sort.Direction.DESC, "id")));
+
+        argumentResolvers.add(pageableHandlerMethodArgumentResolver);
     }
 }

@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * @author Arek Jurasz
+ * @author ajurasz
  */
 @Entity
 @Table(name = "addresses")

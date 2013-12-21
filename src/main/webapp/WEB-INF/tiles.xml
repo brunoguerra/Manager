@@ -11,7 +11,7 @@
     </definition>
 
     <definition name="*/*" extends="template">
-        <put-attribute name="title" value="Sk?ad Manager"/>
+        <put-attribute name="title" value="Manager"/>
         <put-attribute name="body" value="/WEB-INF/pages/{1}/{2}.jsp"/>
     </definition>
 </tiles-definitions>
