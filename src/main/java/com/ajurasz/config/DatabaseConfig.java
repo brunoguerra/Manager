@@ -12,8 +12,11 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -40,8 +43,13 @@ public class DatabaseConfig {
     }
 
     @Bean
+    public LocalValidatorFactoryBean validator() {
+        return new LocalValidatorFactoryBean();
+    }
+
+    @Bean
     @Autowired
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(BoneCPDataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(BoneCPDataSource dataSource, LocalValidatorFactoryBean validator) {
 
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         jpaVendorAdapter.setDatabase(Database.valueOf(environment.getProperty("jpa.database")));
@@ -55,10 +63,14 @@ public class DatabaseConfig {
         jpaProperties.setProperty("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
         jpaProperties.setProperty("hibernate.hbm2ddl.import_files", environment.getProperty("hibernate.hbm2ddl.import_files"));
 
+        Map<String, Object> jpaPropertyMap = new HashMap<String, Object>();
+        jpaPropertyMap.put("javax.persistence.validation.factory", validator);
+
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan("com.ajurasz.model");
         em.setJpaVendorAdapter(jpaVendorAdapter);
+        em.setJpaPropertyMap(jpaPropertyMap);
         em.setJpaProperties(jpaProperties);
         em.afterPropertiesSet();
 

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -50,7 +51,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver =
                 new PageableHandlerMethodArgumentResolver();
-        pageableHandlerMethodArgumentResolver.setFallbackPageable(new PageRequest(0, 2, new Sort(Sort.Direction.DESC, "id")));
+        pageableHandlerMethodArgumentResolver.setFallbackPageable(new PageRequest(0, 4, new Sort(Sort.Direction.DESC, "id")));
 
         argumentResolvers.add(pageableHandlerMethodArgumentResolver);
     }

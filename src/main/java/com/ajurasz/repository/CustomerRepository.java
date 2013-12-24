@@ -12,6 +12,6 @@ import java.util.List;
 @Repository("customerRepo")
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    @Query("select new com.ajurasz.util.sql.CityPostCode( address.city, address.postCode) from  Address address where address.city like %:cityName% group by city")
+    @Query("select new com.ajurasz.util.sql.mapper.CityPostCode( address.city, address.postCode) from  Address address where address.city like %:cityName% group by city")
     List<CityPostCode> findAllCitiesAndPostCodes(@Param("cityName") String cityName);
 }

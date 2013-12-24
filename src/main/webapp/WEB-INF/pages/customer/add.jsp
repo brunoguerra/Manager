@@ -6,19 +6,7 @@
 <spring:message code="customer.add.form.button.reset" var="reset" />
 
 <%@include file="/WEB-INF/scripts/CityPostCodeAutocomplete.jsp"%>
-
-<script type="text/javascript">
-    //reset inputboxe values
-    $(document).ready(function()
-        {
-            $("#reset").click(function()
-                {
-                    $('.module_content input[type="text"]').val('');
-                }
-            );
-        }
-    );
-</script>
+<%@include file="/WEB-INF/scripts/ResetTextFields.jsp"%>
 
 <section id="main" class="column">
 
@@ -26,43 +14,62 @@
     <sf:form modelAttribute="customer" method="post">
         <header><h3><spring:message code="customer.add.form.title"/></h3></header>
         <div class="module_content">
-            <fieldset style="width:48%; float:left;">
+
+            <!-- First row -->
+            <fieldset style="width:48%; float:left; margin-right: 3%;">
                 <label><spring:message code="customer.add.form.name"/>:</label>
                 <sf:input path="firstName" cssStyle="width:92%;"/>
                 <sf:errors path="firstName" cssClass="error_text"/>
-            </fieldset><div class="clear"></div>
+            </fieldset>
             <fieldset style="width:48%; float:left;">
                 <label><spring:message code="customer.add.form.surname"/>:</label>
                 <sf:input path="lastName" cssStyle="width:92%;"/>
                 <sf:errors path="lastName" cssClass="error_text"/>
             </fieldset><div class="clear"></div>
-            <%--<fieldset style="width:48%; float:left;">--%>
-                <%--<label><spring:message code="customer.add.form.phone"/>:</label>--%>
-                <%--<sf:input path="phoneNumber" cssStyle="width:92%;"/>--%>
-            <%--</fieldset><div class="clear"></div>--%>
-            <%--<fieldset style="width:48%; float:left;">--%>
-                <%--<label><spring:message code="customer.add.form.pesel"/>:</label>--%>
-                <%--<sf:input path="pesel" cssStyle="width:92%;"/>--%>
-            <%--</fieldset><div class="clear"></div>--%>
+
+            <!-- Second row -->
+            <fieldset style="width:48%; float:left; margin-right: 3%;">
+                <label><spring:message code="customer.add.form.phone"/>:</label>
+                <sf:input path="phoneNumber" cssStyle="width:92%;"/>
+                <sf:errors path="phoneNumber" cssClass="error_text"/>
+            </fieldset>
             <fieldset style="width:48%; float:left;">
+                <label><spring:message code="customer.add.form.pesel"/>:</label>
+                <sf:input path="pesel" cssStyle="width:92%;"/>
+                <sf:errors path="pesel" cssClass="error_text"/>
+            </fieldset><div class="clear"></div>
+
+            <!-- Third row -->
+            <fieldset style="width:48%; float:left; margin-left: 51%;">
+                <label><spring:message code="customer.add.form.email"/>:</label>
+                <sf:input path="email" cssStyle="width:92%;"/>
+                <sf:errors path="email" cssClass="error_text"/>
+            </fieldset><div class="clear"></div>
+
+            <!-- Fourth row -->
+            <fieldset style="width:48%; float:left; margin-right: 3%;">
                 <label><spring:message code="customer.add.form.city"/>:</label>
                 <sf:input path="address.city" cssStyle="width:92%;"/>
                 <sf:errors path="address.city" cssClass="error_text"/>
-            </fieldset><div class="clear"></div>
-            <fieldset style="width:48%; float:left;">
-                <label><spring:message code="customer.add.form.street"/>:</label>
-                <sf:input path="address.street" cssStyle="width:92%;"/>
-                <sf:errors path="address.street" cssClass="error_text"/>
-            </fieldset><div class="clear"></div>
-            <%--<fieldset style="width:48%; float:left;">--%>
-                <%--<label><spring:message code="customer.add.form.number"/>:</label>--%>
-                <%--<sf:input path="address.number" cssStyle="width:92%;"/>--%>
-            <%--</fieldset><div class="clear"></div>--%>
+            </fieldset>
             <fieldset style="width:48%; float:left;">
                 <label><spring:message code="customer.add.form.postcode"/>:</label>
                 <sf:input path="address.postCode" cssStyle="width:92%;"/>
                 <sf:errors path="address.postCode" cssClass="error_text"/>
             </fieldset><div class="clear"></div>
+
+            <!-- Fifth row -->
+            <fieldset style="width:48%; float:left; margin-right: 3%;">
+                <label><spring:message code="customer.add.form.street"/>:</label>
+                <sf:input path="address.street" cssStyle="width:92%;"/>
+                <sf:errors path="address.street" cssClass="error_text"/>
+            </fieldset>
+            <fieldset style="width:48%; float:left;">
+                <label><spring:message code="customer.add.form.number"/>:</label>
+                <sf:input path="address.number" cssStyle="width:92%;"/>
+                <sf:errors path="address.number" cssClass="error_text"/>
+            </fieldset><div class="clear"></div>
+
         </div>
         <footer>
             <div class="submit_link">

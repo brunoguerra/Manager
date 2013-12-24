@@ -17,12 +17,10 @@
         <li class="icn_add_user"><a href="${contextPath}/customer/add"><spring:message code="menu.customer.add"/></a></li>
         <li class="icn_view_users"><a href="${contextPath}/customer/list"><spring:message code="menu.customer.list"/></a></li>
     </ul>
-    <h3>Media</h3>
+    <h3><spring:message code="menu.item" /></h3>
     <ul class="toggle">
-        <li class="icn_folder"><a href="#">File Manager</a></li>
-        <li class="icn_photo"><a href="#">Gallery</a></li>
-        <li class="icn_audio"><a href="#">Audio</a></li>
-        <li class="icn_video"><a href="#">Video</a></li>
+        <li class="icn_new_article"><a href="${contextPath}/item/add"><spring:message code="menu.item.add" /></a></li>
+        <li class="icn_categories"><a href="${contextPath}/item/list"><spring:message code="menu.item.list" /></a></li>
     </ul>
     <h3>Admin</h3>
     <ul class="toggle">

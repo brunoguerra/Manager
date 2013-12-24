@@ -6,6 +6,7 @@ import org.springframework.core.style.ToStringCreator;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,9 +24,14 @@ public class Customer extends BaseEntity {
     @NotEmpty(message = "{customer.lastName}")
     private String lastName;
 
-    @Email
+    @Email(message = "{customer.email}")
     private String email;
 
+    @Digits(integer = 9, fraction = 0, message = "{customer.pesel}")
+    private String pesel;
+
+    @Digits(integer = 10, fraction = 0, message = "{customer.phoneNumber}")
+    private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Valid
@@ -56,6 +62,22 @@ public class Customer extends BaseEntity {
         this.email = email;
     }
 
+    public String getPesel() {
+        return pesel;
+    }
+
+    public void setPesel(String pesel) {
+        this.pesel = pesel;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public Address getAddress() {
         return address;
     }
@@ -75,4 +97,5 @@ public class Customer extends BaseEntity {
                 .append("email", this.getEmail())
                 .toString();
     }
+
 }

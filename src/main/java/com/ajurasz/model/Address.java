@@ -31,6 +31,10 @@ public class Address extends BaseEntity {
     @Pattern(regexp = "[0-9]{2}-[0-9]{3}", message = "{customer.postCode.invalid}")
     private String postCode;
 
+    @Column(nullable = false)
+    @NotEmpty(message = "{customer.number}")
+    private String number;
+
     @OneToOne(mappedBy = "address")
     private Customer customer;
 
@@ -56,6 +60,15 @@ public class Address extends BaseEntity {
 
     public void setPostCode(String postCode) {
         this.postCode = postCode;
+    }
+
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public Customer getCustomer() {

@@ -26,19 +26,19 @@ import java.util.List;
 public class CustomerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
-
-    @Autowired
     private ManagerService managerService;
 
-//    @InitBinder
-//    public void setAllowedFields(WebDataBinder dataBinder) {
-//        dataBinder.setDisallowedFields("id");
-//    }
+    @Autowired
+    public CustomerController(ManagerService managerService) {
+        this.managerService = managerService;
+        LOGGER.info("CustomerController called");
+    }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initCreationForm(Model model) {
         Customer customer = new Customer();
         model.addAttribute("customer", customer);
+        LOGGER.info("Customer object send to html form - " + customer);
         return "customer/add";
     }
 
@@ -47,21 +47,21 @@ public class CustomerController {
         if(result.hasErrors()) {
             return "customer/add";
         }
-        managerService.save(customer);
+        managerService.saveCustomer(customer);
         redirectAttributes.addFlashAttribute("customerAdded", true);
         return "redirect:/customer/list";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String initCustomerList(Model model, Pageable pageable) {
-        Page<Customer> customerPage = managerService.findAll(pageable);
+        Page<Customer> customerPage = managerService.findAllCustomers(pageable);
         model.addAttribute("customersPage", customerPage);
         return "customer/list";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String initCustomerEdit(@PathVariable Long id, Model model) {
-        model.addAttribute("customer", managerService.get(id));
+        model.addAttribute("customer", managerService.getCustomer(id));
         return "customer/edit";
     }
 
@@ -70,15 +70,15 @@ public class CustomerController {
         if(result.hasErrors()) {
             return "customer/edit";
         }
-        managerService.save(customer);
+        managerService.saveCustomer(customer);
         redirectAttributes.addFlashAttribute("customerUpdated", true);
         return "redirect:/customer/list";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String processCustomerDelete(@RequestParam Long id, RedirectAttributes redirectAttributes) {
-        Customer customer = managerService.get(id);
-        managerService.delete(customer);
+        Customer customer = managerService.getCustomer(id);
+        managerService.deleteCustomer(customer);
         redirectAttributes.addFlashAttribute("customerDeleted", true);
         return "redirect:/customer/list";
     }

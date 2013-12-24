@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
  * @author ajurasz
  */
 @MappedSuperclass
-public class BaseEntity {
+abstract public class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

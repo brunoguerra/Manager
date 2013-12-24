@@ -67,7 +67,7 @@
                                         <td><c:out value="${customer.address.city}"/></td>
                                         <td><c:out value="${customer.address.postCode}"/></td>
                                         <td><c:out value="${customer.address.street}"/></td>
-                                        <td></td>
+                                        <td><c:out value="${customer.address.number}"/></td>
                                         <td>
                                             <a href="${contextPath}/customer/edit/${customer.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_edit.png"/>" title="${edit}"></a>
                                             <form id="deleteForm" method="post" action="${contextPath}/customer/delete" onsubmit="return confirmDelete();">
