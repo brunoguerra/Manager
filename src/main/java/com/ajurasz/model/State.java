@@ -1,8 +1,7 @@
 package com.ajurasz.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +14,15 @@ import java.util.List;
 public class State extends BaseEntity {
 
     @Column(name = "current_state")
-    @Digits(integer = 10, fraction = 2, message = "{item.currentState.invalid}")
-    @NotNull(message = "{state.currentState}")
+    @NotNull(message = "{state.currentState}", groups = { Item.Add.class, Item.Update.class })
+    @DecimalMin(value = "-9999999.99", groups = { Item.Add.class, Item.Update.class })
+    @DecimalMax(value = "9999999.99", groups = { Item.Add.class, Item.Update.class })
     private BigDecimal currentState;
 
     @Column(name = "last_value")
-    @Digits(integer = 10, fraction = 2, message = "{item.lastValue.invalid}")
+    @NotNull(groups = { Item.Add.class, Item.Update.class })
+    @DecimalMin(value = "-9999999.99", groups = { Item.Add.class, Item.Update.class })
+    @DecimalMax(value = "9999999.99", groups = { Item.Add.class, Item.Update.class })
     private BigDecimal lastValue;
 
     @OneToOne(mappedBy = "state")
