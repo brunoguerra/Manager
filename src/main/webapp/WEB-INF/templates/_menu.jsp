@@ -5,12 +5,10 @@
         <input type="text" value="Quick Search" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
     </form>
     <hr/>
-    <h3>Content</h3>
+    <h3><spring:message code="menu.order" /></h3>
     <ul class="toggle">
-        <li class="icn_new_article"><a href="#">New Article</a></li>
-        <li class="icn_edit_article"><a href="#">Edit Articles</a></li>
-        <li class="icn_categories"><a href="#">Categories</a></li>
-        <li class="icn_tags"><a href="#">Tags</a></li>
+        <li class="icn_new_article"><a href="#"><spring:message code="menu.order.add" /></a></li>
+        <li class="icn_edit_article"><a href="#"><spring:message code="menu.order.list" /></a></li>
     </ul>
     <h3><spring:message code="menu.customer"/></h3>
     <ul class="toggle">
