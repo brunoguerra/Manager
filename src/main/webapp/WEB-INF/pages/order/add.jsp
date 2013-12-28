@@ -66,7 +66,7 @@
             <input id="search" name="search" type="text" value="${search}" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
         </form>
         <sf:form modelAttribute="order" method="post" onsubmit="return checkClient();">
-            <header><h3><spring:message code="order.add.form.title" /></h3></header>
+            <header><h3><spring:message code="order.add.form.title" /> <sf:input path="docNumber"/> <sf:errors path="docNumber" /></h3></header>
             <div class="module_content">
                 <fieldset style="width:48%; float:left;">
                     <label id="clientData"><spring:message code="order.add.form.customerdata" />:</label>
@@ -85,6 +85,7 @@
                                 <option value="${item.key}">${item.value}</option>
                             </c:forEach>
                         </select>
+                        <%--<sf:errors path="orderDetails[0].item.id" cssClass="error_text"/>--%>
                     </fieldset>
                     <fieldset style="width:25%; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
                         <label><spring:message code="order.add.form.quantity" />:</label>

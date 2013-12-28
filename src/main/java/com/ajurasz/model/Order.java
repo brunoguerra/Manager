@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.List;
 public class Order extends BaseEntity {
 
     @Column(name = "document_number", nullable = false)
+    @Pattern(regexp = "([0-9]{1,5})/([0-9]{2})/([0-9]{4})", message = "{order.docNumber.format}")
     private String docNumber;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")

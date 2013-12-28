@@ -61,6 +61,8 @@ public class OrderController {
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initOrderForm(Model model, HttpServletRequest request) {
         Order order = new Order();
+        //set init values
+        order.setDocNumber(managerService.getNextDocNumnber());
         HttpSession session = request.getSession(false);
         if(session != null) {
             Customer customer = (Customer) session.getAttribute("customer");
@@ -72,6 +74,7 @@ public class OrderController {
         return "order/add";
     }
 
+    //todo: add validation
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String processOrderForm(@Valid @ModelAttribute Order order, BindingResult result, HttpServletRequest request) {
         if(result.hasErrors()) {
@@ -82,6 +85,6 @@ public class OrderController {
             session.removeAttribute("customer");
         }
         managerService.saveOrder(order);
-        return "home/index";
+        return "home/home";
     }
 }

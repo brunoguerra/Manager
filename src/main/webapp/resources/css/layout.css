@@ -209,6 +209,17 @@ display: block;
 width: 100%;
 height: 2px;}
 
+/*doc number */
+
+#docNumber {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    padding-left: 1%;
+    width: 10%;
+}
+
+
 /* Search */
 
 .quick_search {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -165,13 +166,43 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional
     public Reason saveReason(Reason reason) {
         return reasonRepo.save(reason);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Reason> findAllReasons() {
         return reasonRepo.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getNextDocNumnber() {
+        String docNumber = null;
+        //Get current time is expected format
+        Calendar calendar = Calendar.getInstance();
+        String currentMonth = new SimpleDateFormat("MM").format(calendar.getTime());
+        String currentYear = new SimpleDateFormat("YYYY").format(calendar.getTime());
+
+        Order order = orderRepo.getLatestOrder();
+
+        //First entry in db
+        if(order == null) {
+            return "1/" + currentMonth + "/" + currentYear;
+        }
+
+        //docNumber exist but new month or year is present
+        String[] latestDocNumber = order.getDocNumber().split("/");
+        if(!latestDocNumber[1].equals(currentMonth) || !latestDocNumber[2].equals(currentYear)) {
+            return "1/" + currentMonth + "/" + currentYear;
+        }
+
+        //just increment first number
+        int id = Integer.parseInt(latestDocNumber[0]);
+        id++;
+        return id + "/" + currentMonth + "/" + currentYear;
     }
 
     @Override
@@ -192,13 +223,13 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional
     public Order saveOrder(Order order) {
         Customer customer = customerRepo.findOne(order.getCustomer().getId());
         List<OrderDetails> orderDetailses = order.getOrderDetails();
         List<OrderDetails> resultList = new ArrayList<OrderDetails>();
         for (OrderDetails orderDetails : orderDetailses) {
-            if(orderDetails.getItem() == null) {
-                int i = 10;
+            if(orderDetails.getItem() == null || orderDetails.getReason() == null || (orderDetails.getQuantity() == new BigDecimal(0)) ) {
                 continue;
             }
             Item item = itemRepo.findOne(orderDetails.getItem().getId());
@@ -230,7 +261,8 @@ public class ManagerServiceImpl implements ManagerService {
 
 
         //set order
-        order.setDocNumber("1/01/2014");
+        if (order.getDocNumber() == null)
+            order.setDocNumber(getNextDocNumnber());
         order.setDate(new Date());
         order.setCustomer(customer);
         order.setOrderDetails(resultList);
@@ -238,11 +270,13 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Order getOrder(Long id) {
         return orderRepo.findOne(id);
     }
 
     @Override
+    @Transactional
     public void deleteOrder(Order order) {
         orderRepo.delete(order);
     }
