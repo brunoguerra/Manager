@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<spring:message code="customer.add.search.nodata" var="nodata" />
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 <script type="text/javascript">
 
@@ -29,6 +30,12 @@
                     $("#address\\.city").val(ui.item.city);
                     $("#address\\.postCode").val(ui.item.code);
                     return false;
+                }
+            },
+            response: function(event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value:"",label:"${nodata}" };
+                    ui.content.push(noResult);
                 }
             }
         });

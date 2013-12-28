@@ -2,6 +2,7 @@ package com.ajurasz.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -22,7 +23,7 @@ public class StateHistory extends BaseEntity {
 
     private String description;
 
-    @ManyToOne
+    @ManyToOne()
     private State state;
 
     public StateHistory() {
@@ -42,7 +43,7 @@ public class StateHistory extends BaseEntity {
             this.description = HistoryType.ADDED + " : " + value + " kg";
         }
         if(this.value.compareTo(new BigDecimal(0)) == -1) {
-            this.description = HistoryType.REMOVED + " : " + value + " kg";
+            this.description = HistoryType.REMOVED + " : " + value.abs() + " kg";
         }
     }
 
@@ -80,8 +81,8 @@ public class StateHistory extends BaseEntity {
 
     //todo: change to use translated messages
     private enum HistoryType {
-        ADDED("dodano do stanu magazynoweg"),
-        REMOVED("odjęto od stanu magazynowego");
+        ADDED("Dodano do stanu magazynoweg"),
+        REMOVED("Odjęto od stanu magazynowego");
 
         private String desc;
         private HistoryType(String desc) {this.desc = desc;}

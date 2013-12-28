@@ -1,5 +1,6 @@
 package com.ajurasz.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -36,6 +37,7 @@ public class Address extends BaseEntity {
     private String number;
 
     @OneToOne(mappedBy = "address")
+    @JsonBackReference
     private Customer customer;
 
     public String getCity() {

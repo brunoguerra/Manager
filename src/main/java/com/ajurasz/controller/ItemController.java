@@ -31,7 +31,7 @@ import java.util.List;
 @Controller
 public class ItemController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
     private ManagerService managerService;
 
     @InitBinder

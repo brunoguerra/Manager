@@ -1,24 +1,17 @@
 package com.ajurasz.service;
 
-import com.ajurasz.model.Customer;
-import com.ajurasz.model.Item;
-import com.ajurasz.model.State;
-import com.ajurasz.model.StateHistory;
-import com.ajurasz.repository.CustomerRepository;
-import com.ajurasz.repository.ItemRepository;
-import com.ajurasz.repository.StateHistoryRepository;
-import com.ajurasz.repository.StateRepository;
+import com.ajurasz.model.*;
+import com.ajurasz.repository.*;
 import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author ajurasz
@@ -28,14 +21,24 @@ public class ManagerServiceImpl implements ManagerService {
 
     public final static BigDecimal VAT = new BigDecimal(23);
 
-    @Autowired
     private CustomerRepository customerRepo;
-    @Autowired
     private ItemRepository itemRepo;
-    @Autowired
     private StateHistoryRepository stateHistoryRepo;
-    @Autowired
     private StateRepository stateRepo;
+    private OrderRepository orderRepo;
+    private ReasonRepository reasonRepo;
+
+    @Autowired
+    public ManagerServiceImpl(CustomerRepository customerRepo, ItemRepository itemRepo,
+                              StateHistoryRepository stateHistoryRepo,StateRepository stateRepo,
+                              OrderRepository orderRepo, ReasonRepository reasonRepo) {
+        this.customerRepo = customerRepo;
+        this.itemRepo = itemRepo;
+        this.stateHistoryRepo = stateHistoryRepo;
+        this.stateRepo = stateRepo;
+        this.orderRepo = orderRepo;
+        this.reasonRepo = reasonRepo;
+    }
 
     //CUSTOMERS
     @Override
@@ -54,6 +57,11 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional(readOnly = true)
     public Page<Customer> findAllCustomers(Pageable pageable) {
         return customerRepo.findAll(pageable);
+    }
+
+    @Override
+    public List<Customer> findAllByCustomerLastName(String lastName) {
+        return customerRepo.findAllByCustomerLastName(lastName);
     }
 
     @Override
@@ -119,6 +127,19 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    public Map<String, String> findAllItemsMap() {
+        Map<String, String> result = new HashMap<String, String>();
+        List<Item> items = itemRepo.findAll();
+        if(items != null && !items.isEmpty()) {
+            for(Item item : items) {
+                result.put(item.getId().toString(), item.getName());
+            }
+            return result;
+        }
+        return null;
+    }
+
+    @Override
     @Transactional
     public void deleteItem(Item item) {
         itemRepo.delete(item);
@@ -144,6 +165,16 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    public Reason saveReason(Reason reason) {
+        return reasonRepo.save(reason);
+    }
+
+    @Override
+    public List<Reason> findAllReasons() {
+        return reasonRepo.findAll();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public State getState(Long id) {
         return stateRepo.findOne(id);
@@ -158,5 +189,61 @@ public class ManagerServiceImpl implements ManagerService {
         stateHistory.setValue(state.getLastValue());
         stateHistoryRepo.save(stateHistory);
         return state;
+    }
+
+    @Override
+    public Order saveOrder(Order order) {
+        Customer customer = customerRepo.findOne(order.getCustomer().getId());
+        List<OrderDetails> orderDetailses = order.getOrderDetails();
+        List<OrderDetails> resultList = new ArrayList<OrderDetails>();
+        for (OrderDetails orderDetails : orderDetailses) {
+            if(orderDetails.getItem() == null) {
+                int i = 10;
+                continue;
+            }
+            Item item = itemRepo.findOne(orderDetails.getItem().getId());
+            Reason reason = reasonRepo.findOne(orderDetails.getReason().getId());
+            BigDecimal quantity = orderDetails.getQuantity().divide(new BigDecimal(1000));
+
+            //set orderDetails
+            orderDetails.setOrder(order);
+            orderDetails.setItem(item);
+            orderDetails.setReason(reason);
+
+            //set prices
+            orderDetails.setPriceGross( item.getPriceGross().multiply(quantity) );
+            orderDetails.setPriceNet(item.getPriceNet().multiply(quantity));
+            orderDetails.setPriceExcise(item.getPriceExcise().multiply(quantity));
+
+            //set state history
+            State state = item.getState();
+            state.setCurrentState(orderDetails.getQuantity().multiply(new BigDecimal(-1)));
+            stateRepo.save(state);
+
+            StateHistory history = new StateHistory();
+            history.setState(state);
+            history.setValue(orderDetails.getQuantity().multiply(new BigDecimal(-1)));
+            stateHistoryRepo.save(history);
+
+            resultList.add(orderDetails);
+        }
+
+
+        //set order
+        order.setDocNumber("1/01/2014");
+        order.setDate(new Date());
+        order.setCustomer(customer);
+        order.setOrderDetails(resultList);
+        return orderRepo.save(order);
+    }
+
+    @Override
+    public Order getOrder(Long id) {
+        return orderRepo.findOne(id);
+    }
+
+    @Override
+    public void deleteOrder(Order order) {
+        orderRepo.delete(order);
     }
 }

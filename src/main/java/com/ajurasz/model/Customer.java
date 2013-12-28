@@ -1,5 +1,6 @@
 package com.ajurasz.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.core.style.ToStringCreator;
@@ -9,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
+//todo:intergrate with hibernate-search
 /**
  * @author Arek Jurasz
  */
@@ -36,6 +38,7 @@ public class Customer extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Valid
     @NotNull
+    @JsonManagedReference
     private Address address;
 
     public String getFirstName() {

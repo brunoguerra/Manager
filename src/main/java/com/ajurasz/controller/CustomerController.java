@@ -3,7 +3,6 @@ package com.ajurasz.controller;
 import com.ajurasz.model.Customer;
 import com.ajurasz.service.ManagerService;
 import com.ajurasz.util.sql.mapper.CityPostCode;
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -43,11 +44,19 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String processCreationForm(@Valid @ModelAttribute Customer customer, BindingResult result, RedirectAttributes redirectAttributes){
+    public String processCreationForm(@Valid @ModelAttribute Customer customer, BindingResult result, RedirectAttributes redirectAttributes,
+                                      HttpServletRequest request,
+                                      @RequestParam(required = false) Boolean redirect,
+                                      @RequestParam(required = false) String target){
         if(result.hasErrors()) {
             return "customer/add";
         }
         managerService.saveCustomer(customer);
+        if(redirect != null && redirect == true) {
+            HttpSession session = request.getSession();
+            session.setAttribute("customer", customer);
+            return "redirect:" + target;
+        }
         redirectAttributes.addFlashAttribute("customerAdded", true);
         return "redirect:/customer/list";
     }
@@ -85,8 +94,16 @@ public class CustomerController {
 
     @RequestMapping(value = "/edit/getCities", method = RequestMethod.GET)
     @ResponseBody
-    public List<CityPostCode> processCitiesSearch(@RequestParam("term") String cityName) throws JSONException {
+    public List<CityPostCode> processCitiesSearch(@RequestParam("term") String cityName) {
         List<CityPostCode> list =  managerService.findAllCitiesAndPostCodes(cityName);
+        return list;
+    }
+
+    //todo: this need to be very secure as it expose access to customer table
+    @RequestMapping(value = "getCustomersForQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Customer> proccessCustomerSearchForQuery(@RequestParam("term") String query) {
+        List<Customer> list = managerService.findAllByCustomerLastName(query);
         return list;
     }
 }

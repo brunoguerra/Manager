@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Arek Jurasz
@@ -43,6 +44,9 @@ public class Item extends BaseEntity {
     @Valid
     @NotNull
     private State state;
+
+    @OneToMany()
+    private List<OrderDetails> orderDetailses;
 
     public Item() {
         //set default values

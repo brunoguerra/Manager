@@ -14,4 +14,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Query("select new com.ajurasz.util.sql.mapper.CityPostCode( address.city, address.postCode) from  Address address where address.city like %:cityName% group by city")
     List<CityPostCode> findAllCitiesAndPostCodes(@Param("cityName") String cityName);
+
+    @Query("select customer from Customer customer where customer.lastName like %:lastName%")
+    List<Customer> findAllByCustomerLastName(@Param("lastName") String lastName);
 }

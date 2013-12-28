@@ -23,6 +23,10 @@
         <hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
         <datatables-jsp.version>0.9.3</datatables-jsp.version>
         <jackson.version>1.9.13</jackson.version>
+        <hibernate-search.version>4.4.2.Final</hibernate-search.version>
+        <jackson-annotations.version>2.3.0</jackson-annotations.version>
+        <jackson-core.version>2.3.0</jackson-core.version>
+        <jackson-databind.version>2.3.0</jackson-databind.version>
     </properties>
 
     <dependencies>
@@ -151,15 +155,28 @@
 
         <!-- JSON -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson.version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson-core.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20080701</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-annotations.version}</version>
+        </dependency>
+
+        <!--search-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search</artifactId>
+            <version>${hibernate-search.version}</version>
+        </dependency>
+
 
 
     </dependencies>
