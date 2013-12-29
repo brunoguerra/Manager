@@ -207,6 +207,12 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<Order> findAllOrders(Pageable pageable) {
+        return orderRepo.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public State getState(Long id) {
         return stateRepo.findOne(id);
     }
@@ -278,6 +284,19 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public void deleteOrder(Order order) {
-        orderRepo.delete(order);
+        Order actualOrder = orderRepo.findOne(order.getId());
+        //update current state
+        for(OrderDetails orderDetails : actualOrder.getOrderDetails()) {
+            State state = orderDetails.getItem().getState();
+            state.setCurrentState(orderDetails.getQuantity());
+            stateRepo.save(state);
+
+            StateHistory history = new StateHistory();
+            history.setState(state);
+            history.setValue(orderDetails.getQuantity(), true);
+            stateHistoryRepo.save(history);
+        }
+
+        orderRepo.delete(actualOrder);
     }
 }

@@ -8,7 +8,7 @@
     <h3><spring:message code="menu.order" /></h3>
     <ul class="toggle">
         <li class="icn_new_article"><a href="${contextPath}/order/add"><spring:message code="menu.order.add" /></a></li>
-        <li class="icn_edit_article"><a href="${contextPath}/order/list"><spring:message code="menu.order.list" /></a></li>
+        <li class="icn_categories"><a href="${contextPath}/order/list"><spring:message code="menu.order.list" /></a></li>
     </ul>
     <h3><spring:message code="menu.customer"/></h3>
     <ul class="toggle">

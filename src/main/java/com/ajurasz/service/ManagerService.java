@@ -36,6 +36,7 @@ public interface ManagerService {
     List<Reason> findAllReasons();
 
     String getNextDocNumnber();
+    Page<Order> findAllOrders(Pageable pageable);
     Order saveOrder(Order order);
     Order getOrder(Long id);
     void deleteOrder(Order order);

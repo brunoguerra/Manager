@@ -35,6 +35,10 @@ public class StateHistory extends BaseEntity {
     }
 
     public void setValue(BigDecimal value) {
+        setValue(value, false);
+    }
+
+    public void setValue(BigDecimal value, boolean returned) {
         this.value = value;
         if(this.value.compareTo(new BigDecimal(0)) == 1) {
             this.description = HistoryType.ADDED + " : " + value + " kg";
@@ -44,6 +48,10 @@ public class StateHistory extends BaseEntity {
         }
         if(this.value.compareTo(new BigDecimal(0)) == -1) {
             this.description = HistoryType.REMOVED + " : " + value.abs() + " kg";
+        }
+
+        if(returned) {
+            this.description =  HistoryType.RETURNED + " : " + value.abs() + " kg";
         }
     }
 
@@ -82,7 +90,8 @@ public class StateHistory extends BaseEntity {
     //todo: change to use translated messages
     private enum HistoryType {
         ADDED("Dodano do stanu magazynoweg"),
-        REMOVED("Odjęto od stanu magazynowego");
+        REMOVED("Odjęto od stanu magazynowego"),
+        RETURNED("Zwrot z powodu usunięcia dokumentu dostawy");
 
         private String desc;
         private HistoryType(String desc) {this.desc = desc;}
