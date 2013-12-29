@@ -80,4 +80,12 @@ public class Address extends BaseEntity {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
+    public String getAddress() {
+        if(street == null || street.equals("")) {
+            return postCode + " " + city + " " + number;
+        } else {
+            return postCode + " " + city + " ul." + street + " " + number;
+        }
+    }
 }

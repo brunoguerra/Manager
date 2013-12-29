@@ -29,7 +29,9 @@ public class Order extends BaseEntity {
     @ManyToOne()
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    private String documentName;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderDetails> orderDetails;
 
     public Order() {
@@ -44,6 +46,7 @@ public class Order extends BaseEntity {
 
     public void setDocNumber(String docNumber) {
         this.docNumber = docNumber;
+        this.documentName = docNumber.replace("/", "-");
     }
 
     public Date getDate() {
@@ -68,5 +71,9 @@ public class Order extends BaseEntity {
 
     public void setOrderDetails(List<OrderDetails> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public String getDocumentName() {
+        return documentName;
     }
 }

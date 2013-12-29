@@ -48,7 +48,7 @@
     </c:if>
     <c:choose>
         <c:when test="${not empty orderPage.content}">
-            <spring:message code="order.list.action.print" var="drukuj" />
+            <spring:message code="order.list.action.print" var="print" />
             <spring:message code="order.list.action.edit" var="edit" />
             <spring:message code="order.list.action.delete" var="delete" />
             <spring:message code="order.list.docNumber" var="docNumber" />
@@ -79,7 +79,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <a href="${contextPath}/order/show/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${drukujs}"></a>
+                                            <a href="${contextPath}/order/show/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
                                         </td>
                                         <td><c:out value="${order.docNumber}"/></td>
                                         <td><c:out value="${order.date}"/></td>

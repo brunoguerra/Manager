@@ -112,4 +112,10 @@ public class OrderController {
         redirectAttributes.addFlashAttribute("orderDeleted", true);
         return "redirect:/order/list";
     }
+
+    @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
+    public String processOrderShow(@PathVariable Long id) {
+        Order order = managerService.getOrder(id);
+        return "redirect:/documents/" + order.getDocumentName() + ".pdf";
+    }
 }

@@ -2,6 +2,7 @@ package com.ajurasz.service;
 
 import com.ajurasz.model.*;
 import com.ajurasz.repository.*;
+import com.ajurasz.util.pdf.GeneratePDF;
 import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletContext;
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,6 +31,9 @@ public class ManagerServiceImpl implements ManagerService {
     private StateRepository stateRepo;
     private OrderRepository orderRepo;
     private ReasonRepository reasonRepo;
+
+    @Autowired
+    private ServletContext servletContext;
 
     @Autowired
     public ManagerServiceImpl(CustomerRepository customerRepo, ItemRepository itemRepo,
@@ -183,8 +189,9 @@ public class ManagerServiceImpl implements ManagerService {
         String docNumber = null;
         //Get current time is expected format
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
         String currentMonth = new SimpleDateFormat("MM").format(calendar.getTime());
-        String currentYear = new SimpleDateFormat("YYYY").format(calendar.getTime());
+        String currentYear = String.valueOf(calendar.get(Calendar.YEAR));
 
         Order order = orderRepo.getLatestOrder();
 
@@ -265,14 +272,26 @@ public class ManagerServiceImpl implements ManagerService {
             resultList.add(orderDetails);
         }
 
-
         //set order
         if (order.getDocNumber() == null)
             order.setDocNumber(getNextDocNumnber());
+
+        //rename
         order.setDate(new Date());
         order.setCustomer(customer);
         order.setOrderDetails(resultList);
+
+        //todo: execute two tasks in paraller
+        //save order to disk
+        saveOrderToDisk(order, servletContext.getRealPath("/WEB-INF/pdfs/documents/"));
+
+        //save order to db
         return orderRepo.save(order);
+    }
+
+    private void saveOrderToDisk(Order order, String dest) {
+        GeneratePDF generatePDF = new GeneratePDF(order, dest);
+        generatePDF.generate();
     }
 
     @Override
