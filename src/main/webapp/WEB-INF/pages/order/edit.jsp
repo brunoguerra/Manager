@@ -12,10 +12,10 @@
 
     $(document).ready(function(){
 
-        var cid = ${sessionScope.customer.id == null ? -1 : sessionScope.customer.id};
+        var cid = ${order.customer.id == null ? -1 : order.customer.id};
         if(cid > 0) {
-            $("#clientName").text( "" + '${sessionScope.customer.lastName}' + " " + '${sessionScope.customer.firstName}' + "");
-            $("#clientAddress").text( "" + '${sessionScope.customer.address.city}' + " " + '${sessionScope.customer.address.postCode}' + " " + '${sessionScope.customer.address.street}' + " " + '${sessionScope.customer.address.number}' + "");
+            $("#clientName").text( "" + '${order.customer.lastName}' + " " + '${order.customer.firstName}' + "");
+            $("#clientAddress").text( "" + '${order.customer.address.city}' + " " + '${order.customer.address.postCode}' + " " + '${order.customer.address.street}' + " " + '${order.customer.address.number}' + "");
             $("#customer\\.id").val(cid);
         }
         //add remove data row
@@ -73,40 +73,41 @@
                     <label id="clientName" style="clear: left;"></label>
                     <label id="clientAddress" style="clear: left;"></label>
                     <sf:hidden path="customer.id" />
+                    <sf:hidden path="id" />
                 </fieldset><div class="clear"></div>
 
                 <!--second row -->
+                <c:forEach var="ord" items="${order.orderDetails}" varStatus="status">
                 <div>
                     <fieldset style="width:25%; float:left;  margin-right: 2%; padding-right: 0.5%;">
                         <label><spring:message code="order.add.form.item" />:</label>
-                        <select name="orderDetails[0].item.id" cssStyle="width:92%;">
+                        <select name="orderDetails[${status.index}].item.id" cssStyle="width:92%;" >
                             <option value="NONE"><spring:message code="order.add.form.select" /></option>
                             <c:forEach items="${items}" var="item">
-                                <option value="${item.key}">${item.value}</option>
+                                <c:set value="${item.key == ord.item.id}" var="select"/>
+                                <option value="${item.key}" ${select? 'selected' : ''}>${item.value}</option>
                             </c:forEach>
                         </select>
                         <%--<sf:errors path="orderDetails[0].item.id" cssClass="error_text"/>--%>
                     </fieldset>
                     <fieldset style="width:25%; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
                         <label><spring:message code="order.add.form.quantity" />:</label>
-                        <input id="orderDetails[0].quantity" name="orderDetails[0].quantity" cssStyle="width:92%;"/>
+                        <input id="orderDetails[${status.index}].quantity" name="orderDetails[${status.index}].quantity" value="${ord.quantity}" cssStyle="width:92%;"/>
                         <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
                     </fieldset>
                     <fieldset style="width:25%; float:left; margin-right: 2%; padding-right: 0.5%;">
                         <label><spring:message code="order.add.form.reason" />:</label>
-                        <select name="orderDetails[0].reason.id" cssStyle="width:92%;">
+                        <select name="orderDetails[${status.index}].reason.id" cssStyle="width:92%;">
                             <c:forEach items="${reasons}" var="reason">
-                                <option value="${reason.id}">${reason.description}</option>
+                                <c:set value="${reason.id == ord.reason.id}" var="select"/>
+                                <option value="${reason.id}" ${select? 'selected' : ''}>${reason.description}</option>
                             </c:forEach>
                         </select>
                         <%--<sf:errors path="orderDetails[0].priceGross" cssClass="error_text"/>--%>
                     </fieldset>
-                    <fieldset style="width:2%; float:left; margin-right: 2%; padding-right: 0.1%; padding-top: 1%;padding-bottom: 1%;">
-                        <input type="button" class="new add" value="+" />
-                    </fieldset>
                     <div class="clear"></div>
                 </div>
-
+                </c:forEach>
             </div>
             <footer>
                 <div class="submit_link">

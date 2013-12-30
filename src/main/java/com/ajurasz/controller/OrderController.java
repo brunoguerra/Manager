@@ -91,11 +91,22 @@ public class OrderController {
         return "redirect:/order/list";
     }
 
-    @RequestMapping(value = "/edit/{id}")
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String initEditForm(@PathVariable Long id, Model model) {
         Order order = managerService.getOrder(id);
         model.addAttribute("order", order);
         return "order/edit";
+    }
+
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+    public String processEditForm(@Valid @ModelAttribute Order order, BindingResult result,
+                                  RedirectAttributes redirectAttributes) {
+        if(result.hasErrors()) {
+            return "order/edit";
+        }
+        managerService.update(order);
+        redirectAttributes.addFlashAttribute("orderEdited", true);
+        return "redirect:/order/list";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)

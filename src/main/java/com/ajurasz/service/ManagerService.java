@@ -38,8 +38,11 @@ public interface ManagerService {
     String getNextDocNumnber();
     Page<Order> findAllOrders(Pageable pageable);
     Order saveOrder(Order order);
+    Order update(Order order);
     Order getOrder(Long id);
     void deleteOrder(Order order);
 
     List<CityPostCode> findAllCitiesAndPostCodes(String cityName);
+
+
 }

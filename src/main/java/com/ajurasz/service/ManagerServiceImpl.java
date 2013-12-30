@@ -4,6 +4,7 @@ import com.ajurasz.model.*;
 import com.ajurasz.repository.*;
 import com.ajurasz.util.pdf.GeneratePDF;
 import com.ajurasz.util.sql.mapper.CityPostCode;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -288,6 +289,31 @@ public class ManagerServiceImpl implements ManagerService {
         //save order to db
         return orderRepo.save(order);
     }
+
+    @Override
+    @Transactional
+    public Order update(Order order) {
+        Order before = orderRepo.findOne(order.getId());
+        deleteOrder(before);
+        return saveOrder(order);
+    }
+
+//    private boolean compareOrderDetails(List<OrderDetails> before, List<OrderDetails> current) {
+//        //equals?
+//        boolean result = true;
+//
+//        if(before.size() != current.size()) return false;
+//
+//        for(int i = 0; i < before.size(); i++) {
+//            for(int j = 0; j < before.size(); j++) {
+//                if(before.get(i).getItem().getId() == current.get(j).getItem().getId()) {
+//                    if(!before.get(i).getQuantity().equals(current.get(j).getQuantity())) return false;
+//                }
+//            }
+//        }
+//
+//        return result;
+//    }
 
     private void saveOrderToDisk(Order order, String dest) {
         GeneratePDF generatePDF = new GeneratePDF(order, dest);

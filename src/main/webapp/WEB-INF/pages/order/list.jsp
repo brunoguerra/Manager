@@ -44,7 +44,7 @@
         <h4 class="alert_success"><spring:message code="order.delete.form.msg.success"/></h4>
     </c:if>
     <c:if test="${orderEdited}">
-        <h4 class="alert_success"><spring:message code="item.edit.form.msg.success"/></h4>
+        <h4 class="alert_success"><spring:message code="order.edit.form.msg.success"/></h4>
     </c:if>
     <c:choose>
         <c:when test="${not empty orderPage.content}">
