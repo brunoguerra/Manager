@@ -2,8 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<spring:message code="customer.add.form.button.add" var="add" />
-<spring:message code="customer.add.form.button.reset" var="reset" />
+<spring:message code="order.add.form.button.save" var="save" />
+<spring:message code="order.add.form.button.cancel" var="cancel" />
 <spring:message code="order.add.search" var="search" />
 
 <%@include file="/WEB-INF/scripts/ClientAutocomplete.jsp"%>
@@ -92,7 +92,7 @@
                     </fieldset>
                     <fieldset style="width:25%; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
                         <label><spring:message code="order.add.form.quantity" />:</label>
-                        <input id="orderDetails[${status.index}].quantity" name="orderDetails[${status.index}].quantity" value="${ord.quantity}" cssStyle="width:92%;"/>
+                        <input id="orderDetails[${status.index}].quantity" name="orderDetails[${status.index}].quantity" value="${ord.quantity.intValue()}" cssStyle="width:92%;"/>
                         <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
                     </fieldset>
                     <fieldset style="width:25%; float:left; margin-right: 2%; padding-right: 0.5%;">
@@ -111,8 +111,8 @@
             </div>
             <footer>
                 <div class="submit_link">
-                    <input id="reset" type="button" value="${reset}"/>
-                    <input id="add" type="submit" value="${add}" class="alt_btn">
+                    <input id="cancel" type="button" value="${cancel}" onclick="javascript:window.location.replace('${contextPath}/order/list')"/>
+                    <input id="add" type="submit" value="${save}" class="alt_btn">
                 </div>
             </footer>
         </sf:form>

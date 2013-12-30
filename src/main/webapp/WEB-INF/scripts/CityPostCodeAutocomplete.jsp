@@ -7,7 +7,7 @@
         //attach autocomplete
         $("#address\\.city").autocomplete({
             minLength: 1,
-            delay: 500,
+            delay: 100,
             //define callback to format results
             source: function (request, response) {
                 $.getJSON("${contextPath}/customer/edit/getCities", request, function(result) {
@@ -43,7 +43,7 @@
 
     //set autocomplete off
     $(document).ready(function(){
-        $('#address\\.city').attr('autocomplete','on');
+        $('#address\\.city').attr('autocomplete','off');
     });
 
 </script>

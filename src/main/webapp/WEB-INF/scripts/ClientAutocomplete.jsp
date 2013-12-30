@@ -11,7 +11,7 @@
         //attach autocomplete
         $("#search").autocomplete({
             minLength: 1,
-            delay: 500,
+            delay: 100,
             //define callback to format results
             source: function (request, response) {
                 $.getJSON("${contextPath}/customer/getCustomersForQuery", request, function(result) {

@@ -10,7 +10,7 @@
             <spring:message code="item.history.next" var="next"/>
 
             <article class="module width_full">
-                <header><h3 class="tabs_involved">[ ${state.item.name} ] <spring:message code="item.history.title"/>: ${state.currentState}</h3></header>
+                <header><h3 class="tabs_involved">[ ${state.item.name} ] <spring:message code="item.history.title"/>: ${state.currentState.intValue()}</h3></header>
 
                 <div class="tab_container">
                     <div id="tab1" class="tab_content">

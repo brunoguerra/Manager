@@ -87,7 +87,7 @@ public class GeneratePDF {
                 Item itemObj = orderDetails.getItem();
                 acroFields.setField(lp, "" + counter);
                 acroFields.setField(item, itemObj.getName() + " " + itemObj.getCode());
-                acroFields.setField(quantity, "" + orderDetails.getQuantity());
+                acroFields.setField(quantity, "" + orderDetails.getQuantity().intValue());
                 acroFields.setField(reason, orderDetails.getReason().getDescription());
 
                 counter++;

@@ -89,7 +89,7 @@
                                         <td><c:out value="${item.priceNet}"/></td>
                                         <td><c:out value="${item.priceExcise}"/></td>
                                         <td>
-                                            <a id="currentState_${item.state.id}" href="${contextPath}/item/state/${item.state.id}/history"><c:out value="${item.state.currentState}" default="${currentStateDefault}"/></a>
+                                            <a id="currentState_${item.state.id}" href="${contextPath}/item/state/${item.state.id}/history"><c:out value="${item.state.currentState.intValue()}" default="${currentStateDefault}"/></a>
                                             <input type="button" id="stateChangeButton" value="+" onclick="return show(${item.state.id});">
 
                                         </td>
