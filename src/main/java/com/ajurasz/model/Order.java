@@ -1,15 +1,12 @@
 package com.ajurasz.model;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,8 +20,10 @@ public class Order extends BaseEntity {
     @Pattern(regexp = "([0-9]{1,5})/([0-9]{2})/([0-9]{4})", message = "{order.docNumber.format}")
     private String docNumber;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private Date date;
+
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+    private DateTime date;
 
     @ManyToOne()
     private Customer customer;
@@ -35,7 +34,7 @@ public class Order extends BaseEntity {
     private List<OrderDetails> orderDetails;
 
     public Order() {
-        this.date = new Date();
+        this.date = DateTime.now();
         this.customer = new Customer();
         this.orderDetails = new ArrayList<OrderDetails>();
     }
@@ -49,11 +48,11 @@ public class Order extends BaseEntity {
         this.documentName = docNumber.replace("/", "-");
     }
 
-    public Date getDate() {
+    public DateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(DateTime date) {
         this.date = date;
     }
 

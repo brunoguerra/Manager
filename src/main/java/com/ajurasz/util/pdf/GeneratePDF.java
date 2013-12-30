@@ -73,7 +73,7 @@ public class GeneratePDF {
             acroFields.setField("customerAddress", address.getAddress());
 
             //date
-            acroFields.setField("date", new SimpleDateFormat("dd/MM/YYYY").format(order.getDate()));
+            acroFields.setField("date", order.getDate().toString("dd/MM/yyyy"));
 
             //order details
             int counter = 1;

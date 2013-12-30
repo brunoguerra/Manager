@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 
 <section id="main" class="column">
     <c:choose>
@@ -27,7 +28,7 @@
                                 <tbody>
                                 <tr>
                                     <td></td>
-                                    <td><c:out value="${item.date}"/></td>
+                                    <td><joda:format value="${item.date}" pattern="dd/MM/yyyy HH:mm"/></td>
                                     <td><c:out value="${item.description}"/></td>
                                 </tr>
                                 </tbody>

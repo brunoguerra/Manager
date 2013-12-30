@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <spring:message code="order.list.msg.q.delete" var="qDelete"/>
 
 <script type="text/javascript">
@@ -82,7 +83,7 @@
                                             <a href="${contextPath}/order/show/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
                                         </td>
                                         <td><c:out value="${order.docNumber}"/></td>
-                                        <td><c:out value="${order.date}"/></td>
+                                        <td><joda:format value="${order.date}" pattern="dd/MM/yyyy"/></td>
                                         <td><c:out value="${order.customer.lastName} ${order.customer.firstName} "/></td>
                                         <td>
                                             <a href="${contextPath}/order/edit/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_edit.png"/>" title="${edit}"></a>

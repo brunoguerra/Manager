@@ -4,7 +4,7 @@ import com.ajurasz.model.*;
 import com.ajurasz.repository.*;
 import com.ajurasz.util.pdf.GeneratePDF;
 import com.ajurasz.util.sql.mapper.CityPostCode;
-import javafx.util.Pair;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletContext;
-import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -278,7 +277,7 @@ public class ManagerServiceImpl implements ManagerService {
             order.setDocNumber(getNextDocNumnber());
 
         //rename
-        order.setDate(new Date());
+        order.setDate(DateTime.now());
         order.setCustomer(customer);
         order.setOrderDetails(resultList);
 

@@ -1,13 +1,13 @@
 package com.ajurasz.model;
 
+import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
+import org.joda.time.DateTime;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author Arek Jurasz
@@ -18,8 +18,9 @@ public class StateHistory extends BaseEntity {
 
     private BigDecimal value;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-    private Date date;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+    private DateTime date;
 
     private String description;
 
@@ -27,7 +28,7 @@ public class StateHistory extends BaseEntity {
     private State state;
 
     public StateHistory() {
-        this.date = new Date();
+        this.date = DateTime.now();
     }
 
     public BigDecimal getValue() {
@@ -55,11 +56,11 @@ public class StateHistory extends BaseEntity {
         }
     }
 
-    public Date getDate() {
+    public DateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(DateTime date) {
         this.date = date;
     }
 
