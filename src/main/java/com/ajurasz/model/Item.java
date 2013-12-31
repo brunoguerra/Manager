@@ -45,8 +45,8 @@ public class Item extends BaseEntity {
     @NotNull
     private State state;
 
-    @OneToMany()
-    private List<OrderDetails> orderDetailses;
+//    @OneToMany()
+//    private List<OrderDetails> orderDetailses;
 
     public Item() {
         //set default values

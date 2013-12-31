@@ -5,6 +5,8 @@ import com.ajurasz.service.ManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,7 +31,9 @@ public class HomeController {
 
     @RequestMapping(value = "/index")
     public String index() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        Company company = (Company)auth.getPrincipal();
         return "home/home";
     }
 
@@ -106,6 +110,16 @@ public class HomeController {
         managerService.saveCustomer(arek);
         managerService.saveCustomer(darek);
         managerService.saveCustomer(marek);
+
+        Role role1 = new Role("ADMIN");
+        Role role2 = new Role("USER");
+
+        List<Role> roles = new ArrayList<Role>();
+        roles.add(role1);
+        roles.add(role2);
+        Company company = new Company("spider485@o2.pl", "password", roles);
+
+        managerService.saveCompany(company);
 
 
         //create orders , order details

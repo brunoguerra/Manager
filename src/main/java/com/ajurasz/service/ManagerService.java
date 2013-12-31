@@ -42,6 +42,8 @@ public interface ManagerService {
     Order getOrder(Long id);
     void deleteOrder(Order order);
 
+    Company saveCompany(Company company);
+
     List<CityPostCode> findAllCitiesAndPostCodes(String cityName);
 
 

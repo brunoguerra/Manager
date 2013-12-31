@@ -31,6 +31,7 @@ public class ManagerServiceImpl implements ManagerService {
     private StateRepository stateRepo;
     private OrderRepository orderRepo;
     private ReasonRepository reasonRepo;
+    private CompanyRepository companyRepo;
 
     @Autowired
     private ServletContext servletContext;
@@ -38,13 +39,15 @@ public class ManagerServiceImpl implements ManagerService {
     @Autowired
     public ManagerServiceImpl(CustomerRepository customerRepo, ItemRepository itemRepo,
                               StateHistoryRepository stateHistoryRepo,StateRepository stateRepo,
-                              OrderRepository orderRepo, ReasonRepository reasonRepo) {
+                              OrderRepository orderRepo, ReasonRepository reasonRepo,
+                              CompanyRepository companyRepo) {
         this.customerRepo = customerRepo;
         this.itemRepo = itemRepo;
         this.stateHistoryRepo = stateHistoryRepo;
         this.stateRepo = stateRepo;
         this.orderRepo = orderRepo;
         this.reasonRepo = reasonRepo;
+        this.companyRepo = companyRepo;
     }
 
     //CUSTOMERS
@@ -342,5 +345,11 @@ public class ManagerServiceImpl implements ManagerService {
         }
 
         orderRepo.delete(actualOrder);
+    }
+
+    @Override
+    @Transactional
+    public Company saveCompany(Company company) {
+        return  companyRepo.save(company);
     }
 }

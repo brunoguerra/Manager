@@ -20,11 +20,14 @@
         <li class="icn_new_article"><a href="${contextPath}/item/add"><spring:message code="menu.item.add" /></a></li>
         <li class="icn_categories"><a href="${contextPath}/item/list"><spring:message code="menu.item.list" /></a></li>
     </ul>
-    <h3>Admin</h3>
+    <h3><spring:message code="menu.account" /></h3>
     <ul class="toggle">
         <li class="icn_settings"><a href="#">Options</a></li>
         <li class="icn_security"><a href="#">Security</a></li>
-        <li class="icn_jump_back"><a href="#">Logout</a></li>
+        <form id="logout" action="${contextPath}/logout" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <li class="icn_jump_back"><a href="#" onclick="return $('#logout').submit();"><spring:message code="menu.login.logout" /></a></li>
+        </form>
     </ul>
 
     <footer>
