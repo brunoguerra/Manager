@@ -27,9 +27,11 @@ public interface ManagerService {
     Map<String, String> findAllItemsMap();
     void deleteItem(Item item);
 
+    //--STATE METHODS
     State getState(Long id);
     State saveState(State state);
 
+    //--STATE HISTORY METHODS
     StateHistory saveStateHistory(StateHistory stateHistory);
     List<StateHistory> findAllStateHistoryByStateIdDesc(Long id);
     Page<StateHistory> findAllStateHistoryByStateIdDesc(Long id, Pageable pageable);
@@ -38,6 +40,7 @@ public interface ManagerService {
     Reason saveReason(Reason reason);
     List<Reason> findAllReasons();
 
+    //--ORDER METHODS
     String getNextDocNumnber();
     Page<Order> findAllOrders(Pageable pageable);
     Order saveOrder(Order order);
@@ -45,8 +48,10 @@ public interface ManagerService {
     Order getOrder(Long id);
     void deleteOrder(Order order);
 
+    //--COMPANY METHODS
     Company saveCompany(Company company);
 
+    //--OTHER METHODS
     List<CityPostCode> findAllCitiesAndPostCodes(String cityName);
 
 

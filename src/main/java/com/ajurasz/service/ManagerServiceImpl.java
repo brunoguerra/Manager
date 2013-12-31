@@ -201,7 +201,7 @@ public class ManagerServiceImpl implements ManagerService {
         String currentMonth = new SimpleDateFormat("MM").format(calendar.getTime());
         String currentYear = String.valueOf(calendar.get(Calendar.YEAR));
 
-        Order order = orderRepo.getLatestOrder();
+        Order order = orderRepo.getLatestOrder(getCompany().getId());
 
         //First entry in db
         if(order == null) {
@@ -223,7 +223,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional(readOnly = true)
     public Page<Order> findAllOrders(Pageable pageable) {
-        return orderRepo.findAll(pageable);
+        return orderRepo.findAllByCompany(getCompany(), pageable);
     }
 
     @Override
@@ -287,6 +287,7 @@ public class ManagerServiceImpl implements ManagerService {
         //rename
         order.setDate(DateTime.now());
         order.setCustomer(customer);
+        order.setCompany(getCompany());
         order.setOrderDetails(resultList);
 
         //todo: execute two tasks in paraller
@@ -300,7 +301,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public Order update(Order order) {
-        Order before = orderRepo.findOne(order.getId());
+        Order before = orderRepo.findByIdAndCompany(order.getId(), getCompany());
         deleteOrder(before);
         return saveOrder(order);
     }
@@ -330,13 +331,13 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional(readOnly = true)
     public Order getOrder(Long id) {
-        return orderRepo.findOne(id);
+        return orderRepo.findByIdAndCompany(id, getCompany());
     }
 
     @Override
     @Transactional
     public void deleteOrder(Order order) {
-        Order actualOrder = orderRepo.findOne(order.getId());
+        Order actualOrder = orderRepo.findByIdAndCompany(order.getId(), getCompany());
         //update current state
         for(OrderDetails orderDetails : actualOrder.getOrderDetails()) {
             State state = orderDetails.getItem().getState();

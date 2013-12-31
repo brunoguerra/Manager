@@ -1,5 +1,7 @@
 package com.ajurasz.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,8 +32,12 @@ public class Order extends BaseEntity {
 
     private String documentName;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<OrderDetails> orderDetails;
+
+    @ManyToOne
+    private Company company;
 
     public Order() {
         this.date = DateTime.now();
@@ -74,5 +80,13 @@ public class Order extends BaseEntity {
 
     public String getDocumentName() {
         return documentName;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }
