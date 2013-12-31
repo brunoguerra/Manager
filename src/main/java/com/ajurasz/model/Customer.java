@@ -41,6 +41,9 @@ public class Customer extends BaseEntity {
     @JsonManagedReference
     private Address address;
 
+    @ManyToOne
+    private Company company;
+
     public String getFirstName() {
         return firstName;
     }
@@ -101,4 +104,11 @@ public class Customer extends BaseEntity {
                 .toString();
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 }

@@ -12,6 +12,7 @@ import java.util.Map;
  * @author ajurasz
  */
 public interface ManagerService {
+    //--CUSTOMER METHODS
     Customer saveCustomer(Customer customer);
     List<Customer> findAllCustomers();
     Page<Customer> findAllCustomers(Pageable pageable);
@@ -32,7 +33,7 @@ public interface ManagerService {
     List<StateHistory> findAllStateHistoryByStateIdDesc(Long id);
     Page<StateHistory> findAllStateHistoryByStateIdDesc(Long id, Pageable pageable);
 
-    //--REASON METHOD
+    //--REASON METHODS
     Reason saveReason(Reason reason);
     List<Reason> findAllReasons();
 

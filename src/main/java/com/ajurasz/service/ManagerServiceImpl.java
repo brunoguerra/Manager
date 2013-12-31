@@ -56,30 +56,31 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public Customer saveCustomer(Customer customer) {
+        customer.setCompany(getCompany());
         return customerRepo.save(customer);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Customer> findAllCustomers() {
-        return customerRepo.findAll(new Sort(Sort.Direction.DESC, "id"));
+        return customerRepo.findAllByCompany(getCompany(), new Sort(Sort.Direction.DESC, "id"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Customer> findAllCustomers(Pageable pageable) {
-        return customerRepo.findAll(pageable);
+        return customerRepo.findAllByCompany(getCompany(), pageable);
     }
 
     @Override
     public List<Customer> findAllByCustomerLastName(String lastName) {
-        return customerRepo.findAllByCustomerLastName(lastName);
+        return customerRepo.findAllByCustomerLastNameAndCompany(lastName, getCompany());
     }
 
     @Override
     @Transactional(readOnly = true)
     public Customer getCustomer(Long id) {
-        Customer c = customerRepo.findOne(id);
+        Customer c = customerRepo.findCustomerByIdAndCompany(id, getCompany());
         return c;
     }
 
