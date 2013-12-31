@@ -107,6 +107,7 @@ public class ManagerServiceImpl implements ManagerService {
         if(item.getId() == null) {
             isNew = true;
         }
+        item.setCompany(getCompany());
         //PriceNet = PriceGross - ( (PriceGross * 23)/100 )
         item.setPriceNet( item.getPriceGross().subtract( item.getPriceGross().multiply(VAT).divide(new BigDecimal(100)) ) );
         //PriceExcise = PriceGross
@@ -129,20 +130,20 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional(readOnly = true)
     public Item getItem(Long id) {
-        Item item = itemRepo.findOne(id);
+        Item item = itemRepo.findItemByIdAndCompany(id, getCompany());
         return item;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Item> findAllItems() {
-        return itemRepo.findAll();
+        return itemRepo.findAllByCompany(getCompany());
     }
 
     @Override
     public Map<String, String> findAllItemsMap() {
         Map<String, String> result = new HashMap<String, String>();
-        List<Item> items = itemRepo.findAll();
+        List<Item> items = itemRepo.findAllByCompany(getCompany());
         if(items != null && !items.isEmpty()) {
             for(Item item : items) {
                 result.put(item.getId().toString(), item.getName());

@@ -1,5 +1,8 @@
 package com.ajurasz.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -28,7 +31,8 @@ public class State extends BaseEntity {
     @OneToOne(mappedBy = "state")
     private Item item;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "state", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "state")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<StateHistory> stateHistories;
 
     public State() {

@@ -5,6 +5,8 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" >
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <title><tiles:insertAttribute name="title"/></title>
     <link rel="stylesheet" href="<c:url value="/resources/css/layout.css" />" type="text/css" media="screen" />
     <!--[if lt IE 9]>
@@ -41,7 +43,16 @@
                 $(activeTab).fadeIn(); //Fade in the active ID content
                 return false;
             });
+        });
 
+        $(document).ready(function(){
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            $.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            });
         });
     </script>
     <script type="text/javascript">

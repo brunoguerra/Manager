@@ -20,6 +20,7 @@ public interface ManagerService {
     Customer getCustomer(Long id);
     void deleteCustomer(Customer customer);
 
+    //--ITEM METHODS
     Item saveItem(Item item);
     Item getItem(Long id);
     List<Item> findAllItems();

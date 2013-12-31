@@ -1,5 +1,6 @@
 package com.ajurasz.repository;
 
+import com.ajurasz.model.Company;
 import com.ajurasz.model.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,8 @@ import java.util.Map;
 @Repository("itemRepo")
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findItemByName(String name);
+
+    Item findItemByIdAndCompany(Long id, Company company);
+
+    List<Item> findAllByCompany(Company company);
 }

@@ -45,8 +45,8 @@ public class Item extends BaseEntity {
     @NotNull
     private State state;
 
-//    @OneToMany()
-//    private List<OrderDetails> orderDetailses;
+    @ManyToOne
+    private Company company;
 
     public Item() {
         //set default values
@@ -119,6 +119,14 @@ public class Item extends BaseEntity {
 
     public void setCode(Integer code) {
         this.code = code;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public interface Add {}
