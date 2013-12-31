@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -177,13 +179,14 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public Reason saveReason(Reason reason) {
+        reason.setCompany(getCompany());
         return reasonRepo.save(reason);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Reason> findAllReasons() {
-        return reasonRepo.findAll();
+        return reasonRepo.findAllByCompany(getCompany());
     }
 
     @Override
@@ -351,5 +354,11 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public Company saveCompany(Company company) {
         return  companyRepo.save(company);
+    }
+
+    private Company getCompany() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Company company = (Company)auth.getPrincipal();
+        return company;
     }
 }

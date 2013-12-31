@@ -9,7 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,16 +32,19 @@ public class HomeController {
         this.managerService = managerService;
     }
 
-    @RequestMapping(value = "/index")
-    public String index() {
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         Company company = (Company)auth.getPrincipal();
+
+        HttpSession session = request.getSession();
+        session.setAttribute("company", company);
+
         return "home/home";
     }
 
     @RequestMapping(value = "/test")
-    public String test() {
+    public String test(HttpServletRequest request) {
 
         //Create reason
         Reason reason = new Reason();
@@ -110,16 +116,6 @@ public class HomeController {
         managerService.saveCustomer(arek);
         managerService.saveCustomer(darek);
         managerService.saveCustomer(marek);
-
-        Role role1 = new Role("ADMIN");
-        Role role2 = new Role("USER");
-
-        List<Role> roles = new ArrayList<Role>();
-        roles.add(role1);
-        roles.add(role2);
-        Company company = new Company("spider485@o2.pl", "password", roles);
-
-        managerService.saveCompany(company);
 
 
         //create orders , order details

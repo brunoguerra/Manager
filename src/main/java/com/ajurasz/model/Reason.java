@@ -2,10 +2,7 @@ package com.ajurasz.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -21,6 +18,9 @@ public class Reason extends BaseEntity {
 
     private boolean isExcise;
 
+    @ManyToOne
+    private Company company;
+
     public String getDescription() {
         return description;
     }
@@ -35,5 +35,13 @@ public class Reason extends BaseEntity {
 
     public void setExcise(boolean excise) {
         isExcise = excise;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }
