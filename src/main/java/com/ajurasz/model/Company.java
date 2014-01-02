@@ -24,8 +24,14 @@ public class Company extends BaseEntity implements UserDetails {
     private boolean credentialsNonExpired;
     private boolean enabled;
 
+    private String fullName;
+
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Role> roles;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Address address;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -91,5 +97,21 @@ public class Company extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

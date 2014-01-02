@@ -1,37 +1,47 @@
 package com.ajurasz.config;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
 
 /**
  * @author ajurasz
  */
-public class WebAppInitializer implements WebApplicationInitializer {
+@Order(2)
+public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.register(WebAppConfig.class);
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
+    }
 
-        // Manage the lifecycle of the application context
-        servletContext.addListener(new ContextLoaderListener(rootContext));
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class<?>[] {DatabaseConfig.class, InternationalizationConfig.class, SecurityConfig.class};
+    }
 
-        FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("encodingFilter",
-                new CharacterEncodingFilter());
-        characterEncodingFilter.setInitParameter("encoding", "UTF-8");
-        characterEncodingFilter.setInitParameter("forceEncoding", "true");
-        characterEncodingFilter.addMappingForUrlPatterns(null, true, "/*");
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class<?>[] {WebAppConfig.class};
+    }
 
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(rootContext));
-        dispatcher.setLoadOnStartup(1);
-        dispatcher.addMapping("/");
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return new Filter[] {characterEncodingFilter};
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        registration.setInitParameter("defaultHtmlEscape", "true");
+        registration.setInitParameter("spring.profiles.active", "default");
     }
 }

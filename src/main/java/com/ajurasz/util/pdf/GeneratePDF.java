@@ -1,9 +1,6 @@
 package com.ajurasz.util.pdf;
 
-import com.ajurasz.model.Address;
-import com.ajurasz.model.Item;
-import com.ajurasz.model.Order;
-import com.ajurasz.model.OrderDetails;
+import com.ajurasz.model.*;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.BaseFont;
@@ -24,18 +21,20 @@ public class GeneratePDF {
     private static final String TEMPLATE = "DOKUMENT_DOSTAWY.pdf";
     private static final String FONT_NAME = "arial.ttf";
 
+    private Company company;
     private Order order;
     private PdfReader reader;
     private PdfStamper stamper;
     private AcroFields acroFields;
     private String destination;
 
-    public GeneratePDF(Order order, String dest) {
+    public GeneratePDF(Company company, Order order, String dest) {
         if(!dest.endsWith(File.separator)) {
             dest = dest + File.separator;
         }
         try {
 
+            this.company = company;
             this.order = order;
             FileSystemResource resource = new FileSystemResource(TEMPLATE);
             this.reader = new PdfReader(resource.getPath());
@@ -64,8 +63,8 @@ public class GeneratePDF {
         Address address = order.getCustomer().getAddress();
         try {
             //company info
-            acroFields.setField("companyName", "TBD");
-            acroFields.setField("companyAddress", "TBD");
+            acroFields.setField("companyName", company.getFullName());
+            acroFields.setField("companyAddress", company.getAddress().getAddress());
 
             //customer info
             acroFields.setField("docNumber", order.getDocNumber());

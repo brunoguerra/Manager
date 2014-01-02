@@ -22,7 +22,6 @@ import java.util.List;
  * @author ajurasz
  */
 @EnableWebMvc
-@Import(value = {DatabaseConfig.class, SecurityConfig.class, InternationalizationConfig.class})
 @ComponentScan(basePackages = {"com.ajurasz.controller", "com.ajurasz.service", "com.ajurasz.model"})
 @Configuration
 public class WebAppConfig extends WebMvcConfigurerAdapter {

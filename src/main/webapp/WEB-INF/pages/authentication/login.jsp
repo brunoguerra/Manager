@@ -53,7 +53,7 @@
     <!--END SLIDE-IN ICONS-->
 
     <!--LOGIN FORM-->
-    <form name="login-form" class="login-form" action="${contextPath}/login" method="post">
+    <form name="login-form" class="login-form" action="${contextPath}/j_spring_security_check" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <!--HEADER-->
         <div class="header">

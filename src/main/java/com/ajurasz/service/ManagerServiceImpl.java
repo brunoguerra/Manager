@@ -324,7 +324,7 @@ public class ManagerServiceImpl implements ManagerService {
 //    }
 
     private void saveOrderToDisk(Order order, String dest) {
-        GeneratePDF generatePDF = new GeneratePDF(order, dest);
+        GeneratePDF generatePDF = new GeneratePDF(getCompany(), order, dest);
         generatePDF.generate();
     }
 

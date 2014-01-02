@@ -24,7 +24,7 @@
     <ul class="toggle">
         <li class="icn_settings"><a href="#">Options</a></li>
         <li class="icn_security"><a href="#">Security</a></li>
-        <form id="logout" action="${contextPath}/logout" method="post">
+        <form id="logout" action="${contextPath}/j_spring_security_logout" method="post">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <li class="icn_jump_back"><a href="#" onclick="return $('#logout').submit();"><spring:message code="menu.login.logout" /></a></li>
         </form>
