@@ -56,10 +56,14 @@
         <!-- ITEXTPDF -->
         <itextpdf.version>5.4.5</itextpdf.version>
 
+        <!-- REPORTS -->
+        <jasperreports.version>5.5.0</jasperreports.version>
+
         <!-- Dates -->
         <usertype.core.version>3.1.0.CR10</usertype.core.version>
         <joda-time.version>2.3</joda-time.version>
         <joda-time-jsptags.version>1.1.1</joda-time-jsptags.version>
+
     </properties>
 
     <dependencies>
@@ -234,6 +238,20 @@
             <artifactId>itextpdf</artifactId>
             <version>${itextpdf.version}</version>
         </dependency>
+
+        <!-- REPORTS -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>${jasperreports.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+
+
 
         <!-- Dates -->
         <dependency>

@@ -43,6 +43,7 @@ public interface ManagerService {
     //--ORDER METHODS
     String getNextDocNumnber();
     Page<Order> findAllOrders(Pageable pageable);
+    List<Order> findAllOrders();
     Order saveOrder(Order order);
     Order update(Order order);
     Order getOrder(Long id);

@@ -81,13 +81,17 @@ public class GeneratePDF {
                 String item = "item" + counter;
                 String quantity = "quantity" + counter;
                 String reason = "reason" + counter;
+                String asterix = "asterix" + counter;
 
                 //fill row
                 Item itemObj = orderDetails.getItem();
                 acroFields.setField(lp, "" + counter);
-                acroFields.setField(item, itemObj.getName() + " " + itemObj.getCode());
+                acroFields.setField(item, itemObj.getName() + "   " + itemObj.getCode());
                 acroFields.setField(quantity, "" + orderDetails.getQuantity().intValue());
                 acroFields.setField(reason, orderDetails.getReason().getDescription());
+                if(!orderDetails.getReason().isHomeUse()) {
+                    acroFields.setField(asterix, "*");
+                }
 
                 counter++;
             }

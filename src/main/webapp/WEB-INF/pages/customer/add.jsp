@@ -34,13 +34,6 @@
                 <sf:errors path="phoneNumber" cssClass="error_text"/>
             </fieldset>
             <fieldset style="width:48%; float:left;">
-                <label><spring:message code="customer.add.form.pesel"/>:</label>
-                <sf:input path="pesel" cssStyle="width:92%;"/>
-                <sf:errors path="pesel" cssClass="error_text"/>
-            </fieldset><div class="clear"></div>
-
-            <!-- Third row -->
-            <fieldset style="width:48%; float:left; margin-left: 51%;">
                 <label><spring:message code="customer.add.form.email"/>:</label>
                 <sf:input path="email" cssStyle="width:92%;"/>
                 <sf:errors path="email" cssClass="error_text"/>

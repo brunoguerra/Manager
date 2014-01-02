@@ -25,6 +25,7 @@ public class Company extends BaseEntity implements UserDetails {
     private boolean enabled;
 
     private String fullName;
+    private String nip;
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -113,5 +114,13 @@ public class Company extends BaseEntity implements UserDetails {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getNip() {
+        return nip;
+    }
+
+    public void setNip(String nip) {
+        this.nip = nip;
     }
 }

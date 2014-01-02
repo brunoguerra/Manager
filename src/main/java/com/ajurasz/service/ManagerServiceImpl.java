@@ -228,6 +228,12 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Order> findAllOrders() {
+        return orderRepo.findAllByCompany(getCompany());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public State getState(Long id) {
         return stateRepo.findOne(id);
     }
@@ -305,23 +311,6 @@ public class ManagerServiceImpl implements ManagerService {
         deleteOrder(before);
         return saveOrder(order);
     }
-
-//    private boolean compareOrderDetails(List<OrderDetails> before, List<OrderDetails> current) {
-//        //equals?
-//        boolean result = true;
-//
-//        if(before.size() != current.size()) return false;
-//
-//        for(int i = 0; i < before.size(); i++) {
-//            for(int j = 0; j < before.size(); j++) {
-//                if(before.get(i).getItem().getId() == current.get(j).getItem().getId()) {
-//                    if(!before.get(i).getQuantity().equals(current.get(j).getQuantity())) return false;
-//                }
-//            }
-//        }
-//
-//        return result;
-//    }
 
     private void saveOrderToDisk(Order order, String dest) {
         GeneratePDF generatePDF = new GeneratePDF(getCompany(), order, dest);

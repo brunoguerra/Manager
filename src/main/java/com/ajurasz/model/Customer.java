@@ -29,7 +29,7 @@ public class Customer extends BaseEntity {
     @Email(message = "{customer.email}")
     private String email;
 
-    @Digits(integer = 9, fraction = 0, message = "{customer.pesel}")
+    //@Digits(integer = 9, fraction = 0, message = "{customer.pesel}")
     private String pesel;
 
     @Digits(integer = 10, fraction = 0, message = "{customer.phoneNumber}")

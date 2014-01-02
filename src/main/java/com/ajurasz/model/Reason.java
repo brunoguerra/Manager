@@ -18,6 +18,8 @@ public class Reason extends BaseEntity {
 
     private boolean isExcise;
 
+    private boolean isHomeUse;
+
     @ManyToOne
     private Company company;
 
@@ -43,5 +45,13 @@ public class Reason extends BaseEntity {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public boolean isHomeUse() {
+        return isHomeUse;
+    }
+
+    public void setHomeUse(boolean isHomeUse) {
+        this.isHomeUse = isHomeUse;
     }
 }
