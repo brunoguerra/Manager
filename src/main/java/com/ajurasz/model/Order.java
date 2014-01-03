@@ -25,7 +25,8 @@ public class Order extends BaseEntity {
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
-    private DateTime date;
+    @Column(name = "order_date")
+    private DateTime orderDate;
 
     @ManyToOne()
     private Customer customer;
@@ -40,7 +41,7 @@ public class Order extends BaseEntity {
     private Company company;
 
     public Order() {
-        this.date = DateTime.now();
+        this.orderDate = DateTime.now();
         this.customer = new Customer();
         this.orderDetails = new ArrayList<OrderDetails>();
     }
@@ -54,12 +55,12 @@ public class Order extends BaseEntity {
         this.documentName = docNumber.replace("/", "-");
     }
 
-    public DateTime getDate() {
-        return date;
+    public DateTime getOrderDate() {
+        return orderDate;
     }
 
-    public void setDate(DateTime date) {
-        this.date = date;
+    public void setOrderDate(DateTime orderDate) {
+        this.orderDate = orderDate;
     }
 
     public Customer getCustomer() {

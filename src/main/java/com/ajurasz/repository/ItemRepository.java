@@ -15,7 +15,7 @@ import java.util.Map;
 @Repository("itemRepo")
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findItemByName(String name);
-
+    Item findItemByNameAndCompany(String name, Company company);
     Item findItemByIdAndCompany(Long id, Company company);
 
     List<Item> findAllByCompany(Company company);

@@ -18,7 +18,7 @@
     <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet" type="text/css" />
 
     <!--SCRIPTS-->
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
     <!--Slider-in icons-->
     <script type="text/javascript">
         $(document).ready(function() {

@@ -1,9 +1,8 @@
 package com.ajurasz.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -13,6 +12,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.springframework.web.servlet.view.XmlViewResolver;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 
@@ -30,7 +31,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     public UrlBasedViewResolver viewResolver() {
         UrlBasedViewResolver urlBasedViewResolver = new UrlBasedViewResolver();
         urlBasedViewResolver.setViewClass(TilesView.class);
-//        urlBasedViewResolver.setContentType("text/html;charset=UTF-8");
+        urlBasedViewResolver.setOrder(1);
         return urlBasedViewResolver;
     }
 
@@ -41,10 +42,18 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         return tilesConfigurer;
     }
 
+    @Bean
+    public XmlViewResolver xmlViewResolver() {
+        XmlViewResolver xmlViewResolver = new XmlViewResolver();
+        xmlViewResolver.setOrder(0);
+        return xmlViewResolver;
+    }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/**");
         registry.addResourceHandler("/documents/**").addResourceLocations("/WEB-INF/pdfs/documents/**");
+        registry.addResourceHandler("/reports/**").addResourceLocations("/WEB-INF/pdfs/reports/**");
     }
 
     @Override

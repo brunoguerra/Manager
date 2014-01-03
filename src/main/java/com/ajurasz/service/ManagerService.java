@@ -52,8 +52,14 @@ public interface ManagerService {
     //--COMPANY METHODS
     Company saveCompany(Company company);
 
+    //--REPORT METHODS
+    Page<Report> findAllReports(Pageable pageable);
+    Report saveReport(Report report);
+    Report getReport(Long id);
+    void deleteReport(Report report);
+
     //--OTHER METHODS
     List<CityPostCode> findAllCitiesAndPostCodes(String cityName);
-
+    Company getCompany();
 
 }

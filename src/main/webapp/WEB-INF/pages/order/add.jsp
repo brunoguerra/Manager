@@ -110,7 +110,7 @@
             </div>
             <footer>
                 <div class="submit_link">
-                    <input id="reset" type="button" value="${reset}"/>
+                    <%--<input id="reset" type="button" value="${reset}"/>--%>
                     <input id="add" type="submit" value="${add}" class="alt_btn">
                 </div>
             </footer>

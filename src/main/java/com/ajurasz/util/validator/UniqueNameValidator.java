@@ -1,7 +1,9 @@
 package com.ajurasz.util.validator;
 
+import com.ajurasz.model.Company;
 import com.ajurasz.model.Item;
 import com.ajurasz.repository.ItemRepository;
+import com.ajurasz.service.ManagerService;
 import com.ajurasz.util.annotation.UniqueName;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +24,9 @@ public class UniqueNameValidator implements ConstraintValidator<UniqueName, Stri
     @Autowired
     private ItemRepository itemRepo;
 
+    @Autowired
+    private ManagerService managerService;
+
     private UniqueName uniqueName;
 
     @Override
@@ -33,7 +38,8 @@ public class UniqueNameValidator implements ConstraintValidator<UniqueName, Stri
     public boolean isValid(String value, ConstraintValidatorContext context) {
         try {
             entityManager.setFlushMode(FlushModeType.COMMIT);
-            Item item = itemRepo.findItemByName(value);
+            Company company = managerService.getCompany();
+            Item item = itemRepo.findItemByNameAndCompany(value, company);
             if(item == null)
                 return true;
             else

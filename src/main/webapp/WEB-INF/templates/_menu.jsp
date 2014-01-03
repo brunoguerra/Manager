@@ -20,6 +20,11 @@
         <li class="icn_new_article"><a href="${contextPath}/item/add"><spring:message code="menu.item.add" /></a></li>
         <li class="icn_categories"><a href="${contextPath}/item/list"><spring:message code="menu.item.list" /></a></li>
     </ul>
+    <h3><spring:message code="menu.report" /></h3>
+    <ul class="toggle">
+        <li class="icn_new_article"><a href="${contextPath}/report/add"><spring:message code="menu.report.add" /></a></li>
+        <li class="icn_categories"><a href="${contextPath}/report/list"><spring:message code="menu.report.list" /></a></li>
+    </ul>
     <h3><spring:message code="menu.account" /></h3>
     <ul class="toggle">
         <form id="logout" action="${contextPath}/j_spring_security_logout" method="post">

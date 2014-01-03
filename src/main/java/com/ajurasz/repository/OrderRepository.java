@@ -2,6 +2,7 @@ package com.ajurasz.repository;
 
 import com.ajurasz.model.Company;
 import com.ajurasz.model.Order;
+import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findAllByCompany(Company company, Pageable pageable);
     List<Order> findAllByCompany(Company company);
+
+    @Query("select order from Order order where company=:company and orderDate between :startDate and :endDate")
+    List<Order> findAllByCompanyBetweenDates(@Param("company") Company company, @Param("startDate") DateTime startDate, @Param("endDate") DateTime endDate);
 
     Order findByIdAndCompany(Long id, Company company);
 }

@@ -1,9 +1,6 @@
 package com.ajurasz.controller;
 
-import com.ajurasz.model.Customer;
-import com.ajurasz.model.Order;
-import com.ajurasz.model.OrderDetails;
-import com.ajurasz.model.Reason;
+import com.ajurasz.model.*;
 import com.ajurasz.service.ManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,6 +125,7 @@ public class OrderController {
     @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
     public String processOrderShow(@PathVariable Long id) {
         Order order = managerService.getOrder(id);
-        return "redirect:/documents/" + order.getDocumentName() + ".pdf";
+        Company company = managerService.getCompany();
+        return "redirect:/documents/" + company.getId() + File.separator + order.getDocumentName() + ".pdf";
     }
 }

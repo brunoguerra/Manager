@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "items")
 public class Item extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @NotEmpty(message = "{item.name}", groups = { Add.class, Update.class })
     @UniqueName(message = "{item.name.exist}", groups = { Add.class })
     private String name;

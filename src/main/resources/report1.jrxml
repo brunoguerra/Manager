@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0d69aef7-48fa-40ae-bc31-cda0ba7d71ee">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="CompanyName" class="java.lang.String"/>
+	<parameter name="CompanyAddress" class="java.lang.String"/>
+	<parameter name="CompanyId" class="java.lang.Long"/>
+	<parameter name="CompanyNip" class="java.lang.String"/>
+	<parameter name="Quoter" class="java.lang.String"/>
+	<parameter name="Year" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="docNumber" class="java.lang.String"/>
+	<field name="orderDate" class="org.joda.time.DateTime"/>
+	<variable name="variable1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="201" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="414" height="14" uuid="c1f2552d-304d-4aba-b5f7-e85ca50b9354"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CompanyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="14" width="414" height="14" uuid="4855e86b-9a66-42d8-b197-1ef2848121fc"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CompanyAddress}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy">
+				<reportElement x="455" y="0" width="100" height="20" uuid="d32fe74e-8593-4939-b5c5-26eabf15c9bd"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="28" width="22" height="15" uuid="871b84c0-ffcf-477c-9f21-d796d21e432f"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[NIP:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="22" y="28" width="82" height="15" uuid="b37743db-a9fc-4cd7-9219-25aabb24e2dd"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CompanyNip}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="63" width="255" height="33" uuid="129c1c1b-6fc3-4a99-9919-b125d6f2fad7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Naczelnik Urzędu Celnego w Bielsku-Białej
+ul. Tadeusza Regera 32 43-382 Bielsko-Biała]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="168" width="17" height="21" uuid="3710e5cf-ba9c-44b0-a104-ce50ae596988"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ZA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="232" y="167" width="78" height="21" uuid="b47967c7-3618-48e7-be58-ac2c93782343"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KWARTAŁ /]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="204" y="168" width="28" height="20" uuid="2a328672-c41a-4831-a126-9bbc39f81944"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Quoter}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="167" width="82" height="21" uuid="c1932bb5-88b6-49b4-81b2-a0d410bb24bb"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Year}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="126" width="555" height="41" uuid="86b2d4f6-b0ec-4c82-844c-6bac127f40dd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ZESTAWIENIE
+WYSTAWIONYCH DOKUMENTÓW DOSTAWY WYROBÓW WĘGLOWYCH]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="54" splitType="Stretch">
+			<frame>
+				<reportElement style="table" x="0" y="0" width="57" height="18" uuid="8de524ed-36ef-4e95-8768-105c42cbd8b0"/>
+				<staticText>
+					<reportElement x="0" y="0" width="57" height="18" uuid="dcb7a5d0-2be9-4558-8766-d2247445f539"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[1]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement style="table" x="57" y="0" width="225" height="18" uuid="f5a74d5e-c23d-4803-8e32-692f169fa92f"/>
+				<staticText>
+					<reportElement x="0" y="0" width="225" height="18" uuid="3731e5fe-b601-4255-a08c-7ed6c7afe04f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[2]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement style="table" x="282" y="0" width="273" height="18" uuid="3fdf743e-1a3f-43e2-98df-72e5353e4dca"/>
+				<staticText>
+					<reportElement x="0" y="0" width="273" height="18" uuid="60cc40a3-4b00-45a9-b1cc-bdb73287d497"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[3]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement style="table" x="0" y="18" width="57" height="36" uuid="be28a370-cbb0-4595-a9d3-986c1a8550c1"/>
+				<staticText>
+					<reportElement x="0" y="0" width="57" height="36" uuid="8ca4e8a1-e375-4f59-88f7-51cf865b7016"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[LP]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement style="table" x="57" y="18" width="225" height="36" uuid="4de8ecce-a9fa-46a9-adeb-51468e4e3fd3"/>
+				<staticText>
+					<reportElement x="0" y="0" width="225" height="36" uuid="f732e841-c629-414d-a9b0-f28d5225611b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[NUMER DOKUMENTU DOSTAWY]]></text>
+				</staticText>
+			</frame>
+			<frame>
+				<reportElement style="table" x="282" y="18" width="273" height="36" uuid="1e70b7bb-36a7-480f-ba6e-6ebdbec7bf52"/>
+				<staticText>
+					<reportElement x="0" y="0" width="273" height="36" uuid="9d353085-200a-4b85-8ece-fdfd86f7241a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[DATA
+WYSTAWIENIA DOKUMENTU]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement style="table" x="0" y="0" width="57" height="24" uuid="e31c89f5-dba0-4d3b-9a32-fafc65f59d8f"/>
+				<textField>
+					<reportElement x="0" y="0" width="57" height="24" uuid="ee1337e7-174c-4b1e-898f-6fb908bb1742"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="table" x="57" y="0" width="225" height="24" uuid="c1c53122-23ef-4295-b841-6ff48b43090d"/>
+				<textField>
+					<reportElement x="0" y="0" width="225" height="24" uuid="d9ebad1b-3a05-4139-89f4-d85caa9fa165"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{docNumber}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="table" x="282" y="0" width="273" height="24" uuid="e7f09362-0c0b-456e-9fb5-288061a0c2ed"/>
+				<textField pattern="">
+					<reportElement x="0" y="1" width="273" height="23" uuid="13ccf475-efea-4b20-a1f9-cfd5c61a3c10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[""+$F{orderDate}.toString("dd-MM-yyyy")]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="3" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="3" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="185" splitType="Stretch">
+			<staticText>
+				<reportElement x="350" y="72" width="205" height="37" uuid="dff87dbe-85f0-44d6-a303-3d8717c102ea"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[........................................................................................
+imię i nazwisko oraz podpis podmiotu
+lub osoby uprawnionej do reprezentowania podmiotu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="149" width="205" height="25" uuid="9a9b981e-5ebb-4ac1-b93e-1debfb28a586"/>
+				<textElement>
+					<font size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[........................................................................................
+Stempel podmiotu sprzedającego]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

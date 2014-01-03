@@ -34,6 +34,7 @@ public class ManagerServiceImpl implements ManagerService {
     private OrderRepository orderRepo;
     private ReasonRepository reasonRepo;
     private CompanyRepository companyRepo;
+    private ReportRepository reportRepo;
 
     @Autowired
     private ServletContext servletContext;
@@ -42,7 +43,7 @@ public class ManagerServiceImpl implements ManagerService {
     public ManagerServiceImpl(CustomerRepository customerRepo, ItemRepository itemRepo,
                               StateHistoryRepository stateHistoryRepo,StateRepository stateRepo,
                               OrderRepository orderRepo, ReasonRepository reasonRepo,
-                              CompanyRepository companyRepo) {
+                              CompanyRepository companyRepo, ReportRepository reportRepo) {
         this.customerRepo = customerRepo;
         this.itemRepo = itemRepo;
         this.stateHistoryRepo = stateHistoryRepo;
@@ -50,6 +51,7 @@ public class ManagerServiceImpl implements ManagerService {
         this.orderRepo = orderRepo;
         this.reasonRepo = reasonRepo;
         this.companyRepo = companyRepo;
+        this.reportRepo = reportRepo;
     }
 
     //CUSTOMERS
@@ -291,14 +293,14 @@ public class ManagerServiceImpl implements ManagerService {
             order.setDocNumber(getNextDocNumnber());
 
         //rename
-        order.setDate(DateTime.now());
+        order.setOrderDate(DateTime.now());
         order.setCustomer(customer);
         order.setCompany(getCompany());
         order.setOrderDetails(resultList);
 
         //todo: execute two tasks in paraller
         //save order to disk
-        saveOrderToDisk(order, servletContext.getRealPath("/WEB-INF/pdfs/documents/"));
+        saveOrderToDisk(order, servletContext.getRealPath("/WEB-INF/pdfs/documents/" + getCompany().getId()));
 
         //save order to db
         return orderRepo.save(order);
@@ -313,8 +315,8 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     private void saveOrderToDisk(Order order, String dest) {
-        GeneratePDF generatePDF = new GeneratePDF(getCompany(), order, dest);
-        generatePDF.generate();
+        GeneratePDF generatePDF = new GeneratePDF(getCompany(), dest);
+        generatePDF.generate(order);
     }
 
     @Override
@@ -348,7 +350,43 @@ public class ManagerServiceImpl implements ManagerService {
         return  companyRepo.save(company);
     }
 
-    private Company getCompany() {
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Report> findAllReports(Pageable pageable) {
+        return reportRepo.findAllByCompany(getCompany(), pageable);
+    }
+
+    @Override
+    @Transactional
+    public Report saveReport(Report report) {
+        report.setCreationDate(DateTime.now());
+        report.setReportName(DateTime.now().toString("dd-MM-yyy-hh-mm"));
+        report.setCompany(getCompany());
+        saveReportToDisk(report, servletContext.getRealPath("/WEB-INF/pdfs/reports/" + getCompany().getId()));
+        return reportRepo.save(report);
+    }
+
+    private void saveReportToDisk(Report report, String dest) {
+        List<Order> orders =
+                orderRepo.findAllByCompanyBetweenDates(getCompany(), report.getStartDate(), report.getEndDate());
+        GeneratePDF generatePDF = new GeneratePDF(getCompany(), dest);
+        generatePDF.generate(report, orders);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Report getReport(Long id) {
+        return reportRepo.findByIdAndCompany(id, getCompany());
+    }
+
+    @Override
+    @Transactional
+    public void deleteReport(Report report) {
+        reportRepo.delete(report);
+    }
+
+    @Override
+    public Company getCompany() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Company company = (Company)auth.getPrincipal();
         return company;
