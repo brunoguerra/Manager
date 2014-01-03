@@ -31,7 +31,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     public UrlBasedViewResolver viewResolver() {
         UrlBasedViewResolver urlBasedViewResolver = new UrlBasedViewResolver();
         urlBasedViewResolver.setViewClass(TilesView.class);
-        urlBasedViewResolver.setOrder(1);
         return urlBasedViewResolver;
     }
 
@@ -40,13 +39,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         TilesConfigurer tilesConfigurer = new TilesConfigurer();
         tilesConfigurer.setDefinitions(new String[] {"/WEB-INF/tiles.xml"});
         return tilesConfigurer;
-    }
-
-    @Bean
-    public XmlViewResolver xmlViewResolver() {
-        XmlViewResolver xmlViewResolver = new XmlViewResolver();
-        xmlViewResolver.setOrder(0);
-        return xmlViewResolver;
     }
 
     @Override
