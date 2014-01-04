@@ -46,76 +46,76 @@ public class HomeController {
     @RequestMapping(value = "/test")
     public String test(HttpServletRequest request) {
 
-        //Create reason
-        Reason reason = new Reason();
-        reason.setDescription("Na gospodarstwo domowe");
-        reason.setExcise(true);
-        managerService.saveReason(reason);
-
-        //Create items , states and history_states
-        Item flot = new Item("Węgiel - Flot", 911, 23.8, new BigDecimal("500.00"), new BigDecimal("500.00"), new BigDecimal("500.00"));
-        Item mul = new Item("Węgiel - Muł", 911, 23.8, new BigDecimal("510.00"), new BigDecimal("510.00"), new BigDecimal("510.00"));
-
-        State flotState = new State();
-        flotState.setCurrentState(new BigDecimal("1000.00"));
-        flot.setState(flotState);
-
-        State mulState = new State();
-        mulState.setCurrentState(new BigDecimal("1000.00"));
-        mul.setState(mulState);
-
-        managerService.saveItem(flot);
-        managerService.saveItem(mul);
-
-        //Create customers and addresses
-        Customer arek = new Customer();
-        arek.setFirstName("Arkadiusz");
-        arek.setLastName("Jurasz");
-        arek.setEmail("arkadiusz.jurasz@gmail.com");
-        arek.setPhoneNumber("338620506");
-        arek.setPesel("123456789");
-
-        Address address = new Address();
-        address.setCity("Żywiec");
-        address.setStreet("Długa");
-        address.setNumber("12A");
-        address.setPostCode("34-300");
-        address.setCustomer(arek);
-        arek.setAddress(address);
-
-        Customer darek = new Customer();
-        darek.setFirstName("Darek");
-        darek.setLastName("Jurasz");
-        darek.setEmail("darek.jurasz@gmail.com");
-        darek.setPhoneNumber("338620506");
-        darek.setPesel("123456789");
-
-        Address address1 = new Address();
-        address1.setCity("Żywiec");
-        address1.setStreet("Długa");
-        address1.setNumber("12B");
-        address1.setPostCode("34-300");
-        address1.setCustomer(darek);
-        darek.setAddress(address1);
-
-        Customer marek = new Customer();
-        marek.setFirstName("Marek");
-        marek.setLastName("Kowalski");
-        marek.setEmail("marek.kowalski@gmail.com");
-        marek.setPhoneNumber("338620506");
-        marek.setPesel("123456789");
-
-        Address address2 = new Address();
-        address2.setCity("Żywiec");
-        address2.setStreet("Długa");
-        address2.setNumber("12C");
-        address2.setPostCode("34-300");
-        address2.setCustomer(marek);
-        marek.setAddress(address2);
-
-        managerService.saveCustomer(arek);
-        managerService.saveCustomer(darek);
-        managerService.saveCustomer(marek);
+//        //Create reason
+//        Reason reason = new Reason();
+//        reason.setDescription("Na gospodarstwo domowe");
+//        reason.setExcise(true);
+//        managerService.saveReason(reason);
+//
+//        //Create items , states and history_states
+//        Item flot = new Item("Węgiel - Flot", 911, 23.8, new BigDecimal("500.00"), new BigDecimal("500.00"), new BigDecimal("500.00"));
+//        Item mul = new Item("Węgiel - Muł", 911, 23.8, new BigDecimal("510.00"), new BigDecimal("510.00"), new BigDecimal("510.00"));
+//
+//        State flotState = new State();
+//        flotState.setCurrentState(new BigDecimal("1000.00"));
+//        flot.setState(flotState);
+//
+//        State mulState = new State();
+//        mulState.setCurrentState(new BigDecimal("1000.00"));
+//        mul.setState(mulState);
+//
+//        managerService.saveItem(flot);
+//        managerService.saveItem(mul);
+//
+//        //Create customers and addresses
+//        Customer arek = new Customer();
+//        arek.setFirstName("Arkadiusz");
+//        arek.setLastName("Jurasz");
+//        arek.setEmail("arkadiusz.jurasz@gmail.com");
+//        arek.setPhoneNumber("338620506");
+//        arek.setPesel("123456789");
+//
+//        Address address = new Address();
+//        address.setCity("Żywiec");
+//        address.setStreet("Długa");
+//        address.setNumber("12A");
+//        address.setPostCode("34-300");
+//        address.setCustomer(arek);
+//        arek.setAddress(address);
+//
+//        Customer darek = new Customer();
+//        darek.setFirstName("Darek");
+//        darek.setLastName("Jurasz");
+//        darek.setEmail("darek.jurasz@gmail.com");
+//        darek.setPhoneNumber("338620506");
+//        darek.setPesel("123456789");
+//
+//        Address address1 = new Address();
+//        address1.setCity("Żywiec");
+//        address1.setStreet("Długa");
+//        address1.setNumber("12B");
+//        address1.setPostCode("34-300");
+//        address1.setCustomer(darek);
+//        darek.setAddress(address1);
+//
+//        Customer marek = new Customer();
+//        marek.setFirstName("Marek");
+//        marek.setLastName("Kowalski");
+//        marek.setEmail("marek.kowalski@gmail.com");
+//        marek.setPhoneNumber("338620506");
+//        marek.setPesel("123456789");
+//
+//        Address address2 = new Address();
+//        address2.setCity("Żywiec");
+//        address2.setStreet("Długa");
+//        address2.setNumber("12C");
+//        address2.setPostCode("34-300");
+//        address2.setCustomer(marek);
+//        marek.setAddress(address2);
+//
+//        managerService.saveCustomer(arek);
+//        managerService.saveCustomer(darek);
+//        managerService.saveCustomer(marek);
 
 
         //create orders , order details

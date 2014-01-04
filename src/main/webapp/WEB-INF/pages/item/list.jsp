@@ -54,7 +54,8 @@
             <spring:message code="item.list.table.name" var="name"/>
             <spring:message code="item.list.table.priceGross" var="priceGross"/>
             <spring:message code="item.list.table.priceNet" var="priceNet" />
-            <spring:message code="item.list.table.priceExcise" var="priceExcise" />
+            <spring:message code="item.list.table.priceGrossExcise" var="priceGrossExcise" />
+            <spring:message code="item.list.table.priceNetExcise" var="priceNetExcise" />
             <spring:message code="item.list.table.state" var="state"/>
             <spring:message code="item.list.table.action" var="action" />
             <spring:message code="item.delete.table.default.currentState" var="currentStateDefault"/>
@@ -75,7 +76,8 @@
                                 <th>${name}</th>
                                 <th>${priceGross}</th>
                                 <th>${priceNet}</th>
-                                <th>${priceExcise}</th>
+                                <th>${priceGrossExcise}</th>
+                                <th>${priceNetExcise}</th>
                                 <th>${state}</th>
                                 <th>${action}</th>
                             </tr>
@@ -87,7 +89,8 @@
                                         <td><c:out value="${item.name}"/></td>
                                         <td><c:out value="${item.priceGross}"/></td>
                                         <td><c:out value="${item.priceNet}"/></td>
-                                        <td><c:out value="${item.priceExcise}"/></td>
+                                        <td><c:out value="${item.priceGrossExcise}"/></td>
+                                        <td><c:out value="${item.priceNetExcise}"/></td>
                                         <td>
                                             <a id="currentState_${item.state.id}" href="${contextPath}/item/state/${item.state.id}/history"><c:out value="${item.state.currentState.intValue()}" default="${currentStateDefault}"/></a>
                                             <input type="button" id="stateChangeButton" value="+" onclick="return show(${item.state.id});">

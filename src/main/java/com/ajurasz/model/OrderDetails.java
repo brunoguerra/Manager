@@ -14,7 +14,8 @@ import java.math.BigDecimal;
 public class OrderDetails extends BaseEntity {
     private BigDecimal priceGross;
     private BigDecimal priceNet;
-    private BigDecimal priceExcise;
+    private BigDecimal priceGrossExcise;
+    private BigDecimal priceNetExcise;
 
     @NotNull
     private BigDecimal quantity;
@@ -42,14 +43,6 @@ public class OrderDetails extends BaseEntity {
 
     public void setPriceNet(BigDecimal priceNet) {
         this.priceNet = priceNet;
-    }
-
-    public BigDecimal getPriceExcise() {
-        return priceExcise;
-    }
-
-    public void setPriceExcise(BigDecimal priceExcise) {
-        this.priceExcise = priceExcise;
     }
 
     public BigDecimal getQuantity() {
@@ -82,5 +75,21 @@ public class OrderDetails extends BaseEntity {
 
     public void setReason(Reason reason) {
         this.reason = reason;
+    }
+
+    public BigDecimal getPriceGrossExcise() {
+        return priceGrossExcise;
+    }
+
+    public void setPriceGrossExcise(BigDecimal priceGrossExcise) {
+        this.priceGrossExcise = priceGrossExcise;
+    }
+
+    public BigDecimal getPriceNetExcise() {
+        return priceNetExcise;
+    }
+
+    public void setPriceNetExcise(BigDecimal priceNetExcise) {
+        this.priceNetExcise = priceNetExcise;
     }
 }

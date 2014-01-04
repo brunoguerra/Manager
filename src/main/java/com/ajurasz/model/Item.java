@@ -38,7 +38,10 @@ public class Item extends BaseEntity {
     private BigDecimal priceNet;
 
     @Column(nullable = false)
-    private BigDecimal priceExcise;
+    private BigDecimal priceGrossExcise;
+
+    @Column(nullable = false)
+    private BigDecimal priceNetExcise;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Valid
@@ -55,13 +58,15 @@ public class Item extends BaseEntity {
         this.value = 23.8;
     }
 
-    public Item(String name, int code, double value, BigDecimal priceGross, BigDecimal priceNet, BigDecimal priceExcise) {
+    public Item(String name, int code, double value, BigDecimal priceGross, BigDecimal priceNet,
+            BigDecimal priceGrossExcise, BigDecimal priceNetExcise) {
         this.name = name;
         this.code = code;
         this.value = value;
         this.priceGross = priceGross;
         this.priceNet = priceNet;
-        this.priceExcise = priceExcise;
+        this.priceGrossExcise = priceGrossExcise;
+        this.priceNetExcise = priceNetExcise;
     }
 
     public String getName() {
@@ -96,14 +101,6 @@ public class Item extends BaseEntity {
         this.priceNet = priceNet;
     }
 
-    public BigDecimal getPriceExcise() {
-        return priceExcise;
-    }
-
-    public void setPriceExcise(BigDecimal priceExcise) {
-        this.priceExcise = priceExcise;
-    }
-
     public State getState() {
         return state;
     }
@@ -127,6 +124,22 @@ public class Item extends BaseEntity {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public BigDecimal getPriceGrossExcise() {
+        return priceGrossExcise;
+    }
+
+    public void setPriceGrossExcise(BigDecimal priceGrossExcise) {
+        this.priceGrossExcise = priceGrossExcise;
+    }
+
+    public BigDecimal getPriceNetExcise() {
+        return priceNetExcise;
+    }
+
+    public void setPriceNetExcise(BigDecimal priceNetExcise) {
+        this.priceNetExcise = priceNetExcise;
     }
 
     public interface Add {}

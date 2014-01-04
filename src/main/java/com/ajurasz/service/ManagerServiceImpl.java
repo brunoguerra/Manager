@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletContext;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -25,7 +26,9 @@ import java.util.*;
 @Service("managerService")
 public class ManagerServiceImpl implements ManagerService {
 
-    public final static BigDecimal VAT = new BigDecimal(23);
+    public final static BigDecimal VAT = new BigDecimal(123);
+    public final static String VAT_DIS = "23";
+    public final static BigDecimal EXCISE = new BigDecimal(37);
 
     private CustomerRepository customerRepo;
     private ItemRepository itemRepo;
@@ -110,10 +113,16 @@ public class ManagerServiceImpl implements ManagerService {
             isNew = true;
         }
         item.setCompany(getCompany());
-        //PriceNet = PriceGross - ( (PriceGross * 23)/100 )
-        item.setPriceNet( item.getPriceGross().subtract( item.getPriceGross().multiply(VAT).divide(new BigDecimal(100)) ) );
-        //PriceExcise = PriceGross
-        item.setPriceExcise(item.getPriceGross().add(item.getPriceGross().multiply(new BigDecimal(2))));
+
+        //PriceNet = PriceGross * 100 /123
+        item.setPriceNet( item.getPriceGross().multiply(new BigDecimal(100)).divide(VAT, 2, RoundingMode.HALF_UP));
+
+        //PriceGrossExcise = PriceGross + 37zł
+        item.setPriceGrossExcise( item.getPriceGross().add(EXCISE) );
+
+        //PriceNetExcise = PriceGrossExcise * 100 /123
+        item.setPriceNetExcise( item.getPriceGrossExcise().multiply(new BigDecimal(100)).divide(VAT, 2, RoundingMode.HALF_UP));
+
         itemRepo.save(item);
 
         if(isNew) {
@@ -273,7 +282,8 @@ public class ManagerServiceImpl implements ManagerService {
             //set prices
             orderDetails.setPriceGross( item.getPriceGross().multiply(quantity) );
             orderDetails.setPriceNet(item.getPriceNet().multiply(quantity));
-            orderDetails.setPriceExcise(item.getPriceExcise().multiply(quantity));
+            orderDetails.setPriceGrossExcise(item.getPriceGrossExcise().multiply(quantity));
+            orderDetails.setPriceNetExcise(item.getPriceNetExcise().multiply(quantity));
 
             //set state history
             State state = item.getState();
