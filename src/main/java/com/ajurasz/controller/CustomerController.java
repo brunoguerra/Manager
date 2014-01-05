@@ -1,6 +1,8 @@
 package com.ajurasz.controller;
 
 import com.ajurasz.model.Customer;
+import com.ajurasz.model.CustomerRegular;
+import com.ajurasz.model.CustomerVat;
 import com.ajurasz.service.ManagerService;
 import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.slf4j.Logger;
@@ -37,21 +39,21 @@ public class CustomerController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initCreationForm(Model model) {
-        Customer customer = new Customer();
+        CustomerRegular customer = new CustomerRegular();
         model.addAttribute("customer", customer);
         LOGGER.info("Customer object send to html form - " + customer);
         return "customer/add";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String processCreationForm(@Valid @ModelAttribute Customer customer, BindingResult result, RedirectAttributes redirectAttributes,
+    public String processCreationForm(@Valid @ModelAttribute(value = "customer") CustomerRegular customer, BindingResult result, RedirectAttributes redirectAttributes,
                                       HttpServletRequest request,
                                       @RequestParam(required = false) Boolean redirect,
                                       @RequestParam(required = false) String target){
         if(result.hasErrors()) {
             return "customer/add";
         }
-        managerService.saveCustomer(customer);
+        managerService.saveCustomer((CustomerRegular)customer);
         if(redirect != null && redirect == true) {
             HttpSession session = request.getSession();
             session.setAttribute("customer", customer);
@@ -61,11 +63,45 @@ public class CustomerController {
         return "redirect:/customer/list";
     }
 
+    @RequestMapping(value = "/add-vat", method = RequestMethod.GET)
+    public String initCreationVatForm(Model model) {
+        CustomerVat customer = new CustomerVat();
+        model.addAttribute("customer", customer);
+        LOGGER.info("CustomerVat object send to html form - " + customer);
+        return "customer/addVat";
+    }
+
+    @RequestMapping(value = "/add-vat", method = RequestMethod.POST)
+    public String processCreationVatForm(@Valid @ModelAttribute(value = "customer") CustomerVat customer, BindingResult result, RedirectAttributes redirectAttributes,
+                                      HttpServletRequest request,
+                                      @RequestParam(required = false) Boolean redirect,
+                                      @RequestParam(required = false) String target){
+        if(result.hasErrors()) {
+            return "customer/addVat";
+        }
+        managerService.saveCustomerVat((CustomerVat)customer);
+        if(redirect != null && redirect == true) {
+            HttpSession session = request.getSession();
+            session.setAttribute("customer", customer);
+            return "redirect:" + target;
+        }
+        redirectAttributes.addFlashAttribute("customerVatAdded", true);
+        return "redirect:/customer/list-vat";
+    }
+
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String initCustomerList(Model model, Pageable pageable) {
-        Page<Customer> customerPage = managerService.findAllCustomers(pageable);
+        Page<CustomerRegular> customerPage = managerService.findAllCustomers(pageable);
         model.addAttribute("customersPage", customerPage);
         return "customer/list";
+    }
+
+    @RequestMapping(value = "/list-vat", method = RequestMethod.GET)
+    public String initCustomerVatList(Model model, Pageable pageable) {
+        Page<CustomerVat> customerPage = managerService.findAllCustomersVat(pageable);
+        model.addAttribute("customersPage", customerPage);
+        return "customer/listVat";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -75,7 +111,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-    public String processCustomerEdit(@Valid @ModelAttribute Customer customer, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String processCustomerEdit(@Valid @ModelAttribute("customer") CustomerRegular customer, BindingResult result, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
             return "customer/edit";
         }
@@ -84,12 +120,36 @@ public class CustomerController {
         return "redirect:/customer/list";
     }
 
+    @RequestMapping(value = "/edit-vat/{id}", method = RequestMethod.GET)
+    public String initCustomerVatEdit(@PathVariable Long id, Model model) {
+        model.addAttribute("customer", managerService.getCustomerVat(id));
+        return "customer/editVat";
+    }
+
+    @RequestMapping(value = "/edit-vat/{id}", method = RequestMethod.POST)
+    public String processCustomerVatEdit(@Valid @ModelAttribute("customer") CustomerVat customer, BindingResult result, RedirectAttributes redirectAttributes) {
+        if(result.hasErrors()) {
+            return "customer/edit-vat";
+        }
+        managerService.saveCustomerVat(customer);
+        redirectAttributes.addFlashAttribute("customerUpdated", true);
+        return "redirect:/customer/list-vat";
+    }
+
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String processCustomerDelete(@RequestParam Long id, RedirectAttributes redirectAttributes) {
-        Customer customer = managerService.getCustomer(id);
+        CustomerRegular customer = managerService.getCustomer(id);
         managerService.deleteCustomer(customer);
         redirectAttributes.addFlashAttribute("customerDeleted", true);
         return "redirect:/customer/list";
+    }
+
+    @RequestMapping(value = "/delete-vat", method = RequestMethod.POST)
+    public String processCustomerVatDelete(@RequestParam Long id, RedirectAttributes redirectAttributes) {
+        CustomerVat customer = managerService.getCustomerVat(id);
+        managerService.deleteCustomerVat(customer);
+        redirectAttributes.addFlashAttribute("customerVatDeleted", true);
+        return "redirect:/customer/list-vat";
     }
 
     @RequestMapping(value = "/edit/getCities", method = RequestMethod.GET)
@@ -102,8 +162,16 @@ public class CustomerController {
     //todo: this need to be very secure as it expose access to customer table
     @RequestMapping(value = "getCustomersForQuery", method = RequestMethod.GET)
     @ResponseBody
-    public List<Customer> proccessCustomerSearchForQuery(@RequestParam("term") String query) {
-        List<Customer> list = managerService.findAllByCustomerLastName(query);
+    public List<CustomerRegular> proccessCustomerSearchForQuery(@RequestParam("term") String query) {
+        List<CustomerRegular> list = managerService.findAllByCustomerLastName(query);
+        return list;
+    }
+
+    //todo: this need to be very secure as it expose access to customer table
+    @RequestMapping(value = "getCustomersVatForQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public List<CustomerVat> proccessCustomerVatSearchForQuery(@RequestParam("term") String query) {
+        List<CustomerVat> list = managerService.findAllByCustomerVatName(query);
         return list;
     }
 }

@@ -22,6 +22,11 @@
         <li class="icn_categories"><a href="${contextPath}/item/list"><spring:message code="menu.item.list" /></a></li>
     </ul>
     <sec:authorize access="hasRole('ROLE_JURASZ')">
+        <h3><spring:message code="menu.customerVat" /></h3>
+        <ul class="toggle">
+            <li class="icn_new_article"><a href="${contextPath}/customer/add-vat"><spring:message code="menu.customerVat.add" /></a></li>
+            <li class="icn_categories"><a href="${contextPath}/customer/list-vat"><spring:message code="menu.customerVat.list" /></a></li>
+        </ul>
         <h3><spring:message code="menu.invoice" /></h3>
         <ul class="toggle">
             <li class="icn_new_article"><a href="${contextPath}/invoice/add"><spring:message code="menu.invoice.add" /></a></li>

@@ -66,9 +66,8 @@ public class GeneratePDF {
     /**
      * Use this method to generate Documents
      */
-    public void generate(Order order) {
+    public void generate(Order order, boolean invoice) {
 
-        Address address = order.getCustomer().getAddress();
         try {
 
             FileSystemResource resource = new FileSystemResource(TEMPLATE);
@@ -84,8 +83,18 @@ public class GeneratePDF {
 
             //customer info
             acroFields.setField("docNumber", order.getDocNumber());
-            acroFields.setField("customerName", order.getCustomer().getLastName() + " " + order.getCustomer().getFirstName());
-            acroFields.setField("customerAddress", address.getAddress());
+
+            if(!invoice) {
+                CustomerRegular customer = (CustomerRegular) order.getCustomer();
+                Address address = customer.getAddress();
+                acroFields.setField("customerName", customer.getLastName() + " " + customer.getFirstName());
+                acroFields.setField("customerAddress", address.getAddress());
+            } else {
+                CustomerVat customer = (CustomerVat) order.getCustomer();
+                Address address = customer.getAddress();
+                acroFields.setField("customerName", customer.getName());
+                acroFields.setField("customerAddress", address.getAddress());
+            }
 
             //date
             acroFields.setField("date", order.getOrderDate().toString("dd/MM/yyyy"));

@@ -71,7 +71,7 @@
                 <fieldset style="width:48%; float:left;">
                     <label id="clientData"><spring:message code="order.add.form.customerdata" />:</label>
                     <label id="clientName" style="clear: left;"></label>
-                    <label id="clientAddress" style="clear: left;"></label>
+                    <label id="clientAddress" style="clear: left; width: 300px;"></label>
                     <sf:hidden path="customer.id" />
                 </fieldset><div class="clear"></div>
 

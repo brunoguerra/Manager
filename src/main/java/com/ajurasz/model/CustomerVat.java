@@ -1,5 +1,8 @@
 package com.ajurasz.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -8,9 +11,15 @@ import javax.persistence.Table;
  * @author Arek Jurasz
  */
 @Entity
+@PrimaryKeyJoinColumn(name = "id")
 @Table(name = "customers_vat")
-public class CustomerVat extends BaseEntity {
+public class CustomerVat extends Customer {
+    @Column(nullable = false)
+    @NotEmpty(message = "{customer.name}")
     private String name;
+
+    @Column(nullable = false)
+    @NotEmpty(message = "{customer.nip}")
     private String nip;
 
     public String getName() {

@@ -84,7 +84,14 @@
                                         </td>
                                         <td><c:out value="${order.docNumber}"/></td>
                                         <td><joda:format value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
-                                        <td><c:out value="${order.customer.lastName} ${order.customer.firstName} "/></td>
+                                        <c:choose>
+                                            <c:when test="${order.invoice}">
+                                                <td><c:out value="${order.customer.name} "/></td>
+                                            </c:when>
+                                            <c:when test="${not order.invoice}">
+                                                <td><c:out value="${order.customer.lastName} ${order.customer.firstName} "/></td>
+                                            </c:when>
+                                        </c:choose>
                                         <td>
                                             <a href="${contextPath}/order/edit/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_edit.png"/>" title="${edit}"></a>
                                             <form id="deleteForm" method="post" action="${contextPath}/order/delete" onsubmit="return confirmDelete();">

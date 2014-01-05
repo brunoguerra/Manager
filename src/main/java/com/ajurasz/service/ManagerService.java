@@ -1,10 +1,12 @@
 package com.ajurasz.service;
 
 import com.ajurasz.model.*;
+import com.ajurasz.util.forms.InvoiceForm;
 import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -13,12 +15,19 @@ import java.util.Map;
  */
 public interface ManagerService {
     //--CUSTOMER METHODS
-    Customer saveCustomer(Customer customer);
-    List<Customer> findAllCustomers();
-    Page<Customer> findAllCustomers(Pageable pageable);
-    List<Customer> findAllByCustomerLastName(String lastName);
-    Customer getCustomer(Long id);
-    void deleteCustomer(Customer customer);
+    CustomerRegular saveCustomer(CustomerRegular customer);
+    List<CustomerRegular> findAllCustomers();
+    Page<CustomerRegular> findAllCustomers(Pageable pageable);
+    List<CustomerRegular> findAllByCustomerLastName(String lastName);
+    CustomerRegular getCustomer(Long id);
+    void deleteCustomer(CustomerRegular customer);
+
+    //--CUSTOMER VAT METHODS
+    CustomerVat saveCustomerVat(CustomerVat customerVat);
+    Page<CustomerVat> findAllCustomersVat(Pageable pageable);
+    List<CustomerVat> findAllByCustomerVatName(String name);
+    CustomerVat getCustomerVat(Long id);
+    void deleteCustomerVat(CustomerVat customer);
 
     //--ITEM METHODS
     Item saveItem(Item item);
@@ -62,4 +71,7 @@ public interface ManagerService {
     List<CityPostCode> findAllCitiesAndPostCodes(String cityName);
     Company getCompany();
 
+    Map<String, String> calculateInvoice(Long id, BigDecimal quantity);
+
+    void saveInvoiceForm(InvoiceForm invoiceForm);
 }

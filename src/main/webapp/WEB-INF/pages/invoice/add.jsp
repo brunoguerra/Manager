@@ -6,7 +6,7 @@
 <spring:message code="customer.add.form.button.reset" var="reset" />
 <spring:message code="order.add.search" var="search" />
 
-<%@include file="/WEB-INF/scripts/ClientAutocomplete.jsp"%>
+<%@include file="/WEB-INF/scripts/ClientVatAutocomplete.jsp"%>
 
 <script type="text/javascript">
 
@@ -14,8 +14,9 @@
 
         var cid = ${sessionScope.customer.id == null ? -1 : sessionScope.customer.id};
         if(cid > 0) {
-            $("#clientName").text( "" + '${sessionScope.customer.lastName}' + " " + '${sessionScope.customer.firstName}' + "");
+            $("#clientName").text( "" + '${sessionScope.customer.name}' + "");
             $("#clientAddress").text( "" + '${sessionScope.customer.address.city}' + " " + '${sessionScope.customer.address.postCode}' + " " + '${sessionScope.customer.address.street}' + " " + '${sessionScope.customer.address.number}' + "");
+            $("#clientNip").text("" + '${sessionScope.customer.nip}' + "" );
             $("#customer\\.id").val(cid);
         }
         //add remove data row
@@ -26,10 +27,25 @@
                 var thisRow = $(this).parent().parent();
                 newRow = thisRow.clone(true).insertAfter(thisRow);
                 newRow.find('input:not(.add)').val("");
+                var q = newRow.find('input');
+                var number = parseInt(getNumber(q));
 
-                //set new name for select boxes
-                var quantity = newRow.find('input');
+
+                var pricegross = newRow.find("input[name=order\\.orderDetails\\[" + number +"\\]\\.priceGross]");
+                pricegross.attr('name', getNeName(pricegross.attr('name')));
+
+                var pricenet = newRow.find("[name=order\\.orderDetails\\[" + number +"\\]\\.priceNet]");
+                pricenet.attr('name', getNeName(pricenet.attr('name')));
+
+                var pricegrossexcise = newRow.find("[name=order\\.orderDetails\\[" + number +"\\]\\.priceGrossExcise]");
+                pricegrossexcise.attr('name', getNeName(pricegrossexcise.attr('name')));
+
+                var pricenetexcise = newRow.find("[name=order\\.orderDetails\\[" + number +"\\]\\.priceNetExcise]");
+                pricenetexcise.attr('name', getNeName(pricenetexcise.attr('name')));
+
+                var quantity = newRow.find("[name=order\\.orderDetails\\[" + number +"\\]\\.quantity]");
                 quantity.attr('name', getNeName(quantity.attr('name')));
+
 
                 newRow.find('select').each(function() {
                     $(this).attr('name', getNeName($(this).attr('name')));
@@ -55,6 +71,33 @@
         }
         return true;
     }
+
+    function getNumber(obj) {
+
+        var text = obj.attr('name').split('[');
+        var number = text[1].split(']');
+        return number[0];
+    }
+
+    function calculate(obj) {
+        var number = getNumber(obj);
+        var id = $("[name=order\\.orderDetails\\[" + number +"\\]\\.item\\.id]").val();
+        var quantity = $("[name=order\\.orderDetails\\[" + number +"\\]\\.quantity]").val();
+        $.ajax({
+            url: '${contextPath}/invoice/calculateInvoice',
+            data: {
+                id: id, quantity: quantity
+            },
+            dataType: 'json',
+            success: function(data) {
+                $("[name=order\\.orderDetails\\[" + number +"\\]\\.priceGross]").val(data.priceGross);
+                $("[name=order\\.orderDetails\\[" + number +"\\]\\.priceNet]").val(data.priceNet);
+                $("[name=order\\.orderDetails\\[" + number +"\\]\\.priceGrossExcise]").val(data.priceGrossExcise);
+                $("[name=order\\.orderDetails\\[" + number +"\\]\\.priceNetExcise]").val(data.priceNetExcise);
+            }
+        });
+        return true;
+    }
 </script>
 
 <section id="main" class="column">
@@ -70,9 +113,10 @@
                 <div class="module_content">
                     <fieldset style="width:48%; float:left;">
                         <label id="clientData"><spring:message code="order.add.form.customerdata" />:</label>
-                        <label id="clientName" style="clear: left;"></label>
-                        <label id="clientAddress" style="clear: left;"></label>
-                        <sf:hidden path="customer.id" />
+                        <label id="clientName" style="clear: left; width: 300px;"></label>
+                        <label id="clientAddress" style="clear: left; width: 300px;"></label>
+                        <label id="clientNip" style="clear: left;"></label>
+                        <sf:hidden path="order.customer.id" />
                     </fieldset><div class="clear"></div>
 
                 <!--second row -->
@@ -87,17 +131,47 @@
                         </select>
                         <%--<sf:errors path="orderDetails[0].item.id" cssClass="error_text"/>--%>
                     </fieldset>
-                    <fieldset style="width:25%; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
+                    <fieldset style="width:1px; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
                         <label><spring:message code="order.add.form.quantity" />:</label>
-                        <input name="order.orderDetails[0].quantity" cssStyle="width:92%;"/>
+                        <input name="order.orderDetails[0].quantity" cssStyle="width:92%;" onkeyup="return calculate($(this));"/>
                         <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
+                    </fieldset>
+                    <fieldset style="width:25%; float:left; margin-right: 2%; padding-right: 0.5%;">
+                        <label><spring:message code="order.add.form.reason" />:</label>
+                        <select name="order.orderDetails[0].reason.id" cssStyle="width:92%;">
+                            <c:forEach items="${reasons}" var="reason">
+                                <option value="${reason.id}">${reason.description}</option>
+                            </c:forEach>
+                        </select>
+                            <%--<sf:errors path="orderDetails[0].priceGross" cssClass="error_text"/>--%>
+                    </fieldset><div class="clear"></div>
+
+                    <fieldset style="width:1px; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
+                        <label>Cena brutto:</label>
+                        <input name="order.orderDetails[0].priceGross" cssStyle="width:92%;"/>
+                            <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
+                    </fieldset>
+                    <fieldset style="width:1px; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
+                        <label>Cena netto:</label>
+                        <input name="order.orderDetails[0].priceNet" cssStyle="width:92%;"/>
+                            <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
+                    </fieldset>
+                    <fieldset style="width:1px; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
+                        <label>Cena brutto (akc):</label>
+                        <input name="order.orderDetails[0].priceGrossExcise" cssStyle="width:92%;"/>
+                            <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
+                    </fieldset>
+                    <fieldset style="width:1px; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
+                        <label>Cena netto (akc):</label>
+                        <input name="order.orderDetails[0].priceNetExcise" cssStyle="width:92%;"/>
+                            <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
                     </fieldset>
 
                     <fieldset style="width:2%; float:left; margin-right: 2%; padding-right: 0.1%; padding-top: 1%;padding-bottom: 1%;">
                         <input type="button" class="new add" value="+" />
                     </fieldset>
 
-                    <div class="clear"></div>
+                    <div class="clear"></div><div class="clear"></div>
                 </div>
 
             </div>

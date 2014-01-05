@@ -2,6 +2,7 @@ package com.ajurasz.service;
 
 import com.ajurasz.model.*;
 import com.ajurasz.repository.*;
+import com.ajurasz.util.forms.InvoiceForm;
 import com.ajurasz.util.pdf.GeneratePDF;
 import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.joda.time.DateTime;
@@ -30,7 +31,7 @@ public class ManagerServiceImpl implements ManagerService {
     public final static String VAT_DIS = "23";
     public final static BigDecimal EXCISE = new BigDecimal(37);
 
-    private CustomerRepository customerRepo;
+    private CustomerRegularRepository customerRepo;
     private ItemRepository itemRepo;
     private StateHistoryRepository stateHistoryRepo;
     private StateRepository stateRepo;
@@ -38,15 +39,17 @@ public class ManagerServiceImpl implements ManagerService {
     private ReasonRepository reasonRepo;
     private CompanyRepository companyRepo;
     private ReportRepository reportRepo;
+    private CustomerVatRepository customerVatRepo;
 
     @Autowired
     private ServletContext servletContext;
 
     @Autowired
-    public ManagerServiceImpl(CustomerRepository customerRepo, ItemRepository itemRepo,
+    public ManagerServiceImpl(CustomerRegularRepository customerRepo, ItemRepository itemRepo,
                               StateHistoryRepository stateHistoryRepo,StateRepository stateRepo,
                               OrderRepository orderRepo, ReasonRepository reasonRepo,
-                              CompanyRepository companyRepo, ReportRepository reportRepo) {
+                              CompanyRepository companyRepo, ReportRepository reportRepo,
+                              CustomerVatRepository customerVatRepo) {
         this.customerRepo = customerRepo;
         this.itemRepo = itemRepo;
         this.stateHistoryRepo = stateHistoryRepo;
@@ -55,44 +58,75 @@ public class ManagerServiceImpl implements ManagerService {
         this.reasonRepo = reasonRepo;
         this.companyRepo = companyRepo;
         this.reportRepo = reportRepo;
+        this.customerVatRepo = customerVatRepo;
     }
 
     //CUSTOMERS
     @Override
     @Transactional
-    public Customer saveCustomer(Customer customer) {
+    public CustomerRegular saveCustomer(CustomerRegular customer) {
         customer.setCompany(getCompany());
         return customerRepo.save(customer);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Customer> findAllCustomers() {
+    public List<CustomerRegular> findAllCustomers() {
         return customerRepo.findAllByCompany(getCompany(), new Sort(Sort.Direction.DESC, "id"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Customer> findAllCustomers(Pageable pageable) {
+    public Page<CustomerRegular> findAllCustomers(Pageable pageable) {
         return customerRepo.findAllByCompany(getCompany(), pageable);
     }
 
     @Override
-    public List<Customer> findAllByCustomerLastName(String lastName) {
+    public List<CustomerRegular> findAllByCustomerLastName(String lastName) {
         return customerRepo.findAllByCustomerLastNameAndCompany(lastName, getCompany());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Customer getCustomer(Long id) {
-        Customer c = customerRepo.findCustomerByIdAndCompany(id, getCompany());
+    public CustomerRegular getCustomer(Long id) {
+        CustomerRegular c = customerRepo.findCustomerByIdAndCompany(id, getCompany());
         return c;
     }
 
     @Override
     @Transactional
-    public void deleteCustomer(Customer customer) {
+    public void deleteCustomer(CustomerRegular customer) {
         customerRepo.delete(customer);
+    }
+
+    @Override
+    @Transactional
+    public CustomerVat saveCustomerVat(CustomerVat customerVat) {
+        customerVat.setCompany(getCompany());
+        return customerVatRepo.save(customerVat);
+    }
+
+    @Override
+    public Page<CustomerVat> findAllCustomersVat(Pageable pageable) {
+        return customerVatRepo.findAllByCompany(getCompany(), pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CustomerVat> findAllByCustomerVatName(String name) {
+        return customerVatRepo.findAllByCustomerVatNameAndCompany(name, getCompany());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CustomerVat getCustomerVat(Long id) {
+        return customerVatRepo.findCustomerByIdAndCompany(id, getCompany());
+    }
+
+    @Override
+    @Transactional
+    public void deleteCustomerVat(CustomerVat customer) {
+        customerVatRepo.delete(customer);
     }
 
     @Override
@@ -310,7 +344,7 @@ public class ManagerServiceImpl implements ManagerService {
 
         //todo: execute two tasks in paraller
         //save order to disk
-        saveOrderToDisk(order, servletContext.getRealPath("/WEB-INF/pdfs/documents/" + getCompany().getId()));
+        saveOrderToDisk(order, servletContext.getRealPath("/WEB-INF/pdfs/documents/" + getCompany().getId()), false);
 
         //save order to db
         return orderRepo.save(order);
@@ -324,9 +358,9 @@ public class ManagerServiceImpl implements ManagerService {
         return saveOrder(order);
     }
 
-    private void saveOrderToDisk(Order order, String dest) {
+    private void saveOrderToDisk(Order order, String dest, boolean invoice) {
         GeneratePDF generatePDF = new GeneratePDF(getCompany(), dest);
-        generatePDF.generate(order);
+        generatePDF.generate(order, invoice);
     }
 
     @Override
@@ -400,5 +434,79 @@ public class ManagerServiceImpl implements ManagerService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Company company = (Company)auth.getPrincipal();
         return company;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, String> calculateInvoice(Long id, BigDecimal quantity) {
+        Map<String, String> result = new HashMap<String, String>();
+        Item item = getItem(id);
+
+
+        result.put("priceGross", item.getPriceGross().multiply(quantity.divide(new BigDecimal(1000))).toString());
+        result.put("priceNet", item.getPriceNet().multiply(quantity.divide(new BigDecimal(1000))).toString());
+        result.put("priceGrossExcise", item.getPriceGrossExcise().multiply(quantity.divide(new BigDecimal(1000))).toString());
+        result.put("priceNetExcise", item.getPriceNetExcise().multiply(quantity.divide(new BigDecimal(1000))).toString());
+        return result;
+    }
+
+    @Override
+    public void saveInvoiceForm(InvoiceForm invoiceForm) {
+        CustomerVat customer = (CustomerVat)customerVatRepo.findOne(invoiceForm.getOrder().getCustomer().getId());
+        List<OrderDetails> orderDetailses = invoiceForm.getOrder().getOrderDetails();
+        List<OrderDetails> resultList = new ArrayList<OrderDetails>();
+        for (OrderDetails orderDetails : orderDetailses) {
+            if(orderDetails.getItem() == null || (orderDetails.getQuantity() == new BigDecimal(0)) ) {
+                continue;
+            }
+            Item item = itemRepo.findOne(orderDetails.getItem().getId());
+            Reason reason = reasonRepo.findOne(orderDetails.getReason().getId());
+            //set orderDetails
+            orderDetails.setReason(reason);
+            orderDetails.setOrder(invoiceForm.getOrder());
+            orderDetails.setItem(item);
+
+            BigDecimal quantity = orderDetails.getQuantity().divide(new BigDecimal(1000));
+            //set prices
+            if(orderDetails.getPriceGross() == null)
+                orderDetails.setPriceGross( item.getPriceGross().multiply(quantity) );
+            if(orderDetails.getPriceNet() == null)
+                orderDetails.setPriceNet(item.getPriceNet().multiply(quantity));
+            if(orderDetails.getPriceGrossExcise() == null)
+                orderDetails.setPriceGrossExcise(item.getPriceGrossExcise().multiply(quantity));
+            if(orderDetails.getPriceNetExcise() == null)
+                orderDetails.setPriceNetExcise(item.getPriceNetExcise().multiply(quantity));
+
+            //set state history
+            State state = item.getState();
+            state.setCurrentState(orderDetails.getQuantity().multiply(new BigDecimal(-1)));
+            stateRepo.save(state);
+
+            StateHistory history = new StateHistory();
+            history.setState(state);
+            history.setValue(orderDetails.getQuantity().multiply(new BigDecimal(-1)));
+            stateHistoryRepo.save(history);
+
+            resultList.add(orderDetails);
+        }
+
+        //set order
+        if (invoiceForm.getOrder().getDocNumber() == null)
+            invoiceForm.getOrder().setDocNumber(getNextDocNumnber());
+
+        //rename
+        invoiceForm.getOrder().setInvoice(true);
+        invoiceForm.getOrder().setOrderDate(DateTime.now());
+        invoiceForm.getOrder().setCustomer(customer);
+        invoiceForm.getOrder().setCompany(getCompany());
+        invoiceForm.getOrder().setOrderDetails(resultList);
+
+        //todo: execute two tasks in paraller
+        //save order to disk
+        saveOrderToDisk(invoiceForm.getOrder(), servletContext.getRealPath("/WEB-INF/pdfs/documents/" + getCompany().getId()), true);
+        //save invoice to disk
+
+        //save order to db
+        orderRepo.save(invoiceForm.getOrder());
     }
 }

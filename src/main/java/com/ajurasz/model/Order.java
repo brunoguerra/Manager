@@ -33,6 +33,8 @@ public class Order extends BaseEntity {
 
     private String documentName;
 
+    private boolean invoice;
+
     @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<OrderDetails> orderDetails;
@@ -42,6 +44,7 @@ public class Order extends BaseEntity {
 
     public Order() {
         this.orderDate = DateTime.now();
+        this.invoice = false;
         this.customer = new Customer();
         this.orderDetails = new ArrayList<OrderDetails>();
     }
@@ -89,5 +92,13 @@ public class Order extends BaseEntity {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public boolean isInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(boolean invoice) {
+        this.invoice = invoice;
     }
 }
