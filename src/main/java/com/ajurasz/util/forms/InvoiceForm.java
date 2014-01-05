@@ -1,11 +1,53 @@
 package com.ajurasz.util.forms;
 
 import com.ajurasz.model.Order;
+import org.joda.time.DateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author Arek Jurasz
  */
 public class InvoiceForm {
+
+    private boolean excise;
+    private Payment payment;
+    private Order order;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private DateTime paymentDate;
+
+    public InvoiceForm() {
+        order = new Order();
+        payment = Payment.CASH;
+        excise = true;
+    }
+
+    public DateTime getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(DateTime paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public static enum Payment {
+        CASH("gotówka"), TRANSFER("przelew"), INSTALLMENT("płatność ratalna");
+
+        private String description;
+        private Payment(String desc){
+            this.description = desc;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+    }
+
     public boolean isExcise() {
         return excise;
     }
@@ -30,16 +72,6 @@ public class InvoiceForm {
         this.order = order;
     }
 
-    public static enum Payment {
-        CASH, TRANSFER, INSTALLMENT;
-    }
-    private boolean excise;
-    private Payment payment;
-    private Order order;
 
-    public InvoiceForm() {
-        order = new Order();
-        payment = Payment.CASH;
-        excise = false;
-    }
+
 }

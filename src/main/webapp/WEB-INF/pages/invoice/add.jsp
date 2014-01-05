@@ -7,10 +7,13 @@
 <spring:message code="order.add.search" var="search" />
 
 <%@include file="/WEB-INF/scripts/ClientVatAutocomplete.jsp"%>
-
+<script src="<c:url value="/resources/js/jquery.ui.datepicker-pl.js" />" ></script>
 <script type="text/javascript">
 
     $(document).ready(function(){
+
+        $('#paymentDate').hide();
+        $('#paymentDate').datepicker();
 
         var cid = ${sessionScope.customer.id == null ? -1 : sessionScope.customer.id};
         if(cid > 0) {
@@ -98,6 +101,14 @@
         });
         return true;
     }
+
+    function paymentChange() {
+        if( $('#payment').val() == 'TRANSFER') {
+            $('#paymentDate').show();
+        } else {
+            $('#paymentDate').hide();
+        }
+    }
 </script>
 
 <section id="main" class="column">
@@ -109,14 +120,23 @@
             <input id="search" name="search" type="text" value="${search}" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
             </form>
             <sf:form modelAttribute="invoiceForm" method="post" onsubmit="return checkClient();">
-                <header><h3><spring:message code="order.add.form.title" /> <sf:input path="order.docNumber"/> <sf:errors path="order.docNumber" /></h3></header>
+                <header><h3><spring:message code="order.add.form.title" /> <sf:input path="order.invoiceNumber" /> <sf:errors path="order.invoiceNumber" /></h3></header>
                 <div class="module_content">
-                    <fieldset style="width:48%; float:left;">
+                    <fieldset style="width:48%; float:left; margin-right: 3px;">
                         <label id="clientData"><spring:message code="order.add.form.customerdata" />:</label>
                         <label id="clientName" style="clear: left; width: 300px;"></label>
                         <label id="clientAddress" style="clear: left; width: 300px;"></label>
                         <label id="clientNip" style="clear: left;"></label>
                         <sf:hidden path="order.customer.id" />
+                    </fieldset>
+                    <fieldset style="width:48%; float:left;">
+                        <sf:checkbox path="excise" label="Akcyza" />
+                        <select id="payment" name="payment" onchange="return paymentChange();" >
+                            <c:forEach items="${payments}" var="item">
+                                <option value="${item}">${item.description}</option>
+                            </c:forEach>
+                        </select>
+                        <sf:input path="paymentDate" cssStyle="margin-top: 15px; width: 100px;"></sf:input>
                     </fieldset><div class="clear"></div>
 
                 <!--second row -->

@@ -51,7 +51,9 @@ public interface ManagerService {
 
     //--ORDER METHODS
     String getNextDocNumnber();
+    String getNextInvoiceNumnber();
     Page<Order> findAllOrders(Pageable pageable);
+    Page<Order> findAllInvoices(Pageable pageable);
     List<Order> findAllOrders();
     Order saveOrder(Order order);
     Order update(Order order);

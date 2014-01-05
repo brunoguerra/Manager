@@ -18,9 +18,12 @@ import java.util.List;
 @Table(name = "orders")
 public class Order extends BaseEntity {
 
-    @Column(name = "document_number", nullable = false)
+    @Column(name = "document_number")
     @Pattern(regexp = "([0-9]{1,5})/([0-9]{2})/([0-9]{4})", message = "{order.docNumber.format}")
     private String docNumber;
+
+    @Column(name = "invoice_number")
+    private String invoiceNumber;
 
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -31,9 +34,14 @@ public class Order extends BaseEntity {
     @ManyToOne()
     private Customer customer;
 
+    @Column(name = "document_name")
     private String documentName;
 
+    @Column(name = "document_invoice_name")
+    private String documentInvoiceName;
+
     private boolean invoice;
+    private boolean document;
 
     @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -45,6 +53,7 @@ public class Order extends BaseEntity {
     public Order() {
         this.orderDate = DateTime.now();
         this.invoice = false;
+        this.document = true;
         this.customer = new Customer();
         this.orderDetails = new ArrayList<OrderDetails>();
     }
@@ -100,5 +109,26 @@ public class Order extends BaseEntity {
 
     public void setInvoice(boolean invoice) {
         this.invoice = invoice;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+        this.documentInvoiceName = invoiceNumber.replace("/", "-");
+    }
+
+    public String getDocumentInvoiceName() {
+        return documentInvoiceName;
+    }
+
+    public boolean isDocument() {
+        return document;
+    }
+
+    public void setDocument(boolean document) {
+        this.document = document;
     }
 }

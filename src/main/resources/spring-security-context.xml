@@ -15,6 +15,12 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
         <security:intercept-url pattern="/documents/1/*" access="hasAuthority('ROLE_JURASZ')" />
         <security:intercept-url pattern="/documents/2/*" access="hasAuthority('ROLE_URBANSKI')" />
         <security:intercept-url pattern="/documents/3/*" access="hasAuthority('ROLE_SKOWRON')" />
+        <security:intercept-url pattern="/reports/1/*" access="hasAuthority('ROLE_JURASZ')" />
+        <security:intercept-url pattern="/reports/2/*" access="hasAuthority('ROLE_URBANSKI')" />
+        <security:intercept-url pattern="/reports/3/*" access="hasAuthority('ROLE_SKOWRON')" />
+        <security:intercept-url pattern="/invoices/1/*" access="hasAuthority('ROLE_JURASZ')" />
+        <security:intercept-url pattern="/invoices/2/*" access="hasAuthority('ROLE_URBANSKI')" />
+        <security:intercept-url pattern="/invoices/3/*" access="hasAuthority('ROLE_SKOWRON')" />
         <security:intercept-url pattern="/**" access="isAuthenticated()" />
 
 		<security:form-login

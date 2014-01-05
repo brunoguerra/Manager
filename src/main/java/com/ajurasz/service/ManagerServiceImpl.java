@@ -267,8 +267,38 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     @Transactional(readOnly = true)
+    public String getNextInvoiceNumnber() {
+        String docNumber = null;
+        //Get current time is expected format
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        String currentMonth = new SimpleDateFormat("MM").format(calendar.getTime());
+        String currentYear = String.valueOf(calendar.get(Calendar.YEAR));
+
+        Order order = orderRepo.getLatestInvoice(getCompany().getId());
+
+        //First entry in db
+        if(order == null) {
+            return "1/" + currentMonth + "/" + currentYear;
+        }
+
+        String[] latestDocNumber = order.getInvoiceNumber().split("/");
+        //just increment first number
+        int id = Integer.parseInt(latestDocNumber[0]);
+        id++;
+        return id + "/" + currentMonth + "/" + currentYear;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<Order> findAllOrders(Pageable pageable) {
         return orderRepo.findAllByCompany(getCompany(), pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Order> findAllInvoices(Pageable pageable) {
+        return orderRepo.findAllByCompanyAndInvoice(getCompany(), true, pageable);
     }
 
     @Override
@@ -413,8 +443,20 @@ public class ManagerServiceImpl implements ManagerService {
     private void saveReportToDisk(Report report, String dest) {
         List<Order> orders =
                 orderRepo.findAllByCompanyBetweenDates(getCompany(), report.getStartDate(), report.getEndDate());
+
         GeneratePDF generatePDF = new GeneratePDF(getCompany(), dest);
-        generatePDF.generate(report, orders);
+        generatePDF.generate(report, validateOrdersBaseOnInvoiceContent(orders));
+    }
+
+    private List<Order> validateOrdersBaseOnInvoiceContent(List<Order> orders) {
+        List<Order> newOrders = new ArrayList<Order>();
+        for(Order order : orders) {
+            if(order.getDocNumber() != null) {
+                newOrders.add(order);
+            }
+        }
+
+        return newOrders;
     }
 
     @Override
@@ -443,10 +485,10 @@ public class ManagerServiceImpl implements ManagerService {
         Item item = getItem(id);
 
 
-        result.put("priceGross", item.getPriceGross().multiply(quantity.divide(new BigDecimal(1000))).toString());
-        result.put("priceNet", item.getPriceNet().multiply(quantity.divide(new BigDecimal(1000))).toString());
-        result.put("priceGrossExcise", item.getPriceGrossExcise().multiply(quantity.divide(new BigDecimal(1000))).toString());
-        result.put("priceNetExcise", item.getPriceNetExcise().multiply(quantity.divide(new BigDecimal(1000))).toString());
+        result.put("priceGross", item.getPriceGross().multiply(quantity.divide(new BigDecimal(1000))).setScale(2, RoundingMode.HALF_UP).toString());
+        result.put("priceNet", item.getPriceNet().multiply(quantity.divide(new BigDecimal(1000))).setScale(2, RoundingMode.HALF_UP).toString());
+        result.put("priceGrossExcise", item.getPriceGrossExcise().multiply(quantity.divide(new BigDecimal(1000))).setScale(2, RoundingMode.HALF_UP).toString());
+        result.put("priceNetExcise", item.getPriceNetExcise().multiply(quantity.divide(new BigDecimal(1000))).setScale(2, RoundingMode.HALF_UP).toString());
         return result;
     }
 
@@ -491,10 +533,11 @@ public class ManagerServiceImpl implements ManagerService {
         }
 
         //set order
-        if (invoiceForm.getOrder().getDocNumber() == null)
-            invoiceForm.getOrder().setDocNumber(getNextDocNumnber());
+        if (invoiceForm.getOrder().getInvoiceNumber() == null)
+            invoiceForm.getOrder().setInvoiceNumber(getNextInvoiceNumnber());
 
         //rename
+        invoiceForm.getOrder().setDocument(false);
         invoiceForm.getOrder().setInvoice(true);
         invoiceForm.getOrder().setOrderDate(DateTime.now());
         invoiceForm.getOrder().setCustomer(customer);
@@ -503,10 +546,19 @@ public class ManagerServiceImpl implements ManagerService {
 
         //todo: execute two tasks in paraller
         //save order to disk
-        saveOrderToDisk(invoiceForm.getOrder(), servletContext.getRealPath("/WEB-INF/pdfs/documents/" + getCompany().getId()), true);
+        if(!invoiceForm.isExcise()) {
+            invoiceForm.getOrder().setDocument(true);
+            invoiceForm.getOrder().setDocNumber(getNextDocNumnber());
+            saveOrderToDisk(invoiceForm.getOrder(), servletContext.getRealPath("/WEB-INF/pdfs/documents/" + getCompany().getId()), true);
+        }
         //save invoice to disk
-
+        saveInvoiceToDisk(invoiceForm, servletContext.getRealPath("/WEB-INF/pdfs/invoices/" + getCompany().getId()));
         //save order to db
         orderRepo.save(invoiceForm.getOrder());
+    }
+
+    private void saveInvoiceToDisk(InvoiceForm invoiceForm, String dest) {
+        GeneratePDF generatePDF = new GeneratePDF(getCompany(), dest);
+        generatePDF.generate(invoiceForm);
     }
 }

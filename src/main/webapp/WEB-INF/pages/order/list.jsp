@@ -77,32 +77,34 @@
                             </tr>
                             </thead>
                             <c:forEach var="order" items="${orderPage.content}">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <a href="${contextPath}/order/show/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
-                                        </td>
-                                        <td><c:out value="${order.docNumber}"/></td>
-                                        <td><joda:format value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
-                                        <c:choose>
-                                            <c:when test="${order.invoice}">
-                                                <td><c:out value="${order.customer.name} "/></td>
-                                            </c:when>
-                                            <c:when test="${not order.invoice}">
-                                                <td><c:out value="${order.customer.lastName} ${order.customer.firstName} "/></td>
-                                            </c:when>
-                                        </c:choose>
-                                        <td>
-                                            <a href="${contextPath}/order/edit/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_edit.png"/>" title="${edit}"></a>
-                                            <form id="deleteForm" method="post" action="${contextPath}/order/delete" onsubmit="return confirmDelete();">
-                                                <input name="id" type="hidden" value="${order.id}"/>
-                                                <a href="#">
-                                                    <input id="delete" type="image" src="<c:url value="/resources/images/icn_trash.png"/>" title="${delete}">
-                                                </a>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                <c:if test="${not empty order.documentName}">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="${contextPath}/order/show/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
+                                            </td>
+                                            <td><c:out value="${order.docNumber}"/></td>
+                                            <td><joda:format value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
+                                            <c:choose>
+                                                <c:when test="${order.invoice}">
+                                                    <td><c:out value="${order.customer.name} "/></td>
+                                                </c:when>
+                                                <c:when test="${not order.invoice}">
+                                                    <td><c:out value="${order.customer.lastName} ${order.customer.firstName} "/></td>
+                                                </c:when>
+                                            </c:choose>
+                                            <td>
+                                                <a href="${contextPath}/order/edit/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_edit.png"/>" title="${edit}"></a>
+                                                <form id="deleteForm" method="post" action="${contextPath}/order/delete" onsubmit="return confirmDelete();">
+                                                    <input name="id" type="hidden" value="${order.id}"/>
+                                                    <a href="#">
+                                                        <input id="delete" type="image" src="<c:url value="/resources/images/icn_trash.png"/>" title="${delete}">
+                                                    </a>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </c:if>
                             </c:forEach>
                         </table>
                     </div><!-- end of #tab1 -->

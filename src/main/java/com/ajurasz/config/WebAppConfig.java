@@ -46,13 +46,14 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/**");
         registry.addResourceHandler("/documents/**").addResourceLocations("/WEB-INF/pdfs/documents/**");
         registry.addResourceHandler("/reports/**").addResourceLocations("/WEB-INF/pdfs/reports/**");
+        registry.addResourceHandler("/invoices/**").addResourceLocations("/WEB-INF/pdfs/invoices/**");
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver =
                 new PageableHandlerMethodArgumentResolver();
-        pageableHandlerMethodArgumentResolver.setFallbackPageable(new PageRequest(0, 4, new Sort(Sort.Direction.DESC, "id")));
+        pageableHandlerMethodArgumentResolver.setFallbackPageable(new PageRequest(0, 10, new Sort(Sort.Direction.DESC, "id")));
 
         argumentResolvers.add(pageableHandlerMethodArgumentResolver);
     }

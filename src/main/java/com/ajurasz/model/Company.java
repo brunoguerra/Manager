@@ -26,6 +26,9 @@ public class Company extends BaseEntity implements UserDetails {
 
     private String fullName;
     private String nip;
+    private String bank;
+    private String bankNumber;
+    private String phoneNumber;
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -122,5 +125,29 @@ public class Company extends BaseEntity implements UserDetails {
 
     public void setNip(String nip) {
         this.nip = nip;
+    }
+
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank;
+    }
+
+    public String getBankNumber() {
+        return bankNumber;
+    }
+
+    public void setBankNumber(String bankNumber) {
+        this.bankNumber = bankNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
