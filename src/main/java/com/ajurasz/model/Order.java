@@ -40,8 +40,8 @@ public class Order extends BaseEntity {
     @Column(name = "document_invoice_name")
     private String documentInvoiceName;
 
-    private boolean invoice;
-    private boolean document;
+    private Boolean invoice;
+    private Boolean document;
 
     @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)

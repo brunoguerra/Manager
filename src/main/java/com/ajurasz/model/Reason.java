@@ -16,9 +16,9 @@ public class Reason extends BaseEntity {
     @NotEmpty
     private String description;
 
-    private boolean isExcise;
+    private Boolean isExcise;
 
-    private boolean isHomeUse;
+    private Boolean isHomeUse;
 
     @ManyToOne
     private Company company;

@@ -19,10 +19,10 @@ public class Company extends BaseEntity implements UserDetails {
 
     private String username;
     private String password;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    private Boolean accountNonExpired;
+    private Boolean accountNonLocked;
+    private Boolean credentialsNonExpired;
+    private Boolean enabled;
 
     private String fullName;
     private String nip;

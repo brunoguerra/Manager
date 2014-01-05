@@ -61,7 +61,6 @@ public class DatabaseConfig {
         jpaProperties.setProperty("hibernate.format_sql", environment.getProperty("hibernate.format_sql"));
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
         jpaProperties.setProperty("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
-        jpaProperties.setProperty("hibernate.hbm2ddl.import_files", environment.getProperty("hibernate.hbm2ddl.import_files"));
 
         Map<String, Object> jpaPropertyMap = new HashMap<String, Object>();
         jpaPropertyMap.put("javax.persistence.validation.factory", validator);

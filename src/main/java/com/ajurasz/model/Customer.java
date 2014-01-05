@@ -22,7 +22,7 @@ public class Customer extends BaseEntity {
     @Email(message = "{customer.email}")
     private String email;
 
-    @Digits(integer = 10, fraction = 0, message = "{customer.phoneNumber}")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
