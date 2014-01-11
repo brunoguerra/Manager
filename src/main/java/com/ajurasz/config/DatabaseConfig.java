@@ -61,6 +61,9 @@ public class DatabaseConfig {
         jpaProperties.setProperty("hibernate.format_sql", environment.getProperty("hibernate.format_sql"));
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
         jpaProperties.setProperty("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));
+        jpaProperties.setProperty("hibernate.connection.CharSet", environment.getProperty("hibernate.connection.CharSet"));
+        jpaProperties.setProperty("hibernate.connection.characterEncoding", environment.getProperty("hibernate.connection.characterEncoding"));
+        jpaProperties.setProperty("hibernate.connection.useUnicode", environment.getProperty("hibernate.connection.useUnicode"));
 
         Map<String, Object> jpaPropertyMap = new HashMap<String, Object>();
         jpaPropertyMap.put("javax.persistence.validation.factory", validator);

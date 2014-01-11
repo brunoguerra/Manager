@@ -14,6 +14,14 @@
         return false;
     }
 
+    function showOrder(id) {
+        window.open('${contextPath}/order/show/' + id, '_blank');
+    }
+
+    function showVat(id) {
+        window.open('${contextPath}/invoice/show-vat/' + id, '_blank');
+    }
+
 </script>
 <section id="main" class="column">
     <c:if test="${invoiceAdded}">
@@ -46,9 +54,9 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <a href="${contextPath}/invoice/show-vat/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="Drukuj Fakture"></a>
+                                            <a href="#" style="float: left;" onclick="return showVat(${order.id});" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="Drukuj Fakture"></a>
                                             <c:if test="${not empty order.documentName}">
-                                                <a href="${contextPath}/order/show/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="Drukuj dokument"></a>
+                                                <a href="#" style="float: left;" onclick="return showOrder(${order.id})" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="Drukuj dokument"></a>
                                             </c:if>
                                         </td>
                                         <td><c:out value="${order.documentInvoiceName}"/></td>

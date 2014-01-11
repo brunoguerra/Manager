@@ -25,7 +25,12 @@
                 {
                     $(".tablesorter").tablesorter();
                 }
+
         );
+        $(document).ready(function() {
+            $( ":input").attr('autocomplete','off');
+
+        });
         $(document).ready(function() {
 
             //When page loads...

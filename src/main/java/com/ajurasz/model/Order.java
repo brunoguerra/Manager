@@ -4,6 +4,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeFieldType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class Order extends BaseEntity {
 
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "order_date")
     private DateTime orderDate;
 
@@ -51,7 +52,7 @@ public class Order extends BaseEntity {
     private Company company;
 
     public Order() {
-        this.orderDate = DateTime.now();
+//        this.orderDate = DateTime.now();
         this.invoice = false;
         this.document = true;
         this.customer = new Customer();
@@ -72,7 +73,16 @@ public class Order extends BaseEntity {
     }
 
     public void setOrderDate(DateTime orderDate) {
-        this.orderDate = orderDate;
+        if(orderDate == null) {
+            this.orderDate = orderDate;
+            return;
+        }
+        this.orderDate = new DateTime(
+                orderDate.get(DateTimeFieldType.year()),
+                orderDate.get(DateTimeFieldType.monthOfYear()),
+                orderDate.get(DateTimeFieldType.dayOfMonth()),
+                0, 0, 0, 0
+        );
     }
 
     public Customer getCustomer() {

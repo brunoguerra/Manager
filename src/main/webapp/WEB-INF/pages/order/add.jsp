@@ -2,15 +2,30 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <spring:message code="customer.add.form.button.add" var="add" />
 <spring:message code="customer.add.form.button.reset" var="reset" />
 <spring:message code="order.add.search" var="search" />
 
 <%@include file="/WEB-INF/scripts/ClientAutocomplete.jsp"%>
 
+<script src="<c:url value="/resources/js/jquery.ui.datepicker-pl.js" />" ></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $( "#orderDate" ).datepicker();
+        $("#orderDate").attr('autocomplete','off');
+    });
+</script>
+
 <script type="text/javascript">
 
     $(document).ready(function(){
+
+        //set current date
+        var myDate = new Date();
+        var prettyDate = myDate.getDate() + '/' +  ( '0' + (myDate.getMonth()+1) ).slice( -2 ) + '/' +
+                myDate.getFullYear();
+        $("#orderDate").val(prettyDate);
 
         var cid = ${sessionScope.customer.id == null ? -1 : sessionScope.customer.id};
         if(cid > 0) {
@@ -48,11 +63,37 @@
         return text[0] + '[' + result + ']' + number[1];
     }
 
+    function repleaceComma() {
+        var quantity0 = $('[name=orderDetails\\[0\\]\\.quantity]').val();
+        var quantity1 = $('[name=orderDetails\\[1\\]\\.quantity]').val();
+        var quantity2 = $('[name=orderDetails\\[2\\]\\.quantity]').val();
+        var quantity3 = $('[name=orderDetails\\[3\\]\\.quantity]').val();
+
+        if(quantity0.indexOf(',') > 0) {
+            quantity0 = quantity0.replace(',', '.');
+            $('[name=orderDetails\\[0\\]\\.quantity]').val(quantity0);
+        }
+        if(quantity1.indexOf(',') > 0) {
+            quantity1 = quantity1.replace(',', '.');
+            $('[name=orderDetails\\[1\\]\\.quantity]').val(quantity1);
+        }
+        if(quantity2.indexOf(',') > 0) {
+            quantity2 = quantity2.replace(',', '.');
+            $('[name=orderDetails\\[2\\]\\.quantity]').val(quantity2);
+        }
+        if(quantity3.indexOf(',') > 0) {
+            quantity3 = quantity3.replace(',', '.');
+            $('[name=orderDetails\\[3\\]\\.quantity]').val(quantity3);
+        }
+        return true;
+    }
+
     function checkClient() {
         if($('#customer\\.id').val() == '') {
             $("#missingclient").show();
             return false;
         }
+        repleaceComma();
         return true;
     }
 </script>
@@ -66,7 +107,11 @@
             <input id="search" name="search" type="text" value="${search}" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
         </form>
         <sf:form modelAttribute="order" method="post" onsubmit="return checkClient();">
-            <header><h3><spring:message code="order.add.form.title" /> <sf:input path="docNumber"/> <sf:errors path="docNumber" /></h3></header>
+            <joda:format var="date" value="${order.orderDate}" pattern="dd/MM/yyyy"/>
+            <header>
+                <h3 style="width: 30%;"><spring:message code="order.add.form.title" /> <sf:input path="docNumber" cssStyle="width: 30%;"/> <sf:errors path="docNumber" /></h3>
+                <h3 style="width: 30%;"><spring:message code="order.add.form.date" /> <sf:input path="orderDate" cssStyle="width: 30%;"/> <sf:errors path="orderDate"/> </h3>
+            </header>
             <div class="module_content">
                 <fieldset style="width:48%; float:left;">
                     <label id="clientData"><spring:message code="order.add.form.customerdata" />:</label>
@@ -87,8 +132,8 @@
                         </select>
                         <%--<sf:errors path="orderDetails[0].item.id" cssClass="error_text"/>--%>
                     </fieldset>
-                    <fieldset style="width:25%; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
-                        <label><spring:message code="order.add.form.quantity" />:</label>
+                    <fieldset style="width:20%; float:left;  margin-right: 2%; padding-right: 0.5%; padding-bottom: 15px;">
+                        <label style="width: 20%"><spring:message code="order.add.form.quantity" />:</label>
                         <input name="orderDetails[0].quantity" cssStyle="width:92%;"/>
                         <%--<sf:errors path="orderDetails[0].quantity" cssClass="error_text"/>--%>
                     </fieldset>

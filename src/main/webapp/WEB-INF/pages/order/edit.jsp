@@ -48,11 +48,37 @@
         return text[0] + '[' + result + ']' + number[1];
     }
 
+    function repleaceComma() {
+        var quantity0 = $('[name=orderDetails\\[0\\]\\.quantity]').val();
+        var quantity1 = $('[name=orderDetails\\[1\\]\\.quantity]').val();
+        var quantity2 = $('[name=orderDetails\\[2\\]\\.quantity]').val();
+        var quantity3 = $('[name=orderDetails\\[3\\]\\.quantity]').val();
+
+        if(quantity0.indexOf(',') > 0) {
+            quantity0 = quantity0.replace(',', '.');
+            $('[name=orderDetails\\[0\\]\\.quantity]').val(quantity0);
+        }
+        if(quantity1.indexOf(',') > 0) {
+            quantity1 = quantity1.replace(',', '.');
+            $('[name=orderDetails\\[1\\]\\.quantity]').val(quantity1);
+        }
+        if(quantity2.indexOf(',') > 0) {
+            quantity2 = quantity2.replace(',', '.');
+            $('[name=orderDetails\\[2\\]\\.quantity]').val(quantity2);
+        }
+        if(quantity3.indexOf(',') > 0) {
+            quantity3 = quantity3.replace(',', '.');
+            $('[name=orderDetails\\[3\\]\\.quantity]').val(quantity3);
+        }
+        return true;
+    }
+
     function checkClient() {
         if($('#customer\\.id').val() == '') {
             $("#missingclient").show();
             return false;
         }
+        repleaceComma();
         return true;
     }
 </script>

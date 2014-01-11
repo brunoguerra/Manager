@@ -25,6 +25,8 @@ public class Company extends BaseEntity implements UserDetails {
     private Boolean enabled;
 
     private String fullName;
+    private String ownerFirstName;
+    private String ownerLastName;
     private String nip;
     private String bank;
     private String bankNumber;
@@ -149,5 +151,21 @@ public class Company extends BaseEntity implements UserDetails {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getOwnerFirstName() {
+        return ownerFirstName;
+    }
+
+    public void setOwnerFirstName(String ownerFirstName) {
+        this.ownerFirstName = ownerFirstName;
+    }
+
+    public String getOwnerLastName() {
+        return ownerLastName;
+    }
+
+    public void setOwnerLastName(String ownerLastName) {
+        this.ownerLastName = ownerLastName;
     }
 }

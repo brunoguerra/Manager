@@ -60,6 +60,7 @@ public class CustomerController {
             return "redirect:" + target;
         }
         redirectAttributes.addFlashAttribute("customerAdded", true);
+        LOGGER.info("Customer object saved - " + customer);
         return "redirect:/customer/list";
     }
 
@@ -86,6 +87,7 @@ public class CustomerController {
             return "redirect:" + target;
         }
         redirectAttributes.addFlashAttribute("customerVatAdded", true);
+        LOGGER.info("CustomerVat object saved - " + customer);
         return "redirect:/customer/list-vat";
     }
 
@@ -94,6 +96,7 @@ public class CustomerController {
     public String initCustomerList(Model model, Pageable pageable) {
         Page<CustomerRegular> customerPage = managerService.findAllCustomers(pageable);
         model.addAttribute("customersPage", customerPage);
+        LOGGER.info("Customer list requested");
         return "customer/list";
     }
 
@@ -101,12 +104,15 @@ public class CustomerController {
     public String initCustomerVatList(Model model, Pageable pageable) {
         Page<CustomerVat> customerPage = managerService.findAllCustomersVat(pageable);
         model.addAttribute("customersPage", customerPage);
+        LOGGER.info("CustomerVat list requested");
         return "customer/listVat";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String initCustomerEdit(@PathVariable Long id, Model model) {
-        model.addAttribute("customer", managerService.getCustomer(id));
+        CustomerRegular customer =  managerService.getCustomer(id);
+        model.addAttribute("customer",customer);
+        LOGGER.info("Customer edit form - " + customer);
         return "customer/edit";
     }
 
@@ -117,6 +123,7 @@ public class CustomerController {
         }
         managerService.saveCustomer(customer);
         redirectAttributes.addFlashAttribute("customerUpdated", true);
+        LOGGER.info("Customer edit form saved - " + customer);
         return "redirect:/customer/list";
     }
 

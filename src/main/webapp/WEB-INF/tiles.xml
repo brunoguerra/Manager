@@ -11,6 +11,10 @@
         <put-attribute name="content" value="/WEB-INF/pages/authentication/{1}.jsp"/>
     </definition>
 
+    <definition name="mainPage/*" extends="empty" >
+        <put-attribute name="content" value="/WEB-INF/pages/home/{1}.jsp"/>
+    </definition>
+
 
     <definition name="template" template="/WEB-INF/templates/template.jsp">
         <put-attribute name="header" value="/WEB-INF/templates/_header.jsp"/>

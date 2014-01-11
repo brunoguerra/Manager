@@ -366,8 +366,10 @@ public class ManagerServiceImpl implements ManagerService {
         if (order.getDocNumber() == null)
             order.setDocNumber(getNextDocNumnber());
 
+        if(order.getOrderDate() == null)
+            order.setOrderDate(DateTime.now());
+
         //rename
-        order.setOrderDate(DateTime.now());
         order.setCustomer(customer);
         order.setCompany(getCompany());
         order.setOrderDetails(resultList);

@@ -36,6 +36,10 @@
         $('#extraRow_' + id).toggle('slow');
     }
 
+    function showOrder(id) {
+        window.open('${contextPath}/order/show/' + id, '_blank');
+    }
+
 </script>
 <section id="main" class="column">
     <c:if test="${orderAdded}">
@@ -81,7 +85,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <a href="${contextPath}/order/show/${order.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
+                                                <a href="#" style="float: left;" onclick="return showOrder(${order.id});" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
                                             </td>
                                             <td><c:out value="${order.docNumber}"/></td>
                                             <td><joda:format value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>

@@ -8,18 +8,15 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>C:\SM.log</file>
+        <file>Manager.log</file>
         <encoder>
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
         </encoder>
     </appender>
 
-    <logger name="o.h" level="INFO"/>
-    <logger name="org.hibernate" level="INFO" />
-    <logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="com.ajurasz" level="INFO"/>
 
-
-    <root level="debug">
+    <root level="info">
         <!--<appender-ref ref="STDOUT" />-->
         <appender-ref ref="FILE" />
     </root>

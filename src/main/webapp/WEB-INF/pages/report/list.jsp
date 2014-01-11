@@ -14,6 +14,10 @@
         return false;
     }
 
+    function showReport(id) {
+        window.open('${contextPath}/report/show/' + id, '_blank');
+    }
+
 </script>
 <section id="main" class="column">
     <c:if test="${reportAdded}">
@@ -54,7 +58,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <a href="${contextPath}/report/show/${report.id}" style="float: left;" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
+                                            <a href="#" style="float: left;" onclick="return showReport(${report.id});" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
                                         </td>
                                         <td><joda:format value="${report.creationDate}" pattern="dd/MM/yyyy"/></td>
                                         <td><joda:format value="${report.startDate}" pattern="dd/MM/yyyy"/></td>

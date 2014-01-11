@@ -82,7 +82,7 @@ public class Address extends BaseEntity {
     }
 
     public String getAddress() {
-        if(street == null || street.equals("")) {
+        if(street == null || street.equals("") || street.equals(" ")) {
             return postCode + " " + city + " " + number;
         } else {
             return postCode + " " + city + " ul." + street + " " + number;

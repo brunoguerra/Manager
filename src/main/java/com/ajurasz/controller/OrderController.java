@@ -2,6 +2,7 @@ package com.ajurasz.controller;
 
 import com.ajurasz.model.*;
 import com.ajurasz.service.ManagerService;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,11 @@ public class OrderController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
     private ManagerService managerService;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder binder) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+//    }
 
     @ModelAttribute("items")
     public Map<String, String> populateWithItems() {

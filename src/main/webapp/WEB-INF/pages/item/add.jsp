@@ -7,10 +7,27 @@
 
 <%@include file="/WEB-INF/scripts/ResetTextFields.jsp"%>
 
+<script type="text/javascript">
+    function repleaceComma() {
+        var price = $('#priceGross').val();
+        var state = $('#state\\.currentState').val();
+        if(price.indexOf(',') > 0) {
+            price = price.replace(',', '.');
+            $('#priceGross').val(price);
+        }
+        if(state.indexOf(',') > 0) {
+            state = state.replace(',', '.');
+            $('#state\\.currentState').val(state);
+        }
+
+        return true;
+    }
+</script>
+
 <section id="main" class="column">
 
 <article class="module width_full">
-    <sf:form modelAttribute="item" method="post">
+    <sf:form modelAttribute="item" method="post" onsubmit="return repleaceComma();">
         <header><h3><spring:message code="item.add.form.title"/></h3></header>
         <div class="module_content">
             <fieldset style="width:48%; float:left;">

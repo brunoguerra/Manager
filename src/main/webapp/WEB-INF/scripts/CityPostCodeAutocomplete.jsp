@@ -28,6 +28,7 @@
                     event.preventDefault();
                     $("#address\\.city").val(ui.item.city);
                     $("#address\\.postCode").val(ui.item.code);
+                    $("#address\\.street").focus();
                     return false;
                 }
             },

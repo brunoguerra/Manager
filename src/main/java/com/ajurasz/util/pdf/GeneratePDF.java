@@ -103,12 +103,13 @@ public class GeneratePDF {
             }
 
             //date
-            acroFields.setField("date", order.getOrderDate().toString("dd/MM/yyyy"));
+            acroFields.setField("date", order.getOrderDate().toString("dd/MM/yyyy") + " " +
+                    company.getOwnerFirstName() + " " + company.getOwnerLastName());
 
             //order details
             int counter = 1;
             for(OrderDetails orderDetails : order.getOrderDetails()) {
-                String lp = "" + counter;
+                String lp = "lp" + counter;
                 String item = "item" + counter;
                 String quantity = "quantity" + counter;
                 String reason = "reason" + counter;
@@ -246,7 +247,7 @@ public class GeneratePDF {
                 valueNetTotal = valueNetTotal.add(valueNetResult);
                 valueVatTotal = valueVatTotal.add(valueVatResult);
                 valueGrossTotal = valueGrossTotal.add(valueGrossResult);
-                quantityTotal.add(orderDetails.getQuantity());
+                quantityTotal = quantityTotal.add(orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(2, RoundingMode.HALF_UP));
                 counter++;
             }
 
@@ -265,9 +266,10 @@ public class GeneratePDF {
                     numberInString[1] + "/100");
 
 
-            acroFields.setField("Autor", "Jurasz Wojciech");
+            acroFields.setField("Autor", company.getOwnerFirstName() + " " + company.getOwnerLastName());
             if(invoiceForm.isExcise())
-                acroFields.setField("Uwaga", "Uwagi:\\nFaktura zawiera naliczoną akcyzę w kwocie " + quantityTotal.multiply(new BigDecimal(1.28)).multiply(new BigDecimal(23.8)));
+                acroFields.setField("Uwaga", "Uwagi:\nFaktura zawiera naliczoną akcyzę w kwocie " +
+                        quantityTotal.multiply(new BigDecimal(1.28)).setScale(2, RoundingMode.HALF_UP).multiply(new BigDecimal(23.8)).setScale(2, RoundingMode.HALF_UP) );
             stamper.close();
 
         } catch (IOException e) {
