@@ -54,7 +54,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{CompanyAddress}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd-MM-yyyy">
+			<textField pattern="dd.MM.yyyy">
 				<reportElement x="455" y="0" width="100" height="20" uuid="d32fe74e-8593-4939-b5c5-26eabf15c9bd"/>
 				<textElement>
 					<font size="9"/>
@@ -206,7 +206,7 @@ WYSTAWIENIA DOKUMENTU]]></text>
 				<textField pattern="">
 					<reportElement x="0" y="1" width="273" height="23" uuid="13ccf475-efea-4b20-a1f9-cfd5c61a3c10"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[""+$F{orderDate}.toString("dd-MM-yyyy")]]></textFieldExpression>
+					<textFieldExpression><![CDATA[""+$F{orderDate}.toString("dd.MM.yyyy")]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -215,7 +215,13 @@ WYSTAWIENIA DOKUMENTU]]></text>
 		<band height="3" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="3" splitType="Stretch"/>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="4" width="100" height="20" uuid="12f768ea-c50a-4262-a53c-5d4f499c1f06"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
 		<band height="185" splitType="Stretch">
