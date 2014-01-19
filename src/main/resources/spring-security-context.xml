@@ -29,11 +29,11 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 		<security:form-login
                 login-page="/login"
+                authentication-success-handler-ref="authenticationSuccessHandler"
                 authentication-failure-url="/login?error"
                 login-processing-url="/j_spring_security_check"
                 username-parameter="username"
                 password-parameter="password"
-                default-target-url="http://localhost:8080/index"
                 />
 		<security:logout
                 logout-url="/j_spring_security_logout"
