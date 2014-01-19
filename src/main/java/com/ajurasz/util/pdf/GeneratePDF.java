@@ -103,7 +103,7 @@ public class GeneratePDF {
             }
 
             //date
-            acroFields.setField("date", order.getOrderDate().toString("dd/MM/yyyy") + " " +
+            acroFields.setField("date", order.getOrderDate().toString("dd.MM.yyyy") + " " +
                     company.getOwnerFirstName() + " " + company.getOwnerLastName());
 
             //order details
@@ -113,16 +113,20 @@ public class GeneratePDF {
                 String item = "item" + counter;
                 String quantity = "quantity" + counter;
                 String reason = "reason" + counter;
-                String asterix = "asterix" + counter;
+                String reasonA = "reason" + counter + "a";
+                String cb = "cb" + counter;
+                String cbA = "cb" + counter + "a";
 
                 //fill row
                 Item itemObj = orderDetails.getItem();
                 acroFields.setField(lp, "" + counter);
                 acroFields.setField(item, itemObj.getName() + "   " + itemObj.getCode());
                 acroFields.setField(quantity, "" + orderDetails.getQuantity().intValue());
-                acroFields.setField(reason, orderDetails.getReason().getDescription());
-                if(!orderDetails.getReason().isHomeUse()) {
-                    acroFields.setField(asterix, "*");
+                if(orderDetails.getReason().isHomeUse()) {
+                    acroFields.setField(cb, "Yes");
+                } else {
+                    acroFields.setField(cbA, "Yes");
+                    acroFields.setField(reasonA, orderDetails.getReason().getDescription());
                 }
 
                 counter++;
@@ -148,6 +152,7 @@ public class GeneratePDF {
         parametersMap.put("CompanyName", this.company.getFullName());
         parametersMap.put("CompanyAddress", this.company.getAddress().getAddress());
         parametersMap.put("CompanyNip", this.company.getNip());
+        parametersMap.put("CompanyCity", this.company.getAddress().getCity());
         parametersMap.put("Quoter", report.getQuoter());
         parametersMap.put("Year", "2014");
 
@@ -182,7 +187,7 @@ public class GeneratePDF {
             this.acroFields = this.stamper.getAcroFields();
 
             //date and place
-            acroFields.setField("Data", invoiceForm.getOrder().getOrderDate().toString("dd-MM-yyyy"));
+            acroFields.setField("Data", invoiceForm.getOrder().getOrderDate().toString("dd.MM.yyyy"));
             acroFields.setField("DataMiejsce", invoiceForm.getOrder().getOrderDate().toString("dd-MM-yyyy") + " " + company.getAddress().getCity());
             acroFields.setField("NrFaktury", invoiceForm.getOrder().getInvoiceNumber());
 
