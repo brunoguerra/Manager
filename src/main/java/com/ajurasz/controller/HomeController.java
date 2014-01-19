@@ -33,20 +33,12 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(HttpServletRequest request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Company company = (Company)auth.getPrincipal();
-
-        HttpSession session = request.getSession();
-        session.setAttribute("company", company);
-
+    public String index() {
         return "home/home";
     }
 
     @RequestMapping(value = "/")
     public String homePage() {
-
-
         return "mainPage/index";
     }
 }
