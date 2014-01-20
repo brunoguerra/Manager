@@ -106,13 +106,20 @@ public class GeneratePDF {
             acroFields.setField("date", order.getOrderDate().toString("dd.MM.yyyy") + " " +
                     company.getOwnerFirstName() + " " + company.getOwnerLastName());
 
+            //set reason statically
+            String r = "zużycie przez gospodarstwo domowe";
+            acroFields.setField("reason1", r);
+            acroFields.setField("reason2", r);
+            acroFields.setField("reason3", r);
+            acroFields.setField("reason4", r);
+            acroFields.setField("reason5", r);
+
             //order details
             int counter = 1;
             for(OrderDetails orderDetails : order.getOrderDetails()) {
                 String lp = "lp" + counter;
                 String item = "item" + counter;
                 String quantity = "quantity" + counter;
-                String reason = "reason" + counter;
                 String reasonA = "reason" + counter + "a";
                 String cb = "cb" + counter;
                 String cbA = "cb" + counter + "a";
