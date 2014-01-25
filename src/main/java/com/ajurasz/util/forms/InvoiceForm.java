@@ -10,16 +10,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class InvoiceForm {
 
     private boolean excise;
+    private boolean grossInvoice;
     private Payment payment;
     private Order order;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private DateTime paymentDate;
 
     public InvoiceForm() {
         order = new Order();
         payment = Payment.CASH;
         excise = true;
+        grossInvoice = false;
     }
 
     public DateTime getPaymentDate() {
@@ -28,6 +30,14 @@ public class InvoiceForm {
 
     public void setPaymentDate(DateTime paymentDate) {
         this.paymentDate = paymentDate;
+    }
+
+    public boolean isGrossInvoice() {
+        return grossInvoice;
+    }
+
+    public void setGrossInvoice(boolean grossInvoice) {
+        this.grossInvoice = grossInvoice;
     }
 
     public static enum Payment {

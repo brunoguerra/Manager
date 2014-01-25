@@ -279,14 +279,14 @@ public class ManagerServiceImpl implements ManagerService {
 
         //First entry in db
         if(order == null) {
-            return "1/" + currentMonth + "/" + currentYear;
+            return "01/" + currentMonth + "/" + currentYear;
         }
 
         String[] latestDocNumber = order.getInvoiceNumber().split("/");
         //just increment first number
         int id = Integer.parseInt(latestDocNumber[0]);
         id++;
-        return id + "/" + currentMonth + "/" + currentYear;
+        return String.format("%02d", id) + "/" + currentMonth + "/" + currentYear;
     }
 
     @Override
@@ -541,7 +541,8 @@ public class ManagerServiceImpl implements ManagerService {
         //rename
         invoiceForm.getOrder().setDocument(false);
         invoiceForm.getOrder().setInvoice(true);
-        invoiceForm.getOrder().setOrderDate(DateTime.now());
+        if(invoiceForm.getOrder().getOrderDate() == null)
+            invoiceForm.getOrder().setOrderDate(DateTime.now());
         invoiceForm.getOrder().setCustomer(customer);
         invoiceForm.getOrder().setCompany(getCompany());
         invoiceForm.getOrder().setOrderDetails(resultList);
@@ -561,6 +562,10 @@ public class ManagerServiceImpl implements ManagerService {
 
     private void saveInvoiceToDisk(InvoiceForm invoiceForm, String dest) {
         GeneratePDF generatePDF = new GeneratePDF(getCompany(), dest);
-        generatePDF.generate(invoiceForm);
+        if(invoiceForm.isGrossInvoice()) {
+            generatePDF.generateGross(invoiceForm);
+        } else {
+            generatePDF.generateNet(invoiceForm);
+        }
     }
 }

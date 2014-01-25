@@ -59,8 +59,8 @@
                                                 <a href="#" style="float: left;" onclick="return showOrder(${order.id})" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="Drukuj dokument"></a>
                                             </c:if>
                                         </td>
-                                        <td><c:out value="${order.documentInvoiceName}"/></td>
-                                        <td><joda:format value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
+                                        <td><c:out value="${order.invoiceNumber}"/></td>
+                                        <td><joda:format value="${order.orderDate}" pattern="dd-MM-yyyy"/></td>
                                         <td><c:out value="${order.customer.name} "/></td>
                                         <td>
                                             <form id="deleteForm" method="post" action="${contextPath}/invoice/delete" onsubmit="return confirmDelete();">

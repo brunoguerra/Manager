@@ -13,7 +13,6 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRProperties;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.joda.time.DateTime;
 import org.springframework.core.io.FileSystemResource;
 
@@ -22,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +31,8 @@ import java.util.Map;
  */
 public class GeneratePDF {
     private static final String TEMPLATE = "DOKUMENT_DOSTAWY.pdf";
-    private static final String INVOICE = "INVOICE.pdf";
+    private static final String INVOICE_NET = "INVOICE_NET.pdf";
+    private static final String INVOICE_GROSS = "INVOICE_GROSS.pdf";
     private static final String FONT_NAME = "arial.ttf";
 
     private Company company;
@@ -70,7 +69,7 @@ public class GeneratePDF {
     }
 
     /**
-     * Use this method to generate Documents
+     * Use this method to generateNet Documents
      */
     public void generate(Order order, boolean invoice) {
 
@@ -103,7 +102,7 @@ public class GeneratePDF {
             }
 
             //date
-            acroFields.setField("date", order.getOrderDate().toString("dd.MM.yyyy") + " " +
+            acroFields.setField("date", order.getOrderDate().toString("dd-MM-yyyy") + " " +
                     company.getOwnerFirstName() + " " + company.getOwnerLastName());
 
             //set reason statically
@@ -150,7 +149,7 @@ public class GeneratePDF {
     }
 
     /**
-     * Use this method to generate report
+     * Use this method to generateNet report
      * @param orders list of Orders for specyfic company and time frame
      */
     public void generate(Report report, List<Order> orders) {
@@ -180,13 +179,13 @@ public class GeneratePDF {
     }
 
     /**
-     * Use this method to generate Invoices
+     * Use this method to generateNet Net Invoices
      */
-    public void generate(InvoiceForm invoiceForm) {
+    public void generateNet(InvoiceForm invoiceForm) {
 
         try {
 
-            FileSystemResource resource = new FileSystemResource(INVOICE);
+            FileSystemResource resource = new FileSystemResource(INVOICE_NET);
             this.reader = new PdfReader(resource.getPath());
             this.destination = this.destination + invoiceForm.getOrder().getDocumentInvoiceName() + ".pdf";
             this.stamper = new PdfStamper(this.reader, new FileOutputStream(this.destination));
@@ -194,7 +193,7 @@ public class GeneratePDF {
             this.acroFields = this.stamper.getAcroFields();
 
             //date and place
-            acroFields.setField("Data", invoiceForm.getOrder().getOrderDate().toString("dd.MM.yyyy"));
+            acroFields.setField("Data", invoiceForm.getOrder().getOrderDate().toString("dd-MM-yyyy"));
             acroFields.setField("DataMiejsce", invoiceForm.getOrder().getOrderDate().toString("dd-MM-yyyy") + " " + company.getAddress().getCity());
             acroFields.setField("NrFaktury", invoiceForm.getOrder().getInvoiceNumber());
 
@@ -218,7 +217,7 @@ public class GeneratePDF {
             acroFields.setField("FormaPlatnosci", invoiceForm.getPayment().getDescription());
             if(invoiceForm.getPaymentDate() == null)
                 invoiceForm.setPaymentDate(DateTime.now());
-            acroFields.setField("TerminPlatnosci", invoiceForm.getPaymentDate().toString("dd/MM/yyyy"));
+            acroFields.setField("TerminPlatnosci", invoiceForm.getPaymentDate().toString("dd-MM-yyyy"));
 
             //order details
             int counter = 1;
@@ -242,25 +241,36 @@ public class GeneratePDF {
                 Item itemObj = orderDetails.getItem();
                 acroFields.setField(lp, "" + counter);
                 acroFields.setField(item, itemObj.getName());
-                acroFields.setField(quantity, "" + orderDetails.getQuantity().divide(new BigDecimal(1000)));
+                acroFields.setField(quantity, "" +
+                        orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP).toString().replace('.', ','));
                 acroFields.setField(jm, "tona");
                 acroFields.setField(vat, "23%");
 
                 BigDecimal priceNetResult = invoiceForm.isExcise()? itemObj.getPriceNetExcise() : itemObj.getPriceNet();
                 BigDecimal valueNetResult = priceNetResult.multiply(orderDetails.getQuantity().divide(new BigDecimal(1000))).setScale(2, RoundingMode.HALF_UP);
-                BigDecimal valueVatResult = valueNetResult.multiply(new BigDecimal(23)).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
-                BigDecimal valueGrossResult = valueNetResult.add(valueVatResult).setScale(2, RoundingMode.HALF_UP);
 
                 acroFields.setField(priceNet, priceNetResult.toString().replace('.', ','));
                 acroFields.setField(valueNet, valueNetResult.toString().replace('.', ','));
-                acroFields.setField(valueVat, valueVatResult.toString().replace('.', ','));
-                acroFields.setField(valueGross, valueGrossResult.toString().replace('.', ','));
 
                 valueNetTotal = valueNetTotal.add(valueNetResult);
-                valueVatTotal = valueVatTotal.add(valueVatResult);
-                valueGrossTotal = valueGrossTotal.add(valueGrossResult);
-                quantityTotal = quantityTotal.add(orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(2, RoundingMode.HALF_UP));
+
+                //Fill all columns only for one item
+                if(invoiceForm.getOrder().getOrderDetails().size() == 1) {
+                    BigDecimal valueVatResult = valueNetResult.multiply(new BigDecimal(23)).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+                    BigDecimal valueGrossResult = valueNetResult.add(valueVatResult).setScale(2, RoundingMode.HALF_UP);
+                    acroFields.setField(valueVat, valueVatResult.toString().replace('.', ','));
+                    acroFields.setField(valueGross, valueGrossResult.toString().replace('.', ','));
+                    valueVatTotal = valueVatTotal.add(valueVatResult);
+                    valueGrossTotal = valueGrossTotal.add(valueGrossResult);
+                }
+
+                quantityTotal = quantityTotal.add(orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP));
                 counter++;
+            }
+
+            if(invoiceForm.getOrder().getOrderDetails().size() > 1) {
+                valueVatTotal = valueNetTotal.multiply(new BigDecimal(23)).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+                valueGrossTotal = valueNetTotal.add(valueVatTotal).setScale(2, RoundingMode.HALF_UP);
             }
 
             //Summary
@@ -274,14 +284,14 @@ public class GeneratePDF {
 
             acroFields.setField("DoZaplaty", valueGrossTotal.toString().replace('.', ',') + " zł");
             String[] numberInString = valueGrossTotal.toString().replace('.',',').split(",");
-            acroFields.setField("KwotaSlownie", NumberSpeaker.speakNumber(valueGrossTotal.intValue()) + " złotych " +
+            acroFields.setField("KwotaSlownie", NumberSpeaker.speakNumber(valueGrossTotal.intValue()) + "złotych " +
                     numberInString[1] + "/100");
 
 
             acroFields.setField("Autor", company.getOwnerFirstName() + " " + company.getOwnerLastName());
             if(invoiceForm.isExcise())
                 acroFields.setField("Uwaga", "Uwagi:\nFaktura zawiera naliczoną akcyzę w kwocie " +
-                        quantityTotal.multiply(new BigDecimal(1.28)).setScale(2, RoundingMode.HALF_UP).multiply(new BigDecimal(23.8)).setScale(2, RoundingMode.HALF_UP) );
+                        quantityTotal.multiply(new BigDecimal(30.46)).setScale(2, RoundingMode.HALF_UP).toString().replace('.', ',') + " zł");
             stamper.close();
 
         } catch (IOException e) {
@@ -289,6 +299,129 @@ public class GeneratePDF {
         } catch (DocumentException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    /**
+     * Use this method to generateGross Gross Invoices
+     */
+    public void generateGross(InvoiceForm invoiceForm) {
+
+        try {
+
+            FileSystemResource resource = new FileSystemResource(INVOICE_GROSS);
+            this.reader = new PdfReader(resource.getPath());
+            this.destination = this.destination + invoiceForm.getOrder().getDocumentInvoiceName() + ".pdf";
+            this.stamper = new PdfStamper(this.reader, new FileOutputStream(this.destination));
+            setFontForAcroFields(this.stamper);
+            this.acroFields = this.stamper.getAcroFields();
+
+            //date and place
+            acroFields.setField("Data", invoiceForm.getOrder().getOrderDate().toString("dd-MM-yyyy"));
+            acroFields.setField("DataMiejsce", invoiceForm.getOrder().getOrderDate().toString("dd-MM-yyyy") + " " + company.getAddress().getCity());
+            acroFields.setField("NrFaktury", invoiceForm.getOrder().getInvoiceNumber());
+
+
+            //company info
+            acroFields.setField("Sprzedawca", company.getFullName());
+            acroFields.setField("AdresSprzedawcy", company.getAddress().getAddress());
+            acroFields.setField("NipSprzedawcy", company.getNip());
+            acroFields.setField("Bank", company.getBank());
+            acroFields.setField("Konto", company.getBankNumber());
+            acroFields.setField("Telefon", company.getPhoneNumber());
+            acroFields.setField("E-mail", company.getUsername());
+
+            //customer info
+            CustomerVat customer = (CustomerVat) invoiceForm.getOrder().getCustomer();
+            acroFields.setField("Nabywca", customer.getName());
+            acroFields.setField("AdresNabywcy", customer.getAddress().getAddress());
+            acroFields.setField("NipNabywcy", customer.getNip());
+
+            //payments
+            acroFields.setField("FormaPlatnosci", invoiceForm.getPayment().getDescription());
+            if(invoiceForm.getPaymentDate() == null)
+                invoiceForm.setPaymentDate(DateTime.now());
+            acroFields.setField("TerminPlatnosci", invoiceForm.getPaymentDate().toString("dd-MM-yyyy"));
+
+            //order details
+            int counter = 1;
+            BigDecimal valueNetTotal = new BigDecimal(0);
+            BigDecimal valueGrossTotal = new BigDecimal(0);
+            BigDecimal valueVatTotal = new BigDecimal(0);
+            BigDecimal quantityTotal = new BigDecimal(0);
+            for(OrderDetails orderDetails : invoiceForm.getOrder().getOrderDetails()) {
+                String lp = "Lp" + counter;
+                String item = "Nazwa" + counter;
+                String quantity = "Ilosc" + counter;
+                String jm = "Jm" + counter;
+                String vat = "StawkaVat" + counter;
+
+                String priceGross = "CenaBrutto" + counter;
+                String valueNet = "WartoscNetto" + counter;
+                String valueVat = "KwotaVat" + counter;
+                String valueGross = "WartoscBrutto" + counter;
+
+                //fill row
+                Item itemObj = orderDetails.getItem();
+                acroFields.setField(lp, "" + counter);
+                acroFields.setField(item, itemObj.getName());
+                acroFields.setField(quantity, "" +
+                        orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP).toString().replace('.', ','));
+                acroFields.setField(jm, "tona");
+                acroFields.setField(vat, "23%");
+
+                BigDecimal priceGrossResult = invoiceForm.isExcise()? itemObj.getPriceGrossExcise() : itemObj.getPriceGross();
+                BigDecimal valueGrossResult = priceGrossResult.multiply(orderDetails.getQuantity().divide(new BigDecimal(1000))).setScale(2, RoundingMode.HALF_UP);
+
+                acroFields.setField(priceGross, priceGrossResult.toString().replace('.', ','));
+                acroFields.setField(valueGross, valueGrossResult.toString().replace('.', ','));
+
+                //Fill all columns only for one item
+                if(invoiceForm.getOrder().getOrderDetails().size() == 1) {
+                    BigDecimal valueVatResult = valueGrossResult.multiply(new BigDecimal(23)).divide(new BigDecimal(123), 2, RoundingMode.HALF_UP);
+                    acroFields.setField(valueVat, valueVatResult.toString().replace('.', ','));
+                    BigDecimal valueNetResult = valueGrossResult.subtract(valueVatResult).setScale(2, RoundingMode.HALF_UP);
+                    acroFields.setField(valueNet, valueNetResult.toString().replace('.', ','));
+
+                    valueVatTotal = valueVatTotal.add(valueVatResult);
+                    valueNetTotal = valueNetResult;
+                }
+
+                valueGrossTotal = valueGrossTotal.add(valueGrossResult);
+
+                quantityTotal = quantityTotal.add(orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP));
+                counter++;
+            }
+
+            if(invoiceForm.getOrder().getOrderDetails().size() > 1) {
+                valueVatTotal = valueGrossTotal.multiply(new BigDecimal(23)).divide(new BigDecimal(123), 2, RoundingMode.HALF_UP);
+                valueNetTotal = valueGrossTotal.subtract(valueVatTotal).setScale(2, RoundingMode.HALF_UP);
+            }
+
+            //Summary
+            acroFields.setField("WartoscNettoRazem", valueNetTotal.toString().replace('.', ','));
+            acroFields.setField("WartoscNettoWtym", valueNetTotal.toString().replace('.', ','));
+            acroFields.setField("StawkaVatWtym", "23%");
+            acroFields.setField("KwotaVatRazem", valueVatTotal.toString().replace('.', ','));
+            acroFields.setField("KwotaVatWtym", valueVatTotal.toString().replace('.', ','));
+            acroFields.setField("WartoscBruttoRazem", valueGrossTotal.toString().replace('.', ','));
+            acroFields.setField("WartoscBruttoWtym", valueGrossTotal.toString().replace('.', ','));
+
+            acroFields.setField("DoZaplaty", valueGrossTotal.toString().replace('.', ',') + " zł");
+            String[] numberInString = valueGrossTotal.toString().replace('.',',').split(",");
+            acroFields.setField("KwotaSlownie", NumberSpeaker.speakNumber(valueGrossTotal.intValue()) + "złotych " +
+                    numberInString[1] + "/100");
+
+
+            acroFields.setField("Autor", company.getOwnerFirstName() + " " + company.getOwnerLastName());
+            if(invoiceForm.isExcise())
+                acroFields.setField("Uwaga", "Uwagi:\nFaktura zawiera naliczoną akcyzę w kwocie " +
+                        quantityTotal.multiply(new BigDecimal(30.46)).setScale(2, RoundingMode.HALF_UP).toString().replace('.', ',') + " zł");
+            stamper.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

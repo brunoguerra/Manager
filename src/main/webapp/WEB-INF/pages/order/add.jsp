@@ -12,7 +12,7 @@
 <script src="<c:url value="/resources/js/jquery.ui.datepicker-pl.js" />" ></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $( "#orderDate" ).datepicker();
+        $("#orderDate" ).datepicker();
         $("#orderDate").attr('autocomplete','off');
     });
 </script>
@@ -23,7 +23,7 @@
 
         //set current date
         var myDate = new Date();
-        var prettyDate = myDate.getDate() + '/' +  ( '0' + (myDate.getMonth()+1) ).slice( -2 ) + '/' +
+        var prettyDate = myDate.getDate() + '-' +  ( '0' + (myDate.getMonth()+1) ).slice( -2 ) + '-' +
                 myDate.getFullYear();
         $("#orderDate").val(prettyDate);
 
@@ -107,7 +107,7 @@
             <input id="search" name="search" type="text" value="${search}" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
         </form>
         <sf:form modelAttribute="order" method="post" onsubmit="return checkClient();">
-            <joda:format var="date" value="${order.orderDate}" pattern="dd/MM/yyyy"/>
+            <joda:format var="date" value="${order.orderDate}" pattern="dd-MM-yyyy"/>
             <header>
                 <h3 style="width: 30%;"><spring:message code="order.add.form.title" /> <sf:input path="docNumber" cssStyle="width: 30%;"/> <sf:errors path="docNumber" /></h3>
                 <h3 style="width: 30%;"><spring:message code="order.add.form.date" /> <sf:input path="orderDate" cssStyle="width: 30%;"/> <sf:errors path="orderDate"/> </h3>

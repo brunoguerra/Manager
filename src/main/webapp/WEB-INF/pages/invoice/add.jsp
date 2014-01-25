@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <spring:message code="customer.add.form.button.add" var="add" />
 <spring:message code="customer.add.form.button.reset" var="reset" />
 <spring:message code="order.add.search" var="search" />
@@ -9,8 +10,20 @@
 <%@include file="/WEB-INF/scripts/ClientVatAutocomplete.jsp"%>
 <script src="<c:url value="/resources/js/jquery.ui.datepicker-pl.js" />" ></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+        $("#order\\.orderDate" ).datepicker();
+        $("#order\\.orderDate").attr('autocomplete','off');
+    });
+</script>
+<script type="text/javascript">
 
     $(document).ready(function(){
+
+        //set current date
+        var myDate = new Date();
+        var prettyDate = myDate.getDate() + '-' +  ( '0' + (myDate.getMonth()+1) ).slice( -2 ) + '-' +
+                myDate.getFullYear();
+        $("#order\\.orderDate").val(prettyDate);
 
         $('#paymentDate').hide();
         $('#paymentDate').datepicker();
@@ -20,7 +33,7 @@
             $("#clientName").text( "" + '${sessionScope.customer.name}' + "");
             $("#clientAddress").text( "" + '${sessionScope.customer.address.city}' + " " + '${sessionScope.customer.address.postCode}' + " " + '${sessionScope.customer.address.street}' + " " + '${sessionScope.customer.address.number}' + "");
             $("#clientNip").text("" + '${sessionScope.customer.nip}' + "" );
-            $("#customer\\.id").val(cid);
+            $("#order\\.customer\\.id").val(cid);
         }
         //add remove data row
         $('.new').click(function(){
@@ -120,7 +133,11 @@
             <input id="search" name="search" type="text" value="${search}" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
             </form>
             <sf:form modelAttribute="invoiceForm" method="post" onsubmit="return checkClient();">
-                <header><h3><spring:message code="order.add.form.title" /> <sf:input path="order.invoiceNumber" /> <sf:errors path="order.invoiceNumber" /></h3></header>
+                <joda:format var="date" value="${order.orderDate}" pattern="dd-MM-yyyy"/>
+                <header>
+                    <h3 style="width: 30%;"><spring:message code="order.add.form.title" /> <sf:input path="order.invoiceNumber" cssStyle="width: 30%;"/> <sf:errors path="order.invoiceNumber" /></h3>
+                    <h3 style="width: 30%;"><spring:message code="order.add.form.date" /> <sf:input path="order.orderDate" cssStyle="width: 30%;"/> <sf:errors path="order.invoiceNumber" /></h3>
+                </header>
                 <div class="module_content">
                     <fieldset style="width:48%; float:left; margin-right: 3px;">
                         <label id="clientData"><spring:message code="order.add.form.customerdata" />:</label>
@@ -130,6 +147,7 @@
                         <sf:hidden path="order.customer.id" />
                     </fieldset>
                     <fieldset style="width:48%; float:left;">
+                        <sf:checkbox path="grossInvoice" label="Faktura brutto" /><div class="clear">
                         <sf:checkbox path="excise" label="Akcyza" />
                         <select id="payment" name="payment" onchange="return paymentChange();" >
                             <c:forEach items="${payments}" var="item">

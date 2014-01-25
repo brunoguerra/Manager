@@ -28,7 +28,7 @@ public class Order extends BaseEntity {
 
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "order_date")
     private DateTime orderDate;
 
