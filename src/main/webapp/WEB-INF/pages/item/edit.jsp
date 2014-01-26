@@ -29,6 +29,10 @@
                     <sf:errors path="name" cssClass="error_text"/>
                 </fieldset><div class="clear"></div>
                 <fieldset style="width:48%; float:left;">
+                    <label><spring:message code="item.add.form.nameInvoice"/>:</label>
+                    <sf:input path="nameInvoice" cssStyle="width:92%;"/>
+                </fieldset><div class="clear"></div>
+                <fieldset style="width:48%; float:left;">
                     <label><spring:message code="item.edit.form.code"/>:</label>
                     <sf:input path="code" cssStyle="width:92%;"/>
                     <sf:errors path="code" cssClass="error_text"/>

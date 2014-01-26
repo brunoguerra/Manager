@@ -22,6 +22,8 @@ public class Item extends BaseEntity {
     @UniqueName(message = "{item.name.exist}", groups = { Add.class })
     private String name;
 
+    private String nameInvoice;
+
     @Column(nullable = false)
     @NotNull(message = "{item.code}", groups = { Add.class, Update.class })
     private Integer code;
@@ -140,6 +142,14 @@ public class Item extends BaseEntity {
 
     public void setPriceNetExcise(BigDecimal priceNetExcise) {
         this.priceNetExcise = priceNetExcise;
+    }
+
+    public String getNameInvoice() {
+        return nameInvoice;
+    }
+
+    public void setNameInvoice(String nameInvoice) {
+        this.nameInvoice = nameInvoice;
     }
 
     public interface Add {}

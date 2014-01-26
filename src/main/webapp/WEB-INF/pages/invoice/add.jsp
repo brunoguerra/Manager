@@ -81,7 +81,7 @@
     }
 
     function checkClient() {
-        if($('#customer\\.id').val() == '') {
+        if($('#order\\.customer\\.id').val() == '') {
             $("#missingclient").show();
             return false;
         }

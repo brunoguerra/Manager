@@ -240,7 +240,13 @@ public class GeneratePDF {
                 //fill row
                 Item itemObj = orderDetails.getItem();
                 acroFields.setField(lp, "" + counter);
-                acroFields.setField(item, itemObj.getName());
+
+                if(itemObj.getNameInvoice() == null) {
+                    acroFields.setField(item, itemObj.getName());
+                } else {
+                    acroFields.setField(item, itemObj.getNameInvoice());
+                }
+
                 acroFields.setField(quantity, "" +
                         orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP).toString().replace('.', ','));
                 acroFields.setField(jm, "tona");
@@ -363,7 +369,13 @@ public class GeneratePDF {
                 //fill row
                 Item itemObj = orderDetails.getItem();
                 acroFields.setField(lp, "" + counter);
-                acroFields.setField(item, itemObj.getName());
+
+                if(itemObj.getNameInvoice() == null) {
+                    acroFields.setField(item, itemObj.getName());
+                } else {
+                    acroFields.setField(item, itemObj.getNameInvoice());
+                }
+
                 acroFields.setField(quantity, "" +
                         orderDetails.getQuantity().divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP).toString().replace('.', ','));
                 acroFields.setField(jm, "tona");
