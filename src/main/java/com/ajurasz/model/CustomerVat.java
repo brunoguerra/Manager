@@ -18,8 +18,6 @@ public class CustomerVat extends Customer {
     @NotEmpty(message = "{customer.name}")
     private String name;
 
-    @Column(nullable = false)
-    @NotEmpty(message = "{customer.nip}")
     private String nip;
 
     public String getName() {

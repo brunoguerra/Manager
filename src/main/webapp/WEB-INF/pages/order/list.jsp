@@ -88,7 +88,7 @@
                                                 <a href="#" style="float: left;" onclick="return showOrder(${order.id});" ><input type="image" src="<c:url value="/resources/images/icn_print.png"/>" title="${print}"></a>
                                             </td>
                                             <td><c:out value="${order.docNumber}"/></td>
-                                            <td><joda:format value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
+                                            <td><joda:format value="${order.orderDate}" pattern="dd-MM-yyyy"/></td>
                                             <c:choose>
                                                 <c:when test="${order.invoice}">
                                                     <td><c:out value="${order.customer.name} "/></td>
