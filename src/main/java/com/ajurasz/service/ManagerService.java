@@ -63,6 +63,9 @@ public interface ManagerService {
     //--COMPANY METHODS
     Company saveCompany(Company company);
 
+    //--ROLE METHODS
+    Role getRoleByName(String roleName);
+
     //--REPORT METHODS
     Page<Report> findAllReports(Pageable pageable);
     Report saveReport(Report report);

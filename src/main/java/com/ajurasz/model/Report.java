@@ -25,18 +25,18 @@ public class Report extends BaseEntity {
     private String quoter;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Column(name = "creation_date")
     private DateTime creationDate;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "start_date")
     @NotNull(message = "{report.startDate}")
     private DateTime startDate;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "end_date")
     @NotNull(message = "{report.endDate}")
     private DateTime endDate;

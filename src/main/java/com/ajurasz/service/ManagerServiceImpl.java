@@ -40,6 +40,7 @@ public class ManagerServiceImpl implements ManagerService {
     private CompanyRepository companyRepo;
     private ReportRepository reportRepo;
     private CustomerVatRepository customerVatRepo;
+    private RoleRepository roleRepo;
 
     @Autowired
     private ServletContext servletContext;
@@ -49,7 +50,7 @@ public class ManagerServiceImpl implements ManagerService {
                               StateHistoryRepository stateHistoryRepo,StateRepository stateRepo,
                               OrderRepository orderRepo, ReasonRepository reasonRepo,
                               CompanyRepository companyRepo, ReportRepository reportRepo,
-                              CustomerVatRepository customerVatRepo) {
+                              CustomerVatRepository customerVatRepo, RoleRepository roleRepo) {
         this.customerRepo = customerRepo;
         this.itemRepo = itemRepo;
         this.stateHistoryRepo = stateHistoryRepo;
@@ -59,6 +60,7 @@ public class ManagerServiceImpl implements ManagerService {
         this.companyRepo = companyRepo;
         this.reportRepo = reportRepo;
         this.customerVatRepo = customerVatRepo;
+        this.roleRepo = roleRepo;
     }
 
     //CUSTOMERS
@@ -424,6 +426,12 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public Company saveCompany(Company company) {
         return  companyRepo.save(company);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Role getRoleByName(String roleName) {
+        return roleRepo.findByAuthority(roleName);
     }
 
     @Override

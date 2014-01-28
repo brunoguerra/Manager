@@ -11,6 +11,10 @@
         <put-attribute name="content" value="/WEB-INF/pages/authentication/{1}.jsp"/>
     </definition>
 
+    <definition name="account/register" extends="empty" >
+        <put-attribute name="content" value="/WEB-INF/pages/account/register.jsp"/>
+    </definition>
+
     <definition name="mainPage/*" extends="empty" >
         <put-attribute name="content" value="/WEB-INF/pages/home/{1}.jsp"/>
     </definition>
