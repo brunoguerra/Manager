@@ -18,6 +18,9 @@ import org.springframework.web.servlet.view.XmlViewResolver;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
+import org.thymeleaf.spring3.SpringTemplateEngine;
+import org.thymeleaf.spring3.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.util.List;
 
@@ -30,17 +33,30 @@ import java.util.List;
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
     @Bean
-    public UrlBasedViewResolver viewResolver() {
-        UrlBasedViewResolver urlBasedViewResolver = new UrlBasedViewResolver();
-        urlBasedViewResolver.setViewClass(TilesView.class);
-        return urlBasedViewResolver;
+    public ServletContextTemplateResolver templateResolver() {
+        ServletContextTemplateResolver templateResolver =
+                new ServletContextTemplateResolver();
+        templateResolver.setPrefix("/WEB-INF/pages/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode("HTML5");
+        return templateResolver;
     }
 
     @Bean
-    public TilesConfigurer tilesConfigurer() {
-        TilesConfigurer tilesConfigurer = new TilesConfigurer();
-        tilesConfigurer.setDefinitions(new String[] {"/WEB-INF/tiles.xml"});
-        return tilesConfigurer;
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine =
+                new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver());
+        return templateEngine;
+    }
+
+    @Bean
+    public ThymeleafViewResolver viewResolver() {
+        ThymeleafViewResolver viewResolver =
+                new ThymeleafViewResolver();
+        viewResolver.setCharacterEncoding("UTF-8");
+        viewResolver.setTemplateEngine(templateEngine());
+        return viewResolver;
     }
 
     @Override
@@ -49,14 +65,5 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/documents/**").addResourceLocations("/WEB-INF/pdfs/documents/**");
         registry.addResourceHandler("/reports/**").addResourceLocations("/WEB-INF/pdfs/reports/**");
         registry.addResourceHandler("/invoices/**").addResourceLocations("/WEB-INF/pdfs/invoices/**");
-    }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver =
-                new PageableHandlerMethodArgumentResolver();
-        pageableHandlerMethodArgumentResolver.setFallbackPageable(new PageRequest(0, 10, new Sort(Sort.Direction.DESC, "id")));
-
-        argumentResolvers.add(pageableHandlerMethodArgumentResolver);
     }
 }
