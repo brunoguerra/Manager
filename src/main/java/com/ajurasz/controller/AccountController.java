@@ -3,6 +3,8 @@ package com.ajurasz.controller;
 import com.ajurasz.model.Company;
 import com.ajurasz.model.Role;
 import com.ajurasz.service.ManagerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,8 @@ import java.util.Arrays;
 @Controller
 public class AccountController {
 
+    private static final Logger log = LoggerFactory.getLogger(AccountController.class);
+
     @Autowired
     ManagerService managerService;
 
@@ -30,42 +34,18 @@ public class AccountController {
     public String initRegisterForm(Model model) {
         Company company = new Company();
         model.addAttribute("company", company);
+
+        log.info("Send new company object to registry page " + company);
         return "account/register";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String processRegisterForm(@Valid @ModelAttribute("company") Company company, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
+            log.debug("Form validation error during registration " + result.getFieldErrors());
             return "account/register";
         }
-        if(!company.getPassword().equals(company.getConfirmPassword())) {
-            model.addAttribute("passwordDontMatch", true);
-            return "account/register";
-        }
-        //set user role
-        Role role = managerService.getRoleByName("ROLE_USER");
-        Role[] roles = {role};
-        //disable account by default
-        company.setEnabled(false);
-
-        //set other properties
-        company.setAccountNonExpired(true);
-        company.setAccountNonLocked(true);
-        company.setCredentialsNonExpired(true);
-
-        //encrypt password
-        BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
-        String encodedPassword = new BCryptPasswordEncoder().encode(company.getPassword());
-        company.setPassword(encodedPassword);
-        company.setConfirmPassword(encodedPassword);
-
-        //save company
         managerService.saveCompany(company);
-
-        //todo: need to fix this:
-        company.setRoles(Arrays.asList(roles));
-        managerService.saveCompany(company);
-        redirectAttributes.addFlashAttribute("accountCreated", true);
-        return "redirect:/login";
+        return "redirect:authentication/login";
     }
 }

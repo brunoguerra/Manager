@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 
-    <title>Login</title>
+    <title>Logowanie</title>
 
     <!-- Core CSS - Include with every page -->
     <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet" />
@@ -19,24 +19,30 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title" th:text="#{login.title}">Please Sign In</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form">
+                        <form action="#" role="form" th:action="@{/j_spring_security_check}" method="post">
+
+                            <div class="alert alert-danger alert-dismissable" th:if="${param.error}">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <span th:text="${session[SPRING_SECURITY_LAST_EXCEPTION].message}" />
+                            </div>
+
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus="autofocus" />
+                                    <input class="form-control" placeholder="E-mail" th:attr="placeholder=#{login.email}" name="email" type="email" autofocus="autofocus" />
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="" />
+                                    <input class="form-control" placeholder="Password" th:attr="placeholder=#{login.password}" name="password" type="password" value="" />
                                 </div>
                                 <div class="checkbox">
                                     <label>
-                                        <input name="remember" type="checkbox" value="Remember Me" />Remember Me
+                                        <input name="remember" type="checkbox" value="Remember Me" th:text="#{login.remember-me}" />
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>
+                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Login in" th:attr="value=#{login.submit}" />
                             </fieldset>
                         </form>
                     </div>

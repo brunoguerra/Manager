@@ -1,5 +1,7 @@
 package com.ajurasz.model;
 
+import com.ajurasz.util.annotation.FieldMatch;
+import com.ajurasz.util.annotation.UniqueEmail;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,38 +9,59 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * @author Arek Jurasz
  */
+@FieldMatch(first = "password", second = "confirmPassword", errorMessage = "{company.validation.passwords-dont-match}")
 @Entity
 @Table(name = "companies")
 public class Company extends BaseEntity implements UserDetails {
 
-    @NotEmpty(message = "Email jest wymagany")
-    @Email(message = "Ten email jest nieprawidłowy")
+    @UniqueEmail(message = "{comapny.validation.email-unique}")
+    @NotEmpty(message = "{comapny.validation.email-required}")
+    @Email(message = "{comapny.validation.email-invalid}")
+    @Column(name = "email", nullable = false, unique = true)
     private String username;
-    @NotEmpty(message = "Hasło jest wymagane")
+
+    @NotEmpty(message = "{comapny.validation.password-required}")
+    @Column(nullable = false)
     private String password;
-    @NotEmpty(message = "Proszę powtórzyć hasło")
+
+    @NotEmpty(message = "{company.validation.password-confirm-required}")
+    @Column(name = "password_confirm", nullable = false)
     private String confirmPassword;
+
     private Boolean accountNonExpired;
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
 
-    @NotEmpty(message = "Nazwa firmy jest wymagana")
+    @NotEmpty(message = "{company.validation.company-name-required}")
+    @Column(name = "company_name", nullable = false)
     private String fullName;
+
+    @Column(name = "owner_first_name")
     private String ownerFirstName;
+
+    @Column(name = "owner_last_name")
     private String ownerLastName;
-    @NotEmpty(message = "Numer NIP jesy wymagany")
+
+    @NotEmpty(message = "{company.validation.company-nip-required}")
+    @Column(nullable = false)
     private String nip;
+
     private String bank;
+
+    @Column(name = "bank_numer")
     private String bankNumber;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Role> roles;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -54,7 +77,7 @@ public class Company extends BaseEntity implements UserDetails {
     }
 
     public Company(String username, String password, List<Role> roles) {
-        this(username, password, true, true, true, true, roles);
+        this(username, password, false, true, true, true, roles);
     }
 
     public Company(String username, String password, boolean enabled, boolean accountNonExpired,
@@ -86,9 +109,17 @@ public class Company extends BaseEntity implements UserDetails {
         return this.password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String getUsername() {
         return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -125,14 +156,6 @@ public class Company extends BaseEntity implements UserDetails {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Address getAddress() {
@@ -209,5 +232,25 @@ public class Company extends BaseEntity implements UserDetails {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "username='" + username + '\'' +
+                ", accountNonExpired=" + accountNonExpired +
+                ", accountNonLocked=" + accountNonLocked +
+                ", credentialsNonExpired=" + credentialsNonExpired +
+                ", enabled=" + enabled +
+                ", fullName='" + fullName + '\'' +
+                ", ownerFirstName='" + ownerFirstName + '\'' +
+                ", ownerLastName='" + ownerLastName + '\'' +
+                ", nip='" + nip + '\'' +
+                ", bank='" + bank + '\'' +
+                ", bankNumber='" + bankNumber + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", roles=" + roles +
+                ", address=" + address +
+                '}';
     }
 }

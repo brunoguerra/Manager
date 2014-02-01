@@ -2,6 +2,7 @@ package com.ajurasz.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -31,6 +32,9 @@ public class DatabaseConfig {
     @Autowired
     Environment environment;
 
+    @Autowired
+    MessageSource messageSource;
+
     @Bean
     public BoneCPDataSource dataSource() {
         BoneCPDataSource ds = new BoneCPDataSource();
@@ -42,9 +46,12 @@ public class DatabaseConfig {
         return ds;
     }
 
-    @Bean
-    public LocalValidatorFactoryBean validator() {
-        return new LocalValidatorFactoryBean();
+    @Bean(name = "validator")
+    public LocalValidatorFactoryBean validatorFactoryBean() {
+        LocalValidatorFactoryBean validatorFactoryBean =
+                new LocalValidatorFactoryBean();
+        validatorFactoryBean.setValidationMessageSource(messageSource);
+        return validatorFactoryBean;
     }
 
     @Bean

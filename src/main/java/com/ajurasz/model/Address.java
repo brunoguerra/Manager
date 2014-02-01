@@ -17,23 +17,22 @@ import javax.validation.constraints.Size;
 @Table(name = "addresses")
 public class Address extends BaseEntity {
 
-    @Column(nullable = false, length = 30)
-    @NotEmpty(message = "{customer.city}")
-    @Size(max = 30, message = "{customer.city.length}")
+    @NotEmpty(message = "{address.validation.city-required}")
+    @Column(nullable = false)
     private String city;
 
-    @Column(length = 30)
-    @Size(max =30, message = "{customer.street.length}")
     private String street;
 
+
+    @NotEmpty(message = "{address.validation.post-code-required}")
+    @Size(max = 6, message = "{address.validation.post-code-length}")
+    @Pattern(regexp = "[0-9]{2}-[0-9]{3}", message = "{address.validation.post-code-pattern}")
     @Column(name = "post_code", nullable = false, length = 6)
-    @NotEmpty(message = "{customer.postCode}")
-    @Size(max = 6, message = "{customer.postCode.length}")
-    @Pattern(regexp = "[0-9]{2}-[0-9]{3}", message = "{customer.postCode.invalid}")
     private String postCode;
 
+
+    @NotEmpty(message = "{address.validation.number-required}")
     @Column(nullable = false)
-    @NotEmpty(message = "{customer.number}")
     private String number;
 
     @OneToOne(mappedBy = "address")
@@ -87,5 +86,15 @@ public class Address extends BaseEntity {
         } else {
             return postCode + " " + city + " ul." + street + " " + number;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", number='" + number + '\'' +
+                '}';
     }
 }

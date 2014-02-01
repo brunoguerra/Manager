@@ -30,12 +30,18 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
                 authentication-success-handler-ref="authenticationSuccessHandler"
                 authentication-failure-url="/login?error"
                 login-processing-url="/j_spring_security_check"
-                username-parameter="username"
+                username-parameter="email"
                 password-parameter="password"
                 />
 		<security:logout
                 logout-url="/j_spring_security_logout"
                 logout-success-url="/login?logout"
+                delete-cookies="JSESSIONID"
+                />
+        <security:remember-me
+                key="uniqueAndSecret"
+                remember-me-parameter="remember"
+                user-service-ref="companyDetailsService"
                 />
 	</security:http>
 	

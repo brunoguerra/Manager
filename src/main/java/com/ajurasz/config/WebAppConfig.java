@@ -1,5 +1,7 @@
 package com.ajurasz.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -8,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -32,10 +36,14 @@ import java.util.List;
 @Configuration
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
+    @Autowired
+    LocalValidatorFactoryBean validatorFactoryBean;
+
     @Bean
     public ServletContextTemplateResolver templateResolver() {
         ServletContextTemplateResolver templateResolver =
                 new ServletContextTemplateResolver();
+        templateResolver.setCacheable(false);
         templateResolver.setPrefix("/WEB-INF/pages/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode("HTML5");
@@ -57,6 +65,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         viewResolver.setCharacterEncoding("UTF-8");
         viewResolver.setTemplateEngine(templateEngine());
         return viewResolver;
+    }
+
+    @Override
+    public Validator getValidator() {
+        return this.validatorFactoryBean;
     }
 
     @Override

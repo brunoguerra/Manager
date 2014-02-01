@@ -35,7 +35,7 @@
         <jta.version>1.1</jta.version>
 
         <!-- Bean validation -->
-        <hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
+        <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
 
         <!-- Search -->
         <hibernate-search.version>4.4.2.Final</hibernate-search.version>

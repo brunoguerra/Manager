@@ -39,7 +39,7 @@ public class InternationalizationConfig {
         return requestMappingHandlerMapping;
     }
 
-    //Register properties with messsages
+
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource =

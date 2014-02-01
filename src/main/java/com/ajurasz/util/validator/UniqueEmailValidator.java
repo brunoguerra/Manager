@@ -1,12 +1,11 @@
 package com.ajurasz.util.validator;
 
 import com.ajurasz.model.Company;
-import com.ajurasz.model.Item;
-import com.ajurasz.repository.ItemRepository;
 import com.ajurasz.service.ManagerService;
-import com.ajurasz.util.annotation.UniqueName;
+import com.ajurasz.util.annotation.UniqueEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
@@ -18,31 +17,27 @@ import javax.validation.ConstraintValidatorContext;
  * @author Arek Jurasz
  */
 @Component
-public class UniqueNameValidator implements ConstraintValidator<UniqueName, String> {
+public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    private ItemRepository itemRepo;
-
-    @Autowired
     private ManagerService managerService;
 
-    private UniqueName uniqueName;
+    private UniqueEmail uniqueEmail;
 
     @Override
-    public void initialize(UniqueName constraintAnnotation) {
-        this.uniqueName = constraintAnnotation;
+    public void initialize(UniqueEmail constraintAnnotation) {
+        this.uniqueEmail = constraintAnnotation;
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         try {
             entityManager.setFlushMode(FlushModeType.COMMIT);
-            Company company = managerService.getCompany();
-            Item item = itemRepo.findItemByNameAndCompany(value, company);
-            if(item == null)
+            Company company = managerService.findCompanyByUsername(value);
+            if(company == null)
                 return true;
             else
                 return false;
@@ -51,6 +46,4 @@ public class UniqueNameValidator implements ConstraintValidator<UniqueName, Stri
             entityManager.setFlushMode(FlushModeType.AUTO);
         }
     }
-
-
 }

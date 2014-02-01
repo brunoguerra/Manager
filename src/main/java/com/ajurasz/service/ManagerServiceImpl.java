@@ -425,7 +425,23 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public Company saveCompany(Company company) {
+        //set default values:
+        company.setAccountNonExpired(true);
+        company.setAccountNonLocked(true);
+        company.setCredentialsNonExpired(true);
+        company.setEnabled(false);
+
+        //set default role
+        Role user = new Role(Roles.USER);
+        company.setRoles(Arrays.asList(new Role[] {user}));
+
         return  companyRepo.save(company);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Company findCompanyByUsername(String username) {
+        return companyRepo.findCompanyByUsername(username);
     }
 
     @Override

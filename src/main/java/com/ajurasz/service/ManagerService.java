@@ -62,6 +62,7 @@ public interface ManagerService {
 
     //--COMPANY METHODS
     Company saveCompany(Company company);
+    Company findCompanyByUsername(String username);
 
     //--ROLE METHODS
     Role getRoleByName(String roleName);

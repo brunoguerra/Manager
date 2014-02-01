@@ -1,4 +1,4 @@
-package com.ajurasz.util.handler;
+package com.ajurasz.authentication;
 
 import com.ajurasz.model.Company;
 import org.springframework.security.core.Authentication;
@@ -18,7 +18,8 @@ public class SimpleAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         super.onAuthenticationSuccess(request, response, authentication);
         HttpSession session = request.getSession();
-        session.setMaxInactiveInterval(60 * 60 * 8);
+        //session.setMaxInactiveInterval(60 * 60 * 8);
+        session.setMaxInactiveInterval(60);
         Company c = (Company) authentication.getPrincipal();
         session.setAttribute("company", c);
     }

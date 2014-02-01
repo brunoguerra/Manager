@@ -24,7 +24,7 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
     private ManagerService managerService;
 
     @Autowired
@@ -39,6 +39,6 @@ public class HomeController {
 
     @RequestMapping(value = "/")
     public String homePage() {
-        return "mainPage/index";
+        return "home/home";
     }
 }

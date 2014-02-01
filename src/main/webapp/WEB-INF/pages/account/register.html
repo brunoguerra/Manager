@@ -1,0 +1,89 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring3-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+
+    <title>Rejestracja</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/resources/font-awesome/css/font-awesome.css}" rel="stylesheet" />
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link th:href="@{/resources/css/sb-admin.css}" rel="stylesheet" />
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title" th:text="#{register.title}">Please Register in</h3>
+                </div>
+                <div class="panel-body">
+                    <form action="#" role="form" th:action="@{/register}" method="post" th:object="${company}">
+                        <fieldset>
+
+                            <label th:text="#{register.account-details}" />
+
+                            <div class="form-group" th:classappend="${#fields.hasErrors('username')}? has-error">
+                                <input class="form-control" placeholder="E-mail" th:attr="placeholder=#{register.email}" th:field="*{username}" type="email" autofocus="autofocus" />
+                                <label th:if="${#fields.hasErrors('username')}" class="control-label" th:errors="*{username}"></label>
+                            </div>
+                            <div class="form-group" th:classappend="${#fields.hasErrors('password')}? has-error">
+                                <input class="form-control" placeholder="Password" th:attr="placeholder=#{register.password}" th:field="*{password}" type="password" value="" />
+                                <label th:if="${#fields.hasErrors('password')}" class="control-label" th:errors="*{password}"></label>
+                            </div>
+                            <div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')}? has-error">
+                                <input class="form-control" placeholder="Confirm Password" th:attr="placeholder=#{register.password-confirm}" th:field="*{confirmPassword}" type="password" value="" />
+                                <label th:if="${#fields.hasErrors('confirmPassword')}" class="control-label" th:errors="*{confirmPassword}"></label>
+                            </div>
+
+                            <label th:text="#{register.company-details}" />
+
+                            <div class="form-group" th:classappend="${#fields.hasErrors('fullName')}? has-error">
+                                <input class="form-control" placeholder="Company Name" th:attr="placeholder=#{register.company-name}" th:field="*{fullName}" type="text" value="" />
+                                <label th:if="${#fields.hasErrors('fullName')}" class="control-label" th:errors="*{fullName}"></label>
+                            </div>
+                            <div class="form-group" th:classappend="${#fields.hasErrors('nip')}? has-error">
+                                <input class="form-control" placeholder="Company NIP" th:attr="placeholder=#{register.company-nip}" th:field="*{nip}" type="text" value="" />
+                                <label th:if="${#fields.hasErrors('nip')}" class="control-label" th:errors="*{nip}"></label>
+                            </div>
+
+                            <label th:text="#{register.company-address}" />
+
+                            <div class="form-group" th:classappend="${#fields.hasErrors('address.city')}? has-error">
+                                <input class="form-control" placeholder="City" th:attr="placeholder=#{register.address-city}" th:field="*{address.city}" type="text" value="" />
+                                <label th:if="${#fields.hasErrors('address.city')}" class="control-label" th:errors="*{address.city}"></label>
+                            </div>
+                            <div class="form-group" th:classappend="${#fields.hasErrors('address.postCode')}? has-error">
+                                <input class="form-control" placeholder="Post code" th:attr="placeholder=#{register.address-post-code}" th:field="*{address.postCode}" type="text" value="" />
+                                <label th:if="${#fields.hasErrors('address.postCode')}" class="control-label" th:errors="*{address.postCode}"></label>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Street" th:attr="placeholder=#{register.address-street}" th:field="*{address.street}" type="text" value="" />
+                            </div>
+                            <div class="form-group" th:classappend="${#fields.hasErrors('address.number')}? has-error">
+                                <input class="form-control" placeholder="Number" th:attr="placeholder=#{register.address-number}" th:field="*{address.number}" type="text" value="" />
+                                <label th:if="${#fields.hasErrors('address.number')}" class="control-label" th:errors="*{address.number}"></label>
+                            </div>
+
+                            <input type="submit" class="btn btn-lg btn-success btn-block" value="Register" th:attr="value=#{register.submit}" />
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Core Scripts - Include with every page -->
+<script th:src="@{/resources/js/jquery-1.10.2.js}"></script>
+<script th:src="@{/resources/js/bootstrap.min.js}"></script>
+<script th:src="@{/resourcesjs/plugins/metisMenu/jquery.metisMenu.js}"></script>
+
+<!-- SB Admin Scripts - Include with every page -->
+<script src="@{/resources/js/sb-admin.js}"></script>
+</body>
+</html>

@@ -22,6 +22,12 @@ public class Role extends BaseEntity implements GrantedAuthority {
         this.authority = authority;
     }
 
+    public Role(Roles roles) {
+        this.authority = roles.toString();
+    }
+
+    @ManyToOne
+    Company company;
 
     @Override
     public String getAuthority() {

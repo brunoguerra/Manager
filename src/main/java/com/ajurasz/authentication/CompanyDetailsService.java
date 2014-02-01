@@ -1,4 +1,4 @@
-package com.ajurasz.service;
+package com.ajurasz.authentication;
 
 import com.ajurasz.model.Company;
 import org.springframework.security.core.userdetails.UserDetailsService;
