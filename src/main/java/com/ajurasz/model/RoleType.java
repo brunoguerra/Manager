@@ -3,13 +3,13 @@ package com.ajurasz.model;
 /**
  * @author Arek Jurasz
  */
-public enum Roles {
+public enum RoleType {
     USER("ROLER_USER"),
     VAT("ROLE_VAT"),
     ADMIN("ROLER_ADMIN");
 
     private String name;
-    private Roles(String name) {
+    private RoleType(String name) {
         this.name = name;
     }
 

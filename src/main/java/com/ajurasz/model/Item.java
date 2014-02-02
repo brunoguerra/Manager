@@ -17,19 +17,19 @@ import java.util.List;
 @Table(name = "items")
 public class Item extends BaseEntity {
 
-    @Column(nullable = false)
     @NotEmpty(message = "{item.name}", groups = { Add.class, Update.class })
     @UniqueName(message = "{item.name.exist}", groups = { Add.class })
+    @Column(nullable = false)
     private String name;
 
     private String nameInvoice;
 
-    @Column(nullable = false)
     @NotNull(message = "{item.code}", groups = { Add.class, Update.class })
+    @Column(name = "code_cn", nullable = false)
     private Integer code;
 
-    @Column(nullable = false)
     @NotNull(message = "{item.value}", groups = { Add.class, Update.class })
+    @Column(name = "value_kj", nullable = false)
     private Double value;
 
     @Column(nullable = false)
@@ -44,6 +44,12 @@ public class Item extends BaseEntity {
 
     @Column(nullable = false)
     private BigDecimal priceNetExcise;
+
+    @Column(nullable = false)
+    private ItemType type;
+
+    @Column(nullable = false)
+    private Vat vat;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Valid
@@ -150,6 +156,22 @@ public class Item extends BaseEntity {
 
     public void setNameInvoice(String nameInvoice) {
         this.nameInvoice = nameInvoice;
+    }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public void setType(ItemType type) {
+        this.type = type;
+    }
+
+    public Vat getVat() {
+        return vat;
+    }
+
+    public void setVat(Vat vat) {
+        this.vat = vat;
     }
 
     public interface Add {}

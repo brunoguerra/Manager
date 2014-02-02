@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -425,6 +426,11 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public Company saveCompany(Company company) {
+        //encode password
+        String hashedPassword = new BCryptPasswordEncoder().encode(company.getPassword());
+        company.setPassword(hashedPassword);
+        company.setConfirmPassword(hashedPassword);
+
         //set default values:
         company.setAccountNonExpired(true);
         company.setAccountNonLocked(true);
@@ -432,7 +438,7 @@ public class ManagerServiceImpl implements ManagerService {
         company.setEnabled(false);
 
         //set default role
-        Role user = new Role(Roles.USER);
+        Role user = new Role(RoleType.USER);
         company.setRoles(Arrays.asList(new Role[] {user}));
 
         return  companyRepo.save(company);

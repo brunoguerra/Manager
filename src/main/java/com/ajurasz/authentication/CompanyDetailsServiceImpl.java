@@ -34,16 +34,15 @@ public class CompanyDetailsServiceImpl implements CompanyDetailsService {
 
         Company company = companyRepo.findCompanyByUsername(username);
         if(company == null) {
-            log.info("No user with this {0} email", username);
+            log.info("No user with this " + username + " email");
             throw new BadCredentialsException(messageSource.getMessage("login.invalid-user-password", null, new Locale("pl", "PL")));
         }
 
         if(company != null && company.isEnabled() == false) {
-            log.info("User's {0} account is disable", username);
+            log.info("User's " + username + " account is disable");
             throw new AccountDisableException(messageSource.getMessage("login.account-disable", null, new Locale("pl", "PL")));
         }
 
-        log.info("User is valid " + company);
         return company;
     }
 }

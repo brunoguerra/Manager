@@ -32,13 +32,13 @@ public class HomeController {
         this.managerService = managerService;
     }
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String index() {
         return "home/home";
     }
 
     @RequestMapping(value = "/")
     public String homePage() {
-        return "home/home";
+        return null;
     }
 }

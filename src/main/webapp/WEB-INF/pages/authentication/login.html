@@ -29,6 +29,11 @@
                                 <span th:text="${session[SPRING_SECURITY_LAST_EXCEPTION].message}" />
                             </div>
 
+                            <div class="alert alert-success alert-dismissable" th:if="${param.logout}">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <span th:text="#{login.logout-success}" />
+                            </div>
+
                             <fieldset>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="E-mail" th:attr="placeholder=#{login.email}" name="email" type="email" autofocus="autofocus" />
@@ -38,7 +43,7 @@
                                 </div>
                                 <div class="checkbox">
                                     <label>
-                                        <input name="remember" type="checkbox" value="Remember Me" th:text="#{login.remember-me}" />
+                                        <input name="_spring_security_remember_me" type="checkbox" th:text="#{login.remember-me}" />
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
@@ -54,9 +59,9 @@
     <!-- Core Scripts - Include with every page -->
     <script th:src="@{/resources/js/jquery-1.10.2.js}"></script>
     <script th:src="@{/resources/js/bootstrap.min.js}"></script>
-    <script th:src="@{/resourcesjs/plugins/metisMenu/jquery.metisMenu.js}"></script>
+    <script th:src="@{/resources/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
 
     <!-- SB Admin Scripts - Include with every page -->
-    <script src="@{/resources/js/sb-admin.js}"></script>
+    <script th:src="@{/resources/js/sb-admin.js}"></script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.ajurasz.controller;
 
 import com.ajurasz.model.Item;
+import com.ajurasz.model.ItemType;
 import com.ajurasz.model.State;
 import com.ajurasz.model.StateHistory;
 import com.ajurasz.service.ManagerService;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 

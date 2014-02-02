@@ -22,7 +22,7 @@ public class Role extends BaseEntity implements GrantedAuthority {
         this.authority = authority;
     }
 
-    public Role(Roles roles) {
+    public Role(RoleType roles) {
         this.authority = roles.toString();
     }
 
