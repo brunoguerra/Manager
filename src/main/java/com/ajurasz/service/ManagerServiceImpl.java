@@ -6,6 +6,8 @@ import com.ajurasz.util.forms.InvoiceForm;
 import com.ajurasz.util.pdf.GeneratePDF;
 import com.ajurasz.util.sql.mapper.CityPostCode;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ import java.util.*;
  */
 @Service("managerService")
 public class ManagerServiceImpl implements ManagerService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ManagerServiceImpl.class);
 
     public final static BigDecimal VAT = new BigDecimal(123);
     public final static String VAT_DIS = "23";
@@ -145,24 +149,30 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public Item saveItem(Item item) {
-        boolean isNew = false;
+        boolean createStateHistory = false;
         if(item.getId() == null) {
-            isNew = true;
+            createStateHistory = true;
+        }
+        //don't create state history for service item
+        if(item.getType() == ItemType.SERVICE) {
+            createStateHistory = false;
         }
         item.setCompany(getCompany());
 
+        BigDecimal vat = new BigDecimal(100).add(item.getVat().getBigDecimal());
+
         //PriceNet = PriceGross * 100 /123
-        item.setPriceNet( item.getPriceGross().multiply(new BigDecimal(100)).divide(VAT, 2, RoundingMode.HALF_UP));
+        item.setPriceNet( item.getPriceGross().multiply(new BigDecimal(100)).divide(vat, 2, RoundingMode.HALF_UP));
 
         //PriceGrossExcise = PriceGross + 37zł
         item.setPriceGrossExcise( item.getPriceGross().add(EXCISE) );
 
         //PriceNetExcise = PriceGrossExcise * 100 /123
-        item.setPriceNetExcise( item.getPriceGrossExcise().multiply(new BigDecimal(100)).divide(VAT, 2, RoundingMode.HALF_UP));
+        item.setPriceNetExcise( item.getPriceGrossExcise().multiply(new BigDecimal(100)).divide(vat, 2, RoundingMode.HALF_UP));
 
         itemRepo.save(item);
 
-        if(isNew) {
+        if(createStateHistory) {
             StateHistory stateHistory = null;
             if(item.getState() != null) {
                 stateHistory = new StateHistory();
@@ -324,6 +334,7 @@ public class ManagerServiceImpl implements ManagerService {
         stateHistory.setState(state);
         stateHistory.setValue(state.getLastValue());
         stateHistoryRepo.save(stateHistory);
+        LOGGER.debug("saved new state {}", state);
         return state;
     }
 

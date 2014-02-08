@@ -305,3 +305,6 @@ table.dataTable thead .sorting:after {
 .show-grid {
     margin: 15px 0;
 }
+
+/* Custom */
+h1 .btn-group { display: inline-block; }

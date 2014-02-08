@@ -1,5 +1,7 @@
 package com.ajurasz.model;
 
+import java.math.BigDecimal;
+
 /**
  * @author Arek Jurasz
  */
@@ -15,5 +17,9 @@ public enum Vat {
 
     public String getValue() {
         return "" + value + "%";
+    }
+
+    public BigDecimal getBigDecimal() {
+        return new BigDecimal(value);
     }
 }

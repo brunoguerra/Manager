@@ -24,7 +24,52 @@ $(document).ready(function() {
     });
 
 });
-//Hide given object after given timeout
-function hideAlert() {
-    alert('test');
-}
+
+//State change modal
+/*<![CDATA[*/
+$(document).ready(function() {
+    var id = '';
+    $('.state-change').on('click', function(e) {
+        e.preventDefault();
+        id = $(this).data('id');
+        $('#state-value').parent('div').removeClass('has-error');
+        $('#state-value').parent('div').find('label').remove();
+        $('#state-value').val('');
+        $('#state-value').focus();
+        $('#state-change-form').find('input[name=id]').val(id);
+    });
+
+    $('#state-change-url').on('click', function(e) {
+        var errors = 0;
+        if( $('#state-value').val().length == 0 ) {
+            $('#state-value').parent('div').addClass('has-error');
+            var text = /*[[#{field-required}]]*/ 'Pole jest wymagane';
+            $('#state-value').parent('div').append("<label class='control-label'>" + text + "</label>");
+            errors++;
+        }
+
+        if(errors == 0) {
+            $.ajax({
+                url: "/item/state/" + id + "/change",
+                type: "POST",
+                data: "value=" + $('#state-value').val(),
+                success: function(result) {
+                    $('#state_' + id).text(result);
+                }
+            });
+
+            $('#state-change-modal').modal('hide');
+        }
+    });
+});
+/*]]>*/
+
+//Clear all input fields for parent element
+$(document).ready(function() {
+    $('.btn-clear').on('click', function(e) {
+        var form = $(this).parents('form:first');
+        form.find('input[type=text]').each(function() {
+            $(this).val('');
+        });
+    });
+});

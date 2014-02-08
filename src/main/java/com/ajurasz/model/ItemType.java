@@ -16,4 +16,8 @@ public enum ItemType {
     public String getName() {
         return name;
     }
+
+    public String getNameForUrl() {
+        return this.name().toLowerCase();
+    }
 }

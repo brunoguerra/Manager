@@ -16,7 +16,7 @@
 
     <logger name="com.ajurasz" level="debug"/>
 
-    <root level="info">
+    <root level="off">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>

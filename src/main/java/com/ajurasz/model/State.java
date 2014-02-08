@@ -6,7 +6,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,15 +16,39 @@ import java.util.List;
 public class State extends BaseEntity {
 
     @Column(name = "current_state")
-    @NotNull(message = "{state.currentState}", groups = { Item.Add.class, Item.Update.class })
-    @DecimalMin(value = "-9999999.99", groups = { Item.Add.class, Item.Update.class })
-    @DecimalMax(value = "9999999.99", groups = { Item.Add.class, Item.Update.class })
+    @NotNull(message = "{state.validation.currentState-required}",
+            groups = {
+                    Item.Add_Coal.class, Item.Update_Coal.class,
+                    Item.Add_Construction.class, Item.Update_Construction.class
+            })
+    @DecimalMin(value = "-99999999.99",
+            groups = {
+                    Item.Add_Coal.class, Item.Update_Coal.class,
+                    Item.Add_Construction.class, Item.Update_Construction.class
+            })
+    @DecimalMax(value = "99999999.99",
+            groups = {
+                    Item.Add_Coal.class, Item.Update_Coal.class,
+                    Item.Add_Construction.class, Item.Update_Construction.class
+            })
     private BigDecimal currentState;
 
     @Column(name = "last_value")
-    @NotNull(groups = { Item.Add.class, Item.Update.class })
-    @DecimalMin(value = "-9999999.99", groups = { Item.Add.class, Item.Update.class })
-    @DecimalMax(value = "9999999.99", groups = { Item.Add.class, Item.Update.class })
+    @NotNull(
+            groups = {
+                    Item.Add_Coal.class, Item.Update_Coal.class,
+                    Item.Add_Construction.class, Item.Update_Construction.class
+            })
+    @DecimalMin(value = "-99999999.99",
+            groups = {
+                    Item.Add_Coal.class, Item.Update_Coal.class,
+                    Item.Add_Construction.class, Item.Update_Construction.class
+            })
+    @DecimalMax(value = "99999999.99",
+            groups = {
+                    Item.Add_Coal.class, Item.Update_Coal.class,
+                    Item.Add_Construction.class, Item.Update_Construction.class
+            })
     private BigDecimal lastValue;
 
     @OneToOne(mappedBy = "state")
@@ -59,7 +82,7 @@ public class State extends BaseEntity {
     }
 
     /**
-     * Add or substract passed value from currentState
+     * Add_Coal or substract passed value from currentState
      * @param currentState
      */
     public void setCurrentState(BigDecimal currentState) {
@@ -81,5 +104,14 @@ public class State extends BaseEntity {
 
     public void setLastValue(BigDecimal lastValue) {
         this.lastValue = lastValue;
+    }
+
+    @Override
+    public String toString() {
+        return "State{" +
+                "lastValue=" + lastValue +
+                ", currentState=" + currentState +
+                ", item=" + item.getName() +
+                '}';
     }
 }

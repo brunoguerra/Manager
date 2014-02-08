@@ -1,7 +1,6 @@
 package com.ajurasz.controller;
 
 import com.ajurasz.model.Item;
-import com.ajurasz.model.ItemType;
 import com.ajurasz.model.State;
 import com.ajurasz.model.StateHistory;
 import com.ajurasz.service.ManagerService;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -36,18 +33,21 @@ public class ItemController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
     private ManagerService managerService;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder binder) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+//    }
 
     @Autowired
     public ItemController(ManagerService managerService) {
         this.managerService = managerService;
-        LOGGER.info("ItemController called");
+        LOGGER.debug("ItemController called");
     }
 
+    /***********************************/
+    /*********  ADD ITEMS  *************/
+    /***********************************/
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initCreationForm(Model model) {
         Item item = new Item();
@@ -55,23 +55,38 @@ public class ItemController {
         return "item/add";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String processCreationForm(@Validated({Item.Add.class}) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+    private String add(Item item, BindingResult result, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
-            return "item/add";
+            LOGGER.debug("errors in add form");
+            return "item/add_validation";
         }
         managerService.saveItem(item);
         redirectAttributes.addFlashAttribute("itemAdded", true);
         return "redirect:/item/list";
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String initItemList(Model model) {
-        List<Item> items = managerService.findAllItems();
-        model.addAttribute("items", items);
-        return "item/list";
+    @RequestMapping(value = "/add-coal", method = RequestMethod.POST)
+    public String processCreationFormForCoal(@Validated({Item.Add_Coal.class}) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("add-coal method called");
+        return add(item, result, redirectAttributes);
     }
 
+    @RequestMapping(value = "/add-construction", method = RequestMethod.POST)
+    public String processCreationFormForConstruction(@Validated({Item.Add_Construction.class}) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("add-construction method called");
+        return add(item, result, redirectAttributes);
+    }
+
+    @RequestMapping(value = "/add-service", method = RequestMethod.POST)
+    public String processCreationFormForService(@Validated({Item.Add_Service.class}) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("add-service method called");
+        return add(item, result, redirectAttributes);
+    }
+
+
+    /***********************************/
+    /*********  EDIT ITEMS  ************/
+    /***********************************/
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String initEditForm(Model model, @PathVariable Long id) {
         Item item = managerService.getItem(id);
@@ -79,8 +94,7 @@ public class ItemController {
         return "item/edit";
     }
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-    public String processEditForm(@Validated({ Item.Update.class }) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+    private String edit(Item item, BindingResult result, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
             return "item/edit";
         }
@@ -89,29 +103,68 @@ public class ItemController {
         return "redirect:/item/list";
     }
 
+    @RequestMapping(value = "/edit-coal/{id}", method = RequestMethod.POST)
+    public String processEditFormForCoal(@Validated({ Item.Update_Coal.class }) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("edit-coal method called");
+        return edit(item, result, redirectAttributes);
+    }
+
+    @RequestMapping(value = "/edit-construction/{id}", method = RequestMethod.POST)
+    public String processEditFormForConstruction(@Validated({ Item.Update_Construction.class }) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("edit-construction method called");
+        return edit(item, result, redirectAttributes);
+    }
+
+    @RequestMapping(value = "/edit-service/{id}", method = RequestMethod.POST)
+    public String processEditFormForService(@Validated({ Item.Update_Service.class }) @ModelAttribute Item item, BindingResult result, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("edit-service method called");
+        return edit(item, result, redirectAttributes);
+    }
+
+    /***********************************/
+    /********  DELETE ITEMS  ***********/
+    /***********************************/
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String processItemDelete(@RequestParam Long id, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("delete method called");
         Item item = managerService.getItem(id);
         managerService.deleteItem(item);
         redirectAttributes.addFlashAttribute("itemDeleted", true);
         return "redirect:/item/list";
     }
 
+
+    /***********************************/
+    /********  LIST ITEMS  *************/
+    /***********************************/
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String initItemList(Model model) {
+        LOGGER.debug("list method called");
+        List<Item> items = managerService.findAllItems();
+        model.addAttribute("items", items);
+        return "item/list";
+    }
+
+
+    /***********************************/
+    /********  STATE HISTORY  **********/
+    /***********************************/
     @RequestMapping(value = "/state/{id}/history", method = RequestMethod.GET)
-    public String initStateHistory(Model model, @PathVariable Long id, Pageable pageable) {
-        Page<StateHistory> historyPage = managerService.findAllStateHistoryByStateIdDesc(id, pageable);
-        model.addAttribute("historyPage", historyPage);
+    public String initStateHistory(Model model, @PathVariable Long id) {
+        List<StateHistory> historyList = managerService.findAllStateHistoryByStateIdDesc(id);
+        model.addAttribute("historyList", historyList);
         model.addAttribute("state", managerService.getState(id));
         return "item/state_history";
     }
 
     @RequestMapping(value = "/state/{id}/change", method = RequestMethod.POST)
     @ResponseBody
-    public BigDecimal processStateChange(@PathVariable Long id, @RequestParam BigDecimal value) {
-        State state = managerService.getState(id);
+    public String processStateChange(@PathVariable Long id, @RequestParam BigDecimal value) {
+        LOGGER.debug("state change method called");
+        Item item = managerService.getItem(id);
+        State state = item.getState();
         state.setCurrentState(value);
         managerService.saveState(state);
-
-        return state.getCurrentState();
+        return state.getCurrentState() + " (" + item.getUnit().getUnit() + ")" ;
     }
 }

@@ -483,7 +483,7 @@
 		} );
 		oSettings.aoColumns.push( oCol );
 	
-		/* Add a column specific filter */
+		/* Add_Coal a column specific filter */
 		if ( oSettings.aoPreSearchCols[ iCol ] === undefined || oSettings.aoPreSearchCols[ iCol ] === null )
 		{
 			oSettings.aoPreSearchCols[ iCol ] = $.extend( true, {}, DataTable.models.oSearch );
@@ -802,7 +802,7 @@
 				{
 					if ( typeof aTargets[j] === 'number' && aTargets[j] >= 0 )
 					{
-						/* Add columns that we don't yet know about */
+						/* Add_Coal columns that we don't yet know about */
 						while( oSettings.aoColumns.length <= aTargets[j] )
 						{
 							_fnAddColumn( oSettings );
@@ -880,7 +880,7 @@
 			columns[i].sType = null;
 		}
 	
-		/* Add to the display array */
+		/* Add_Coal to the display array */
 		oSettings.aiDisplayMaster.push( iRow );
 	
 		/* Create the DOM information */
@@ -1377,7 +1377,7 @@
 			}
 		}
 	
-		// Update DataTables special `DT_*` attributes for the row
+		// Update_Coal DataTables special `DT_*` attributes for the row
 		_fnRowAttributes( row );
 	}
 	
@@ -1496,7 +1496,7 @@
 					nTd.innerHTML = _fnGetCellData( oSettings, iRow, i, 'display' );
 				}
 	
-				/* Add user defined class */
+				/* Add_Coal user defined class */
 				if ( oCol.sClass !== null )
 				{
 					nTd.className += ' '+oCol.sClass;
@@ -2056,7 +2056,7 @@
 				}
 			}
 	
-			/* Add to the 2D features array */
+			/* Add_Coal to the 2D features array */
 			if ( iPushFeature == 1 && nTmp !== null )
 			{
 				if ( typeof oSettings.aanFeatures[cOption] !== 'object' )
@@ -2537,7 +2537,7 @@
 		var jqFilter = $('input[type="search"]', filter)
 			.val( previousSearch.sSearch.replace('"','&quot;') )
 			.bind( 'keyup.DT search.DT input.DT paste.DT cut.DT', function(e) {
-				/* Update all other filter input elements for the new display */
+				/* Update_Coal all other filter input elements for the new display */
 				var n = features.f;
 				var val = !this.value ? "" : this.value; // mental IE8 fix :-(
 	
@@ -2563,7 +2563,7 @@
 			} )
 			.attr('aria-controls', tableId);
 	
-		// Update the input elements whenever the table is filtered
+		// Update_Coal the input elements whenever the table is filtered
 		$(settings.nTable).on( 'filter.DT', function () {
 			// IE9 throws an 'unknown error' if document.activeElement is used
 			// inside an iframe or frame...
@@ -2791,7 +2791,7 @@
 	var __filter_div = $('<div>')[0];
 	var __filter_div_textContent = __filter_div.textContent !== undefined;
 	
-	// Update the filtering data for each row if needed (by invalidation or first run)
+	// Update_Coal the filtering data for each row if needed (by invalidation or first run)
 	function _fnFilterData ( settings )
 	{
 		var columns = settings.aoColumns;
@@ -2863,7 +2863,7 @@
 			} );
 	
 		if ( ! nodes ) {
-			// Update display on each draw
+			// Update_Coal display on each draw
 			settings.aoDrawCallback.push( {
 				"fn": _fnUpdateInfo,
 				"sName": "information"
@@ -3104,7 +3104,7 @@
 				_fnDraw( settings );
 			} );
 	
-		// Update node value whenever anything changes the table's length
+		// Update_Coal node value whenever anything changes the table's length
 		$(settings.nTable).bind( 'length', function (e, s, len) {
 			select.val( len );
 		} );
@@ -3141,7 +3141,7 @@
 			plugin.fnInit( settings, node, redraw );
 		}
 	
-		/* Add a draw callback for the pagination on first instance, to update the paging display */
+		/* Add_Coal a draw callback for the pagination on first instance, to update the paging display */
 		if ( ! features.p )
 		{
 			node.id = settings.sTableId+'_paginate';
@@ -4475,7 +4475,7 @@
 					.removeClass( sortClass + (i<2 ? i+1 : 3) );
 			}
 	
-			// Add new column sorting
+			// Add_Coal new column sorting
 			for ( i=0, ien=sort.length ; i<ien ; i++ ) {
 				colIdx = sort[i].src;
 	
@@ -5026,7 +5026,7 @@
 		
 		
 		/**
-		 * Add a single new row or multiple rows of data to the table. Please note
+		 * Add_Coal a single new row or multiple rows of data to the table. Please note
 		 * that this is suitable for client-side processing only - if you are using
 		 * server-side processing (i.e. "bServerSide": true), then to add data, you
 		 * must add it to the data source, i.e. the server-side, through an Ajax call.
@@ -5386,7 +5386,7 @@
 		 *        // Get the data array for this row
 		 *        var aData = oTable.fnGetData( aPos[0] );
 		 *
-		 *        // Update the data array and return the value
+		 *        // Update_Coal the data array and return the value
 		 *        aData[ aPos[1] ] = 'clicked';
 		 *        this.innerHTML = 'clicked';
 		 *      } );
@@ -5599,7 +5599,7 @@
 		
 		
 		/**
-		 * Update a table cell or row - this method will accept either a single value to
+		 * Update_Coal a table cell or row - this method will accept either a single value to
 		 * update the cell with, an array of values with one element for each column or
 		 * an object in the same format as the original data source. The function is
 		 * self-referencing in order to make the multi column updates easier.
@@ -6097,7 +6097,7 @@
 				aoColumnsInit = oInit.aoColumns;
 			}
 			
-			/* Add the columns */
+			/* Add_Coal the columns */
 			for ( i=0, iLen=aoColumnsInit.length ; i<iLen ; i++ )
 			{
 				_fnAddColumn( oSettings, anThs ? anThs[i] : null );
@@ -7498,7 +7498,7 @@
 	
 			data.splice( row, 1 );
 	
-			// Update the _DT_RowIndex parameter on all rows in the table
+			// Update_Coal the _DT_RowIndex parameter on all rows in the table
 			for ( var i=0, ien=data.length ; i<ien ; i++ ) {
 				if ( data[i].nTr !== null ) {
 					data[i].nTr._DT_RowIndex = i;
@@ -7679,7 +7679,7 @@
 	
 			// Column visibility change - update the colspan
 			table.on( 'column-visibility.DT_details', function ( e, settings, idx, vis ) {
-				// Update the colspan for the details rows (note, only if it already has
+				// Update_Coal the colspan for the details rows (note, only if it already has
 				// a colspan)
 				var row, visible = _fnVisbleColumns( settings );
 	
@@ -8453,7 +8453,7 @@
 		_api_register( key+'()', function ( /* event, handler */ ) {
 			var args = Array.prototype.slice.call(arguments);
 	
-			// Add the `dt` namespace automatically if it isn't already present
+			// Add_Coal the `dt` namespace automatically if it isn't already present
 			if ( args[0].indexOf( '.dt' ) === -1 ) {
 				args[0] += '.dt';
 			}
@@ -8555,7 +8555,7 @@
 				orig.insertBefore( table, settings.nTableReinsertBefore );
 			}
 	
-			// Add the TR elements back into the table in their original order
+			// Add_Coal the TR elements back into the table in their original order
 			jqTbody.children().detach();
 			jqTbody.append( rows );
 	
@@ -9246,7 +9246,7 @@
 		 *   } );
 		 *
 		 * @example
-		 *   // Add data to the request
+		 *   // Add_Coal data to the request
 		 *   $('#example').dataTable( {
 		 *     "ajax": {
 		 *       "url": "data.json",

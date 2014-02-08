@@ -19,7 +19,7 @@ public class StateHistory extends BaseEntity {
     private BigDecimal value;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
     private DateTime date;
 
     private String description;

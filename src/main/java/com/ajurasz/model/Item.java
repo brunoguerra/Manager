@@ -6,9 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author Arek Jurasz
@@ -17,23 +15,34 @@ import java.util.List;
 @Table(name = "items")
 public class Item extends BaseEntity {
 
-    @NotEmpty(message = "{item.name}", groups = { Add.class, Update.class })
-    @UniqueName(message = "{item.name.exist}", groups = { Add.class })
+    @NotEmpty(message = "{item.validation.name-required}",
+            groups = {
+                    Add_Coal.class, Update_Coal.class,
+                    Add_Construction.class, Update_Construction.class,
+                    Add_Service.class, Update_Service.class
+            })
+    @UniqueName(message = "{item.validation.name-unique}",
+            groups = { Add_Coal.class, Add_Construction.class, Add_Service.class })
     @Column(nullable = false)
     private String name;
 
     private String nameInvoice;
 
-    @NotNull(message = "{item.code}", groups = { Add.class, Update.class })
+    @NotNull(message = "{item.validation.code-required}", groups = { Add_Coal.class, Update_Coal.class })
     @Column(name = "code_cn", nullable = false)
     private Integer code;
 
-    @NotNull(message = "{item.value}", groups = { Add.class, Update.class })
+    @NotNull(message = "{item.validation.value-required}", groups = { Add_Coal.class, Update_Coal.class })
     @Column(name = "value_kj", nullable = false)
     private Double value;
 
     @Column(nullable = false)
-    @NotNull(message = "{item.priceGross}", groups = { Add.class, Update.class })
+    @NotNull(message = "{item.validation.priceGross-required}",
+            groups = {
+                    Add_Coal.class, Update_Coal.class,
+                    Add_Construction.class, Update_Construction.class,
+                    Add_Service.class, Update_Service.class
+            })
     private BigDecimal priceGross;
 
     @Column(nullable = false)
@@ -48,12 +57,18 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private ItemType type;
 
+    @Column()
+    @NotNull(groups = {
+            Add_Coal.class, Update_Coal.class,
+            Add_Construction.class, Update_Construction.class
+    })
+    private ItemUnit unit;
+
     @Column(nullable = false)
     private Vat vat;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Valid
-    @NotNull
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
     private State state;
 
     @ManyToOne
@@ -61,7 +76,6 @@ public class Item extends BaseEntity {
 
     public Item() {
         //set default values
-        this.name = "Węgiel - ";
         this.code = 2701;
         this.value = 23.8;
     }
@@ -174,6 +188,24 @@ public class Item extends BaseEntity {
         this.vat = vat;
     }
 
-    public interface Add {}
-    public interface Update {}
+    public ItemUnit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(ItemUnit unit) {
+        this.unit = unit;
+    }
+
+    //coal validation interfaces
+    public interface Add_Coal {}
+    public interface Update_Coal {}
+
+    //construction validation interfaces
+    public interface Add_Construction {}
+    public interface Update_Construction {}
+
+    //service validation interfaces
+    public interface Add_Service {}
+    public interface Update_Service {}
+
 }

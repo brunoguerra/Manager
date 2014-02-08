@@ -47,7 +47,12 @@
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Login in" th:attr="value=#{login.submit}" />
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-lg btn-success btn-block" value="Login in" th:attr="value=#{login.submit}" />
+                                </div>
+                                <div class="pull-right">
+                                    <a th:href="@{/register}" th:text="#{login.register}">Register</a>
+                                </div>
                             </fieldset>
                         </form>
                     </div>

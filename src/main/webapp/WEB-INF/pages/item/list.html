@@ -11,9 +11,13 @@
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header" th:text="#{item.title}">Assortment</h1>
-            <div th:if="${itemDeleted}" class="alert alert-success alert-dismissable">
+            <div id="item-deleted" th:if="${itemDeleted}" class="alert alert-success alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <span th:text="#{item-deleted-success}" />
+            </div>
+            <div id="item-edited" th:if="${itemEdited}" class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <span th:text="#{item-edited-success}" />
             </div>
             <div class="pull-right" style="margin-bottom: 10px;">
                 <a th:href="@{/item/add}">
@@ -29,7 +33,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-        <div class="panel panel-default">
+            <div class="panel panel-default">
                 <div class="panel-heading" th:text="#{item.list.text}">
                     Assortment list
                 </div>
@@ -51,12 +55,25 @@
                                     <td th:text="${item.name}">Item name</td>
                                     <td th:text="${item.priceGross}">Price gross</td>
                                     <td th:text="${item.type.name}">Type</td>
-                                    <td th:text="${item.state.currentState}">State</td>
+                                    <td>
+                                        <div th:switch="${item.type}">
+                                            <p th:case="${T(com.ajurasz.model.ItemType).SERVICE}" th:text="#{item.state-service}">
+                                            </p>
+                                            <p th:case="*">
+                                                <a th:href="@{'/item/state/' + ${item.state.id} + '/history'}">
+                                                    <span th:id="'state_' + ${item.id}" th:text="|${item.state.currentState} (${item.unit.unit})|">State</span>
+                                                </a>
+                                                <a href="#" class="state-change pull-right" data-toggle="modal" data-target="#state-change-modal" th:attr="data-id=${item.id}">
+                                                    <i class="fa fa-plus-circle" th:title="#{item.state.add-desc}"></i>
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </td>
                                     <td>
                                         <a th:href="@{'/item/edit/' + ${item.id}}" style="float: left; margin-left: 15px; margin-right: 15px;" >
                                             <i class="glyphicon glyphicon-pencil" th:title="#{edit}"></i>
                                         </a>
-                                        <a href="#" class="confirm-delete" data-toggle="modal" data-target="#myModal" th:attr="data-id=${item.id}">
+                                        <a href="#" class="confirm-delete" data-toggle="modal" data-target="#delete-modal" th:attr="data-id=${item.id}">
                                             <i class="glyphicon glyphicon-remove" th:title="#{delete}"></i>
                                         </a>
                                     </td>
@@ -64,30 +81,14 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title" id="myModalLabel" th:text="#{warning}">Warning</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <span th:text="#{item.delete-query}">Are you sure to delete this item?</span>
-                                </div>
-                                <div class="modal-footer">
-                                    <form id="delete-form" action="#" role="form" th:action="@{/item/delete/}" method="post">
-                                        <button id="delete-cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <input type="hidden" name="id" value="" />
-                                        <a id="delete-url" href="#" ><button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{delete}">Delete</button></a>
-                                    </form>
-                                </div>
-                            </div>
-                            <!-- /.modal-content -->
+                    <th:block>
+                        <div th:replace="fragments/modal :: modal (id='delete-modal', title=#{warning}, formId='delete-form', formAction=@{/item/delete/}, hiddenId='true', query=#{item.delete-query}, input='false', inputId='', executeId='delete-url', executeText=#{delete}, executeClass='btn-danger')">
+                            Confirm delete
                         </div>
-                        <!-- /.modal-dialog -->
-                    </div>
-                    <!-- /.modal -->
+                        <div th:replace="fragments/modal :: modal (id='state-change-modal', title=#{item.state-change-title}, formId='state-change-form', formAction='', hiddenId='false', query=#{item.state-change}, input='true', inputId='state-value', executeId='state-change-url', executeText=#{update}, executeClass='btn-success')">
+                            State change
+                        </div>
+                    </th:block>
                 </div>
                 <!-- /.panel-body -->
             </div>
@@ -106,6 +107,7 @@
     <script>
         $(document).ready(function() {
             $('#assortment-list').dataTable({
+                "aaSorting": [],
                 "oLanguage": {
                     "sUrl": "/resources/js/plugins/dataTables/pl.txt"
                 }

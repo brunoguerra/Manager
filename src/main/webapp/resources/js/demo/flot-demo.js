@@ -1189,7 +1189,7 @@ $(function() {
         }
     });
 
-    // Update the random dataset at 25FPS for a smoothly-animating chart
+    // Update_Coal the random dataset at 25FPS for a smoothly-animating chart
 
     setInterval(function updateRandom() {
         series[0].data = getRandomData();

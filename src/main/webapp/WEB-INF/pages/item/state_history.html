@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="template/layout">
+<head>
+    <!-- Page-Level Plugin CSS - Tables -->
+    <link th:href="@{/resources/css/plugins/dataTables/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" th:text="|${state.item.name}: ${state.currentState} (${state.item.unit})|">Assortment state</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding-bottom: 20px;">
+                    <span th:text="#{item.state-history.list.title}"></span>
+                    <a th:href="@{/item/list}">
+                        <button type="button" class="btn btn-default pull-right">
+                            <i class="fa fa-arrow-left"></i> <span th:text="#{back}"/>
+                        </button>
+                    </a>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="assortment-list">
+                            <thead>
+                            <tr>
+                                <th class="col-lg-2" th:text="#{item.state-history.date}">Date</th>
+                                <th class="col-lg-6" th:text="#{item.state-history.description}">Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sh,rowStat : ${historyList}" th:class="${rowStat.odd}? 'odd gradeX' : 'even gradeX'">
+                                <td th:text="${#calendars.format(sh.date,'dd.MM.yyyy HH:mm')}">Date</td>
+                                <td th:text="${sh.description}">Description</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+
+<div layout:fragment="page-scripts">
+    <!-- Page-Level Plugin Scripts - Tables -->
+    <script th:src="@{/resources/js/plugins/dataTables/jquery.dataTables.js}"></script>
+    <script th:src="@{/resources/js/plugins/dataTables/dataTables.bootstrap.js}"></script>
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+        $(document).ready(function() {
+            $('#assortment-list').dataTable({
+                "aaSorting": [],
+                "bFilter": false,
+                "oLanguage": {
+                    "sUrl": "/resources/js/plugins/dataTables/pl.txt"
+                }
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>

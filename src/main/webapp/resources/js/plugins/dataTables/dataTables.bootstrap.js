@@ -176,7 +176,7 @@ if ($.fn.dataTable.Api) {
                     // Remove the middle elements
                     $('li:gt(0)', an[i]).filter(':not(:last)').remove();
 
-                    // Add the new list items and their event handlers
+                    // Add_Coal the new list items and their event handlers
                     for (j = iStart; j <= iEnd; j++) {
                         sClass = (j == oPaging.iPage + 1) ? 'class="active"' : '';
                         $('<li ' + sClass + '><a href="#">' + j + '</a></li>')
@@ -188,7 +188,7 @@ if ($.fn.dataTable.Api) {
                             });
                     }
 
-                    // Add / remove disabled classes from the static elements
+                    // Add_Coal / remove disabled classes from the static elements
                     if (oPaging.iPage === 0) {
                         $('li:first', an[i]).addClass('disabled');
                     } else {

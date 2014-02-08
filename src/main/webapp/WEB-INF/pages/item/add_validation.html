@@ -1,0 +1,179 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="template/layout">
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" th:text="#{item.add.title}">Add new assortment</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding-bottom: 20px;">
+                    <span th:text="#{item.title}"></span>
+                    <a th:href="@{/item/list}">
+                        <button type="button" class="btn btn-default pull-right">
+                            <i class="fa fa-arrow-left"></i> <span th:text="#{back}"/>
+                        </button>
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-pills" style="margin-bottom: 15px;">
+                                <li class="active"><a href="#common-pills" data-toggle="tab" class="pills-href" th:text="${item.type.name}">Coal</a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="common-pills">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div th:switch="${item.type}">
+                                                <div th:case="${T(com.ajurasz.model.ItemType).COAL}">
+                                                    <form name="coal-form" action="#" role="form" th:action="@{/item/add-coal}" method="post" th:object="${item}">
+                                                        <input type="hidden" name="type" th:value="${T(com.ajurasz.model.ItemType).COAL}" />
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('name')}? has-error">
+                                                            <label th:text="#{item.name}">Name</label>
+                                                            <input class="form-control" type="text" th:field="*{name}" autofocus="autofocus"/>
+                                                            <label th:if="${#fields.hasErrors('name')}" class="control-label" th:errors="*{name}"></label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label th:text="#{item.name-invoice}">Name invoice</label>
+                                                            <input class="form-control" type="text" th:field="*{nameInvoice}" />
+                                                            <p class="help-block" th:text="#{item.name-invoice-hint}">Alternative name</p>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('code')}? has-error">
+                                                            <label th:text="#{item.code}">Code (CN)</label>
+                                                            <input class="form-control" type="text" th:field="*{code}" />
+                                                            <label th:if="${#fields.hasErrors('code')}" class="control-label" th:errors="*{code}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('value')}? has-error">
+                                                            <label th:text="#{item.value}">Value (KJ)</label>
+                                                            <input class="form-control" type="text" th:field="*{value}" />
+                                                            <label th:if="${#fields.hasErrors('value')}" class="control-label" th:errors="*{value}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('priceGross')}? has-error">
+                                                            <label th:text="#{item.price-gross}">Price gross</label>
+                                                            <input class="form-control" type="text" th:field="*{priceGross}" />
+                                                            <label th:if="${#fields.hasErrors('priceGross')}" class="control-label" th:errors="*{priceGross}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('vat')}? has-error">
+                                                            <label th:text="#{item.vat}">Vat</label>
+                                                            <select class="form-control" name="vat">
+                                                                <option th:each="v : ${T(com.ajurasz.model.Vat).values()}" th:value="${v}" th:text="${v.value}" th:selected="${v == T(com.ajurasz.model.Vat)._23}"></option>
+                                                            </select>
+                                                            <label th:if="${#fields.hasErrors('vat')}" class="control-label" th:errors="*{vat}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('unit')}? has-error">
+                                                            <label th:text="#{item.unit}">Unit</label>
+                                                            <select class="form-control" name="unit">
+                                                                <option th:each="u : ${T(com.ajurasz.model.ItemUnit).values()}" th:value="${u}" th:text="${u.unit}" th:selected="${u == T(com.ajurasz.model.ItemUnit).KG}"></option>
+                                                            </select>
+                                                            <label th:if="${#fields.hasErrors('unit')}" class="control-label" th:errors="*{unit}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('state.currentState')}? has-error">
+                                                            <label th:text="#{item.current-state}">Current state</label>
+                                                            <input class="form-control" type="text" th:field="*{state.currentState}" />
+                                                            <label th:if="${#fields.hasErrors('state.currentState')}" class="control-label" th:errors="*{state.currentState}"></label>
+                                                        </div>
+
+                                                        <p class="pull-right">
+                                                            <button type="button" class="btn btn-default btn-clear" th:text="#{clear}">Clear</button>
+                                                            <input type="submit" class="btn btn-success" value="Save" th:attr="value=#{item.save}" />
+                                                        </p>
+                                                    </form>
+                                                </div>
+
+                                                <div th:case="${T(com.ajurasz.model.ItemType).CONSTRUCTION}">
+                                                    <form name="construction-form" action="#" role="form" th:action="@{/item/add-construction}" method="post" th:object="${item}">
+                                                        <input type="hidden" name="type" th:value="${T(com.ajurasz.model.ItemType).CONSTRUCTION}" />
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('name')}? has-error">
+                                                            <label th:text="#{item.name}">Name</label>
+                                                            <input class="form-control" type="text" th:field="*{name}" value="" autofocus="autofocus"/>
+                                                            <label th:if="${#fields.hasErrors('name')}" class="control-label" th:errors="*{name}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('priceGross')}? has-error">
+                                                            <label th:text="#{item.price-gross}">Price gross</label>
+                                                            <input class="form-control" type="text" th:field="*{priceGross}" />
+                                                            <label th:if="${#fields.hasErrors('priceGross')}" class="control-label" th:errors="*{priceGross}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('vat')}? has-error">
+                                                            <label th:text="#{item.vat}">Vat</label>
+                                                            <select class="form-control" name="vat">
+                                                                <option th:each="v : ${T(com.ajurasz.model.Vat).values()}" th:value="${v}" th:text="${v.value}" th:selected="${v == T(com.ajurasz.model.Vat)._23}"></option>
+                                                            </select>
+                                                            <label th:if="${#fields.hasErrors('vat')}" class="control-label" th:errors="*{vat}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('unit')}? has-error">
+                                                            <label th:text="#{item.unit}">Unit</label>
+                                                            <select class="form-control" name="unit">
+                                                                <option th:each="u : ${T(com.ajurasz.model.ItemUnit).values()}" th:value="${u}" th:text="${u.unit}" th:selected="${u == T(com.ajurasz.model.ItemUnit).KG}"></option>
+                                                            </select>
+                                                            <label th:if="${#fields.hasErrors('unit')}" class="control-label" th:errors="*{unit}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('state.currentState')}? has-error">
+                                                            <label th:text="#{item.current-state}">Current state</label>
+                                                            <input class="form-control" type="text" th:field="*{state.currentState}" />
+                                                            <label th:if="${#fields.hasErrors('state.currentState')}" class="control-label" th:errors="*{state.currentState}"></label>
+                                                        </div>
+
+                                                        <p class="pull-right">
+                                                            <button type="button" class="btn btn-default btn-clear" th:text="#{clear}">Clear</button>
+                                                            <input type="submit" class="btn btn-success" value="Save" th:attr="value=#{item.save}" />
+                                                        </p>
+                                                    </form>
+                                                </div>
+
+                                                <div th:case="${T(com.ajurasz.model.ItemType).SERVICE}">
+                                                    <form name="service-form" action="#" role="form" th:action="@{/item/add-service}" method="post" th:object="${item}">
+                                                        <input type="hidden" name="type" th:value="${T(com.ajurasz.model.ItemType).SERVICE}" />
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('name')}? has-error">
+                                                            <label th:text="#{item.name}">Name</label>
+                                                            <input class="form-control" type="text" th:field="*{name}" autofocus="autofocus"/>
+                                                            <label th:if="${#fields.hasErrors('name')}" class="control-label" th:errors="*{name}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('priceGross')}? has-error">
+                                                            <label th:text="#{item.price-gross}">Price gross</label>
+                                                            <input class="form-control" type="text" th:field="*{priceGross}" />
+                                                            <label th:if="${#fields.hasErrors('priceGross')}" class="control-label" th:errors="*{priceGross}"></label>
+                                                        </div>
+                                                        <div class="form-group" th:classappend="${#fields.hasErrors('vat')}? has-error">
+                                                            <label th:text="#{item.vat}">Vat</label>
+                                                            <select class="form-control" name="vat">
+                                                                <option th:each="v : ${T(com.ajurasz.model.Vat).values()}" th:value="${v}" th:text="${v.value}" th:selected="${v == T(com.ajurasz.model.Vat)._23}"></option>
+                                                            </select>
+                                                            <label th:if="${#fields.hasErrors('vat')}" class="control-label" th:errors="*{vat}"></label>
+                                                        </div>
+                                                        <p class="pull-right">
+                                                            <button type="button" class="btn btn-default btn-clear" th:text="#{clear}">Clear</button>
+                                                            <input type="submit" class="btn btn-success" value="Save" th:attr="value=#{item.save}" />
+                                                        </p>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!--col-lg-6 -->
+                    </div> <!-- row -->
+                </div> <!-- panel-body -->
+            </div> <!-- panel -->
+        </div> <!-- col-lg-12 -->
+    </div> <!-- row -->
+
+</div>
+
+</body>
+</html>
