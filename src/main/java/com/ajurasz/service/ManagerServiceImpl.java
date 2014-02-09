@@ -211,7 +211,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public Map<String, String> findAllItemsMap() {
         Map<String, String> result = new HashMap<String, String>();
-        List<Item> items = itemRepo.findAllByCompany(getCompany());
+        List<Item> items = itemRepo.findAllByTypeAndCompany(ItemType.COAL, getCompany());
         if(items != null && !items.isEmpty()) {
             for(Item item : items) {
                 result.put(item.getId().toString(), item.getName());
@@ -399,7 +399,6 @@ public class ManagerServiceImpl implements ManagerService {
         order.setCompany(getCompany());
         order.setOrderDetails(resultList);
 
-        //todo: execute two tasks in paraller
         //save order to disk
         saveOrderToDisk(order, servletContext.getRealPath("/WEB-INF/pdfs/documents/" + getCompany().getId()), false);
 

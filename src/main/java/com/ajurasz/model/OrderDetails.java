@@ -17,15 +17,17 @@ public class OrderDetails extends BaseEntity {
     private BigDecimal priceGrossExcise;
     private BigDecimal priceNetExcise;
 
-    @NotNull
+    @NotNull(message = "{order-details.validation.quantity-required}", groups = {Order.Document.class})
     private BigDecimal quantity;
 
     @ManyToOne
     private Order order;
 
+    @NotNull(groups = {Order.Document.class})
     @ManyToOne()
     private Item item;
 
+    @NotNull(groups = {Order.Document.class})
     @ManyToOne()
     private Reason reason;
 

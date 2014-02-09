@@ -28,17 +28,63 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12 col-lg-12">
-                            <form name="customer-form" action="#" role="form" th:action="@{/customer/add}" method="post" th:object="${order}">
+                            <form name="customer-form" action="#" role="form" th:action="@{/order/add}" method="post" th:object="${order}">
                                 <div class="col-md-3 col-lg-3">
-                                    <div class="form-group" >
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('docNumber')}? has-error">
                                         <label th:text="#{order.document-number}">Document Number</label>
                                         <input class="form-control" type="text" th:field="*{docNumber}" style="width: 100px;"/>
+                                        <label th:if="${#fields.hasErrors('docNumber')}" class="control-label" th:errors="*{docNumber}"></label>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-lg-3">
-                                    <div class="form-group" >
-                                        <label>Numer dokumentu</label>
-                                        <input class="form-control" type="text" name="date" style="width: 100px;"/>
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('orderDate')}? has-error">
+                                        <label th:text="#{order.document-date}">Document date</label>
+                                        <input class="form-control" type="text" th:field="*{orderDate}" style="width: 100px;"/>
+                                        <label th:if="${#fields.hasErrors('orderDate')}" class="control-label" th:errors="*{orderDate}"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <div class="form-group" th:classappend="${#fields.hasErrors('customer.id')}? has-error">
+                                        <label th:text="#{order.document-customer}">Customer</label>
+                                        <input class="form-control" type="text" name="customer-details" th:placeholder="#{order.customer-add-message}" autofocus="autofocus"/>
+                                        <input type="hidden" th:field="*{customer.id}"/>
+                                        <label th:if="${#fields.hasErrors('customer.id')}" class="control-label" th:errors="*{customer.id}"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="col-md-3 col-lg-3" >
+                                        <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[0].item.id')}? has-error">
+                                            <label th:text="#{order.assortment}">Assortment</label>
+                                            <select class="form-control" name="orderDetails[0].item.id">
+                                                <option value="null" th:text="#{order.order-details.item-choose}"></option>
+                                                <option th:each="item : ${items}" th:value="${item.key}" th:text="${item.value}"></option>
+                                            </select>
+                                            <label th:if="${#fields.hasErrors('orderDetails[0].item.id')}" class="control-label" th:errors="*{orderDetails[0].item.id}"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[0].quantity')}? has-error">
+                                            <label th:text="#{order.order-details.quantity}">Quantity</label>
+                                            <input class="form-control" type="text" th:field="*{orderDetails[0].quantity}" pattern="^[0-9]+(\.[0-9]{1,2})?$"/>
+                                            <label th:if="${#fields.hasErrors('orderDetails[0].quantity')}" class="control-label" th:errors="*{orderDetails[0].quantity}"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[0].reason.id')}? has-error">
+                                            <label th:text="#{order.reason}">Assortment</label>
+                                            <select class="form-control" name="orderDetails[0].reason.id">
+                                                <option value="null" th:text="#{order.order-details.reason-choose}"></option>
+                                                <option th:each="reason : ${reasons}" th:value="${reason.id}" th:text="${reason.description}"></option>
+                                            </select>
+                                            <label th:if="${#fields.hasErrors('orderDetails[0].reason.id')}" class="control-label" th:errors="*{orderDetails[0].reason.id}"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-lg-1">
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary" style="margin-top: 23px;">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-12 col-lg-12">
@@ -54,14 +100,69 @@
             </div> <!-- panel -->
         </div> <!-- col-lg-12 -->
     </div> <!-- row -->
-
+    <span th:text="${customerDetails}"></span>
 </div>
 
 <div layout:fragment="page-scripts">
-    <script>
+    <script th:src="@{/resources/js/jquery.ui.datepicker-pl.js}"></script>
+    <script th:inline="javascript">
         /*<![CDATA[*/
+        var currentDate = new Date();
+        var cust = /*[[${customerDetails}]]*/ '';
+
         $(document).ready(function() {
-            $("#order.\\docNumber" ).datepicker();
+            $('#orderDate').datepicker();
+            $('#orderDate').datepicker("setDate", 'today');
+        });
+
+        $(document).ready(function() {
+            if(cust != null) {
+                $("input[name=customer-details]").val(cust);
+                $("input[name=orderDetails\\[0\\]\\.item\\.id]").focus();
+            }
+        });
+
+        $(document).ready(function() {
+            //attach autocomplete
+            $("input[name=customer-details]").autocomplete({
+                minLength: 2,
+                delay: 100,
+                //define callback to format results
+                source: function (request, response) {
+                    $.getJSON("/customer/getCustomersForQuery", request, function(result) {
+                        response($.map(result, function(item) {
+                            return {
+                                // following property gets displayed in drop down
+                                label: item.lastName + " " + item.firstName + ", " + item.address.postCode + " " + item.address.city + " " + item.address.street + " " + item.address.number,
+                                // following property gets entered in the textbox
+                                id: item.id
+                            }
+                        }));
+                    });
+                },
+
+                //define select handler
+                select : function(event, ui) {
+                    if(ui.item.value == "Klient nie istnieje (dodaj)") {
+                        window.location.replace('/customer/add?redirect=true&target=/order/add');
+                        return false;
+                    }
+                    if (ui.item) {
+                        event.preventDefault();
+                        $("#customer\\.id").val(ui.item.id);
+                        $("input[name=customer-details]").val(ui.item.label);
+                        $("input[name=orderDetails\\[0\\]\\.item\\.id]").focus();
+                        return false;
+                    }
+                },
+
+                response: function(event, ui) {
+                    if (!ui.content.length) {
+                        var noResult = { value:"Klient nie istnieje (dodaj)",label:"Klient nie istnieje (dodaj)" };
+                        ui.content.push(noResult);
+                    }
+                }
+            });
         });
         /*]]>*/
     </script>

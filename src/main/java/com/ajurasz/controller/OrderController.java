@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
@@ -57,25 +58,28 @@ public class OrderController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initOrderForm(Model model, HttpServletRequest request) {
+        LOGGER.debug("order add init method called");
         Order order = new Order();
-        //set init values
         order.setDocNumber(managerService.getNextDocNumnber());
         HttpSession session = request.getSession(false);
         if(session != null) {
             Customer customer = (Customer) session.getAttribute("customer");
             if(customer != null) {
                 order.setCustomer(customer);
+                CustomerRegular cr = (CustomerRegular) customer;
+                model.addAttribute("customerDetails", cr.getLastName() + " " + cr.getFirstName() + ", " + cr.getAddress().getPostCode() + " " +
+                        cr.getAddress().getCity() + " " + cr.getAddress().getStreet() + " " + cr.getAddress().getNumber());
             }
         }
         model.addAttribute("order", order);
         return "order/add";
     }
 
-    //todo: add validation
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String processOrderForm(@Valid @ModelAttribute Order order, BindingResult result,
+    public String processOrderForm(@Validated({Order.Document.class}) @ModelAttribute Order order, BindingResult result,
                                    HttpServletRequest request, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
+            LOGGER.debug("errors in order add form");
             return "order/add";
         }
         HttpSession session = request.getSession(false);

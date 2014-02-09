@@ -27,7 +27,6 @@
                 });
             },
 
-            //todo: intetrnationalization
             //define select handler
             select : function(event, ui) {
                 if(ui.item.value == "${nodata}") {

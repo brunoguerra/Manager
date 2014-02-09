@@ -3,11 +3,14 @@ package com.ajurasz.model;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeFieldType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 @Table(name = "orders")
 public class Order extends BaseEntity {
 
+    @NotEmpty(message = "{order.validation.doc-number-required}", groups = {Document.class})
     @Pattern(regexp = "([0-9]{1,5})/([0-9]{2})/([0-9]{4})", message = "{order.doc-number-invalid}")
     @Column(name = "document_number")
     private String docNumber;
@@ -26,9 +30,9 @@ public class Order extends BaseEntity {
     @Column(name = "invoice_number")
     private String invoiceNumber;
 
-
+    @NotNull(message = "{order.validation.date-required}", groups = {Document.class})
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "dd.MM.yyyy")
     @Column(name = "order_date")
     private DateTime orderDate;
 
@@ -44,6 +48,7 @@ public class Order extends BaseEntity {
     private Boolean invoice;
     private Boolean document;
 
+    @Valid
     @OneToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<OrderDetails> orderDetails;
@@ -52,7 +57,6 @@ public class Order extends BaseEntity {
     private Company company;
 
     public Order() {
-//        this.orderDate = DateTime.now();
         this.invoice = false;
         this.document = true;
         this.customer = new Customer();
@@ -73,16 +77,17 @@ public class Order extends BaseEntity {
     }
 
     public void setOrderDate(DateTime orderDate) {
-        if(orderDate == null) {
-            this.orderDate = orderDate;
-            return;
-        }
-        this.orderDate = new DateTime(
-                orderDate.get(DateTimeFieldType.year()),
-                orderDate.get(DateTimeFieldType.monthOfYear()),
-                orderDate.get(DateTimeFieldType.dayOfMonth()),
-                0, 0, 0, 0
-        );
+//        if(orderDate == null) {
+//            this.orderDate = orderDate;
+//            return;
+//        }
+//        this.orderDate = new DateTime(
+//                orderDate.get(DateTimeFieldType.year()),
+//                orderDate.get(DateTimeFieldType.monthOfYear()),
+//                orderDate.get(DateTimeFieldType.dayOfMonth()),
+//                0, 0, 0, 0
+//        );
+        this.orderDate = orderDate;
     }
 
     public Customer getCustomer() {
@@ -141,4 +146,6 @@ public class Order extends BaseEntity {
     public void setDocument(boolean document) {
         this.document = document;
     }
+
+    public interface Document{}
 }

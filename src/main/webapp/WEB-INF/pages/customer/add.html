@@ -28,7 +28,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            <form name="customer-form" action="#" role="form" th:action="@{/customer/add}" method="post" th:object="${customer}">
+                            <form name="customer-form" action="#" role="form" method="post" th:object="${customer}">
                                 <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? has-error">
                                     <label th:text="#{customer.last-name}">Last Name</label>
                                     <input class="form-control" type="text" th:field="*{lastName}" autofocus="autofocus"/>
