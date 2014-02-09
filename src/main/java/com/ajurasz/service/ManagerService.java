@@ -24,6 +24,7 @@ public interface ManagerService {
 
     //--CUSTOMER VAT METHODS
     CustomerVat saveCustomerVat(CustomerVat customerVat);
+    List<CustomerVat> findAllCustomersVat();
     Page<CustomerVat> findAllCustomersVat(Pageable pageable);
     List<CustomerVat> findAllByCustomerVatName(String name);
     CustomerVat getCustomerVat(Long id);

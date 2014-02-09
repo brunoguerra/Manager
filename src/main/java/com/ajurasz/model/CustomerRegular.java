@@ -18,12 +18,12 @@ import javax.validation.constraints.NotNull;
 @Table(name = "customers_regular")
 public class CustomerRegular extends Customer {
 
+    @NotEmpty(message = "{customer.first-name-required}")
     @Column(name = "first_name", nullable = false)
-    @NotEmpty(message = "{customer.firstName}")
     private String firstName;
 
+    @NotEmpty(message = "{customer.last-name-required}")
     @Column(name = "last_name", nullable = false)
-    @NotEmpty(message = "{customer.lastName}")
     private String lastName;
 
     //@Digits(integer = 9, fraction = 0, message = "{customer.pesel}")
@@ -57,8 +57,6 @@ public class CustomerRegular extends Customer {
     @Override
     public String toString() {
         return new ToStringCreator(this)
-
-                .append("id", this.getId())
                 .append("lastName", this.getLastName())
                 .append("firstName", this.getFirstName())
                 .append("email", this.getEmail())

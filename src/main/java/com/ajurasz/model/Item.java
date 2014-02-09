@@ -196,6 +196,19 @@ public class Item extends BaseEntity {
         this.unit = unit;
     }
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "name='" + name + '\'' +
+                ", priceGross=" + priceGross +
+                ", priceNet=" + priceNet +
+                ", type=" + type +
+                ", unit=" + unit +
+                ", vat=" + vat +
+                ", company=" + company.getFullName() +
+                '}';
+    }
+
     //coal validation interfaces
     public interface Add_Coal {}
     public interface Update_Coal {}

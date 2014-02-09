@@ -14,8 +14,10 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "id")
 @Table(name = "customers_vat")
 public class CustomerVat extends Customer {
+
+
+    @NotEmpty(message = "{customer-vat.name-required}")
     @Column(nullable = false)
-    @NotEmpty(message = "{customer.name}")
     private String name;
 
     private String nip;
@@ -36,4 +38,11 @@ public class CustomerVat extends Customer {
         this.nip = nip;
     }
 
+    @Override
+    public String toString() {
+        return "CustomerVat{" +
+                "name='" + name + '\'' +
+                ", nip='" + nip + '\'' +
+                '}';
+    }
 }

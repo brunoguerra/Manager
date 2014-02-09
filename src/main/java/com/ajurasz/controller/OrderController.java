@@ -37,19 +37,16 @@ public class OrderController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
     private ManagerService managerService;
 
-//    @InitBinder
-//    public void initBinder(WebDataBinder binder) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-//    }
 
     @ModelAttribute("items")
     public Map<String, String> populateWithItems() {
+        LOGGER.debug("populate items");
         return managerService.findAllItemsMap();
     }
 
     @ModelAttribute("reasons")
     public List<Reason> populateWithReasons() {
+        LOGGER.debug("populate reasons");
         return managerService.findAllReasons();
     }
 
@@ -108,10 +105,13 @@ public class OrderController {
         return "redirect:/order/list";
     }
 
+    /***********************************/
+    /********  LIST ORDERS  ************/
+    /***********************************/
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String initOrderList(Model model, Pageable pageable) {
-        Page<Order> orderPage = managerService.findAllOrders(pageable);
-        model.addAttribute("orderPage", orderPage);
+    public String initOrderList(Model model) {
+        List<Order> orderPage = managerService.findAllOrders();
+        model.addAttribute("orders", orderPage);
         return "order/list";
     }
 

@@ -19,8 +19,8 @@ import java.util.List;
 @Table(name = "orders")
 public class Order extends BaseEntity {
 
+    @Pattern(regexp = "([0-9]{1,5})/([0-9]{2})/([0-9]{4})", message = "{order.doc-number-invalid}")
     @Column(name = "document_number")
-    @Pattern(regexp = "([0-9]{1,5})/([0-9]{2})/([0-9]{4})", message = "{order.docNumber.format}")
     private String docNumber;
 
     @Column(name = "invoice_number")

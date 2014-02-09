@@ -1,0 +1,114 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="template/layout">
+<head>
+    <!-- Page-Level Plugin CSS - Tables -->
+    <link th:href="@{/resources/css/plugins/dataTables/dataTables.bootstrap.css}" rel="stylesheet" />
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header" th:text="#{order.title}">Order</h1>
+            <div id="order-deleted" th:if="${orderDeleted}" class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <span th:text="#{order-deleted-success}" />
+            </div>
+            <div id="order-edited" th:if="${orderEdited}" class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <span th:text="#{order-edited-success}" />
+            </div>
+            <div id="order-added" th:if="${orderAdded}" class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <span th:text="#{order-added-success}" />
+            </div>
+            <div class="pull-right" style="margin-bottom: 10px;">
+                <a th:href="@{/order/add}">
+                    <button type="button" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-plus"></i> <span th:text="#{order.add.text}"/>
+                    </button>
+                </a>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" th:text="#{order.list.text}">
+                    Document list
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="order-list">
+                            <thead>
+                            <tr>
+                                <th class="col-lg-1" ></th>
+                                <th class="col-lg-3" th:text="#{order.document-number}">Document Number</th>
+                                <th class="col-lg-1" th:text="#{order.document-date}">Date</th>
+                                <th class="col-lg-3" th:text="#{order.document-customer}">Customer</th>
+                                <th class="col-lg-1" th:text="#{action}">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="order,rowStat : ${orders}" th:class="${rowStat.odd}? 'odd gradeX' : 'even gradeX'">
+                                <td></td>
+                                <td th:text="${order.docNumber}">Document Number</td>
+                                <td th:text="${#calendars.format(order.orderDate,'dd.MM.yyyy')}">Date</td>
+                                <td th:text="|${order.customer.lastName} ${order.customer.firstName}|">Customer</td>
+                                <td>
+                                    <a th:href="@{'/order/edit/' + ${order.id}}" style="float: left; margin-left: 15px; margin-right: 15px;" >
+                                        <i class="glyphicon glyphicon-pencil" th:title="#{edit}"></i>
+                                    </a>
+                                    <a href="#" class="confirm-delete" data-toggle="modal" data-target="#delete-modal" th:attr="data-id=${order.id}">
+                                        <i class="glyphicon glyphicon-remove" th:title="#{delete}"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <th:block>
+                        <div th:replace="fragments/modal :: modal (id='delete-modal', title=#{warning}, formId='delete-form', formAction=@{/order/delete/}, hiddenId='true', query=#{order.delete-query}, input='false', inputId='', executeId='delete-url', executeText=#{delete}, executeClass='btn-danger')">
+                            Confirm delete
+                        </div>
+                    </th:block>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+
+<div layout:fragment="page-scripts">
+    <!-- Page-Level Plugin Scripts - Tables -->
+    <script th:src="@{/resources/js/plugins/dataTables/jquery.dataTables.js}"></script>
+    <script th:src="@{/resources/js/plugins/dataTables/dataTables.bootstrap.js}"></script>
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+        $(document).ready(function() {
+            $('#order-list').dataTable({
+                "aaSorting": [],
+                "oLanguage": {
+                    "sUrl": "/resources/js/plugins/dataTables/pl.txt"
+                },
+                "aoColumnDefs": [
+                    {
+                        "bSortable": false,
+                        "aTargets": [0]
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>

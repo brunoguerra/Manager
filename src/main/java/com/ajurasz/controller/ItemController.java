@@ -33,12 +33,6 @@ public class ItemController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
     private ManagerService managerService;
 
-//    @InitBinder
-//    public void initBinder(WebDataBinder binder) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-//    }
-
     @Autowired
     public ItemController(ManagerService managerService) {
         this.managerService = managerService;
@@ -50,6 +44,7 @@ public class ItemController {
     /***********************************/
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initCreationForm(Model model) {
+        LOGGER.debug("add item init method called");
         Item item = new Item();
         model.addAttribute("item", item);
         return "item/add";
@@ -57,7 +52,7 @@ public class ItemController {
 
     private String add(Item item, BindingResult result, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
-            LOGGER.debug("errors in add form");
+            LOGGER.debug("errors in item add form");
             return "item/add_validation";
         }
         managerService.saveItem(item);
@@ -151,6 +146,7 @@ public class ItemController {
     /***********************************/
     @RequestMapping(value = "/state/{id}/history", method = RequestMethod.GET)
     public String initStateHistory(Model model, @PathVariable Long id) {
+        LOGGER.debug("state history method called");
         List<StateHistory> historyList = managerService.findAllStateHistoryByStateIdDesc(id);
         model.addAttribute("historyList", historyList);
         model.addAttribute("state", managerService.getState(id));

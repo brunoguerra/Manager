@@ -37,11 +37,14 @@ public class CustomerController {
         LOGGER.info("CustomerController called");
     }
 
+    /***********************************/
+    /********  ADD CUSTOMER  ***********/
+    /***********************************/
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initCreationForm(Model model) {
+        LOGGER.debug("add customer init method called");
         CustomerRegular customer = new CustomerRegular();
         model.addAttribute("customer", customer);
-        LOGGER.info("Customer object send to html form - " + customer);
         return "customer/add";
     }
 
@@ -51,6 +54,7 @@ public class CustomerController {
                                       @RequestParam(required = false) Boolean redirect,
                                       @RequestParam(required = false) String target){
         if(result.hasErrors()) {
+            LOGGER.debug("error in customer add form");
             return "customer/add";
         }
         managerService.saveCustomer((CustomerRegular)customer);
@@ -60,15 +64,15 @@ public class CustomerController {
             return "redirect:" + target;
         }
         redirectAttributes.addFlashAttribute("customerAdded", true);
-        LOGGER.info("Customer object saved - " + customer);
         return "redirect:/customer/list";
     }
 
+
     @RequestMapping(value = "/add-vat", method = RequestMethod.GET)
     public String initCreationVatForm(Model model) {
+        LOGGER.debug("add customer-vat init method called");
         CustomerVat customer = new CustomerVat();
         model.addAttribute("customer", customer);
-        LOGGER.info("CustomerVat object send to html form - " + customer);
         return "customer/addVat";
     }
 
@@ -78,6 +82,7 @@ public class CustomerController {
                                       @RequestParam(required = false) Boolean redirect,
                                       @RequestParam(required = false) String target){
         if(result.hasErrors()) {
+            LOGGER.debug("error in customer-vat add form");
             return "customer/addVat";
         }
         managerService.saveCustomerVat((CustomerVat)customer);
@@ -87,62 +92,75 @@ public class CustomerController {
             return "redirect:" + target;
         }
         redirectAttributes.addFlashAttribute("customerVatAdded", true);
-        LOGGER.info("CustomerVat object saved - " + customer);
         return "redirect:/customer/list-vat";
     }
 
 
+    /***********************************/
+    /********  LIST CUSTOMER  **********/
+    /***********************************/
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String initCustomerList(Model model, Pageable pageable) {
-        Page<CustomerRegular> customerPage = managerService.findAllCustomers(pageable);
-        model.addAttribute("customersPage", customerPage);
-        LOGGER.info("Customer list requested");
+    public String initCustomerList(Model model) {
+        LOGGER.debug("customer list method called");
+        List<CustomerRegular> customers = managerService.findAllCustomers();
+        model.addAttribute("customers", customers);
         return "customer/list";
     }
 
     @RequestMapping(value = "/list-vat", method = RequestMethod.GET)
-    public String initCustomerVatList(Model model, Pageable pageable) {
-        Page<CustomerVat> customerPage = managerService.findAllCustomersVat(pageable);
-        model.addAttribute("customersPage", customerPage);
-        LOGGER.info("CustomerVat list requested");
+    public String initCustomerVatList(Model model) {
+        LOGGER.debug("customer-vat list method called");
+        List<CustomerVat> customers = managerService.findAllCustomersVat();
+        model.addAttribute("customers", customers);
         return "customer/listVat";
     }
 
+
+    /***********************************/
+    /********  EDIT CUSTOMER  **********/
+    /***********************************/
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String initCustomerEdit(@PathVariable Long id, Model model) {
         CustomerRegular customer =  managerService.getCustomer(id);
         model.addAttribute("customer",customer);
-        LOGGER.info("Customer edit form - " + customer);
+        LOGGER.info("customer edit form-{}", customer);
         return "customer/edit";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
     public String processCustomerEdit(@Valid @ModelAttribute("customer") CustomerRegular customer, BindingResult result, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
+            LOGGER.debug("error in customer edit form");
             return "customer/edit";
         }
         managerService.saveCustomer(customer);
         redirectAttributes.addFlashAttribute("customerUpdated", true);
-        LOGGER.info("Customer edit form saved - " + customer);
         return "redirect:/customer/list";
     }
 
     @RequestMapping(value = "/edit-vat/{id}", method = RequestMethod.GET)
     public String initCustomerVatEdit(@PathVariable Long id, Model model) {
-        model.addAttribute("customer", managerService.getCustomerVat(id));
+        CustomerVat customer = managerService.getCustomerVat(id);
+        model.addAttribute("customer", customer);
+        LOGGER.info("customer-vat edit form-{}", customer);
         return "customer/editVat";
     }
 
     @RequestMapping(value = "/edit-vat/{id}", method = RequestMethod.POST)
     public String processCustomerVatEdit(@Valid @ModelAttribute("customer") CustomerVat customer, BindingResult result, RedirectAttributes redirectAttributes) {
         if(result.hasErrors()) {
-            return "customer/edit-vat";
+            LOGGER.debug("error in customer-vat edit form");
+            return "customer/editVat";
         }
         managerService.saveCustomerVat(customer);
         redirectAttributes.addFlashAttribute("customerUpdated", true);
         return "redirect:/customer/list-vat";
     }
 
+
+    /***********************************/
+    /********  DELETE CUSTOMER  ********/
+    /***********************************/
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String processCustomerDelete(@RequestParam Long id, RedirectAttributes redirectAttributes) {
         CustomerRegular customer = managerService.getCustomer(id);
@@ -166,7 +184,6 @@ public class CustomerController {
         return list;
     }
 
-    //todo: this need to be very secure as it expose access to customer table
     @RequestMapping(value = "getCustomersForQuery", method = RequestMethod.GET)
     @ResponseBody
     public List<CustomerRegular> proccessCustomerSearchForQuery(@RequestParam("term") String query) {
@@ -174,7 +191,6 @@ public class CustomerController {
         return list;
     }
 
-    //todo: this need to be very secure as it expose access to customer table
     @RequestMapping(value = "getCustomersVatForQuery", method = RequestMethod.GET)
     @ResponseBody
     public List<CustomerVat> proccessCustomerVatSearchForQuery(@RequestParam("term") String query) {

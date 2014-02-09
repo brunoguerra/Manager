@@ -12,6 +12,10 @@
     <link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet" />
     <link th:href="@{/resources/font-awesome/css/font-awesome.css}" rel="stylesheet" />
 
+    <!-- JQuery UI -->
+    <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />-->
+    <link th:href="@{/resources/css/custom-theme/jquery-ui-1.10.0.custom.css}" rel="stylesheet" />
+
     <!-- SB Admin CSS - Include with every page -->
     <link th:href="@{/resources/css/sb-admin.css}" rel="stylesheet" />
 </head>
@@ -94,7 +98,7 @@
                 <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                 </li>
                 <li class="divider"></li>
-                <li><a th:href="@{/j_spring_security_logout}" th:text="#{logout.text}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                <li><a th:href="@{/j_spring_security_logout}"><i class="fa fa-sign-out fa-fw"></i> <span th:text="#{logout.text}" /></a>
                 </li>
             </ul>
             <!-- /.dropdown-user -->
@@ -120,35 +124,23 @@
                         </div>
                         <!-- /input-group -->
                     </li>
-                    <li>
-                        <a href="/home" th:href="@{/home}"><i class="glyphicon glyphicon-home"></i> <span th:text="#{menu.home.text}" /></a>
+                    <li id="menu-home">
+                        <a href="/home" th:href="@{/home}"><i class="fa fa-home"></i> <span th:text="#{menu.home.text}" /></a>
                     </li>
-                    <li>
-                        <a href="/item/list" th:href="@{/item/list}"><i class="glyphicon glyphicon-list-alt"></i> <span th:text="#{menu.item.text}"/></a>
+                    <li id="menu-order">
+                        <a href="/order/list" th:href="@{/order/list}"><i class="fa fa-file-text"></i> <span th:text="#{menu.order.text}"/></a>
                     </li>
-                    <li>
-                        <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                    <li id="menu-assortment">
+                        <a href="/item/list" th:href="@{/item/list}"><i class="fa fa-list"></i> <span th:text="#{menu.item.text}"/></a>
                     </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                    <li id="menu-customer">
+                        <a href="#"><i class="fa fa-users"></i> <span th:text="#{menu.customer.text}" /><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="panels-wells.html">Panels and Wells</a>
+                                <a href="/customer/list" th:href="@{/customer/list}" th:text="#{menu.customer.text}">Customers</a>
                             </li>
                             <li>
-                                <a href="buttons.html">Buttons</a>
-                            </li>
-                            <li>
-                                <a href="notifications.html">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="typography.html">Typography</a>
-                            </li>
-                            <li>
-                                <a href="grid.html">Grid</a>
+                                <a href="/customer/list-vat" th:href="@{/customer/list-vat}" th:text="#{menu.customer-vat.text}">Customers Vat</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
@@ -212,6 +204,7 @@
 
 <!-- Core Scripts - Include with every page -->
 <script th:src="@{/resources/js/jquery-1.10.2.js}"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script th:src="@{/resources/js/bootstrap.min.js}"></script>
 <script th:src="@{/resources/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
 

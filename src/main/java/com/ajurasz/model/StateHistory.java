@@ -42,17 +42,17 @@ public class StateHistory extends BaseEntity {
     public void setValue(BigDecimal value, boolean returned) {
         this.value = value;
         if(this.value.compareTo(new BigDecimal(0)) == 1) {
-            this.description = HistoryType.ADDED + " : " + value.intValue() + " kg";
+            this.description = HistoryType.ADDED + " : " + value.intValue() + " " + state.getItem().getUnit().getUnit();
         }
         if(this.value.compareTo(new BigDecimal(0)) == 0) {
-            this.description = HistoryType.ADDED + " : " + value.intValue() + " kg";
+            this.description = HistoryType.ADDED + " : " + value.intValue() + " " + state.getItem().getUnit().getUnit();
         }
         if(this.value.compareTo(new BigDecimal(0)) == -1) {
-            this.description = HistoryType.REMOVED + " : " + value.abs().intValue() + " kg";
+            this.description = HistoryType.REMOVED + " : " + value.abs().intValue() + " " + state.getItem().getUnit().getUnit();
         }
 
         if(returned) {
-            this.description =  HistoryType.RETURNED + " : " + value.abs().intValue() + " kg";
+            this.description =  HistoryType.RETURNED + " : " + value.abs().intValue() + " " + state.getItem().getUnit().getUnit();
         }
     }
 

@@ -18,10 +18,11 @@ public class SimpleAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         super.onAuthenticationSuccess(request, response, authentication);
         HttpSession session = request.getSession();
-        //session.setMaxInactiveInterval(60 * 60 * 8);
-        session.setMaxInactiveInterval(60);
+        session.setMaxInactiveInterval(60 * 60 * 2);
         Company c = (Company) authentication.getPrincipal();
         session.setAttribute("company", c);
+
+        //if user login for a first time redirect him to setting page
     }
 }
 

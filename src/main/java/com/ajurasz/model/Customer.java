@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "customers")
 public class Customer extends BaseEntity {
 
-    @Email(message = "{customer.email}")
+    @Email(message = "{customer.email-invalid}")
     private String email;
 
     @Column(name = "phone_number")

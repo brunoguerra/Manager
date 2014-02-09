@@ -73,6 +73,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public CustomerRegular saveCustomer(CustomerRegular customer) {
         customer.setCompany(getCompany());
+        LOGGER.debug("customer saved-{}", customer);
         return customerRepo.save(customer);
     }
 
@@ -110,7 +111,14 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public CustomerVat saveCustomerVat(CustomerVat customerVat) {
         customerVat.setCompany(getCompany());
+        LOGGER.debug("customer-vat saved-{}", customerVat);
         return customerVatRepo.save(customerVat);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CustomerVat> findAllCustomersVat() {
+        return customerVatRepo.findAllByCompany(getCompany(), new Sort(Sort.Direction.DESC, "id"));
     }
 
     @Override
@@ -171,6 +179,7 @@ public class ManagerServiceImpl implements ManagerService {
         item.setPriceNetExcise( item.getPriceGrossExcise().multiply(new BigDecimal(100)).divide(vat, 2, RoundingMode.HALF_UP));
 
         itemRepo.save(item);
+        LOGGER.debug("item saved {}", item);
 
         if(createStateHistory) {
             StateHistory stateHistory = null;
@@ -189,6 +198,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional(readOnly = true)
     public Item getItem(Long id) {
         Item item = itemRepo.findItemByIdAndCompany(id, getCompany());
+        LOGGER.debug("get item for id-{}={}", id, item);
         return item;
     }
 
@@ -226,6 +236,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional(readOnly = true)
     public List<StateHistory> findAllStateHistoryByStateIdDesc(Long id) {
+        LOGGER.debug("find state history for id-{}", id);
         List<StateHistory> stateHistories = stateHistoryRepo.findAllByStateIdOrderByDateDesc(id);
         return stateHistories;
     }
