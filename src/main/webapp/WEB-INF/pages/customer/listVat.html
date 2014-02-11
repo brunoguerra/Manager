@@ -94,16 +94,18 @@
     <script th:src="@{/resources/js/plugins/dataTables/jquery.dataTables.js}"></script>
     <script th:src="@{/resources/js/plugins/dataTables/dataTables.bootstrap.js}"></script>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         $(document).ready(function() {
             $('#customer-vat-list').dataTable({
                 "aaSorting": [],
                 "oLanguage": {
-                    "sUrl": "/resources/js/plugins/dataTables/pl.txt"
+                    "sUrl": /*[[@{/resources/js/plugins/dataTables/pl.txt}]]*/ ''
                 }
             });
         });
         $('#menu-customer').addClass('active');
+        /*]]>*/
     </script>
 </div>
 

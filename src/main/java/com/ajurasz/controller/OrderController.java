@@ -2,6 +2,7 @@ package com.ajurasz.controller;
 
 import com.ajurasz.model.*;
 import com.ajurasz.service.ManagerService;
+import com.ajurasz.util.validator.OrderDetailsValidator;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,15 +57,20 @@ public class OrderController {
         this.managerService = managerService;
     }
 
+    /***********************************/
+    /********  ADD ORDERS  ************/
+    /***********************************/
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String initOrderForm(Model model, HttpServletRequest request) {
         LOGGER.debug("order add init method called");
         Order order = new Order();
+        order.getOrderDetails().add(new OrderDetails());
         order.setDocNumber(managerService.getNextDocNumnber());
         HttpSession session = request.getSession(false);
         if(session != null) {
             Customer customer = (Customer) session.getAttribute("customer");
             if(customer != null) {
+                LOGGER.debug("customer found in session-{}", customer);
                 order.setCustomer(customer);
                 CustomerRegular cr = (CustomerRegular) customer;
                 model.addAttribute("customerDetails", cr.getLastName() + " " + cr.getFirstName() + ", " + cr.getAddress().getPostCode() + " " +
@@ -75,9 +81,39 @@ public class OrderController {
         return "order/add";
     }
 
+    @RequestMapping(value = "/add", params = {"addRow"})
+    public String addRow(@Validated({Order.Document.class}) @ModelAttribute Order order, BindingResult result, Model model,
+                         @RequestParam(required = false, value = "customer-details") String custDetails,
+                         @RequestParam(required = false, value = "customer.id") String custId) {
+        LOGGER.debug("adding new row to order");
+        OrderDetailsValidator orderDetailsValidator = new OrderDetailsValidator();
+        orderDetailsValidator.validate(order.getOrderDetails(), result);
+        order.getOrderDetails().add(new OrderDetails());
+        model.addAttribute("customer_details", custDetails);
+        model.addAttribute("customer_id", custId);
+        return "order/add";
+    }
+
+    @RequestMapping(value = "/add", params = {"removeRow"})
+    public String removeRow(@Validated({Order.Document.class}) @ModelAttribute Order order, BindingResult result, Model model,
+                         @RequestParam(value = "removeRow") Long rowId,
+                         @RequestParam(required = false, value = "customer-details") String custDetails,
+                         @RequestParam(required = false, value = "customer.id") String custId) {
+        LOGGER.debug("deleting one row from order");
+        order.getOrderDetails().remove(rowId.intValue());
+        OrderDetailsValidator orderDetailsValidator = new OrderDetailsValidator();
+        orderDetailsValidator.validate(order.getOrderDetails(), result);
+        model.addAttribute("customer_details", custDetails);
+        model.addAttribute("customer_id", custId);
+        return "order/add";
+    }
+
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String processOrderForm(@Validated({Order.Document.class}) @ModelAttribute Order order, BindingResult result,
                                    HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        OrderDetailsValidator orderDetailsValidator = new OrderDetailsValidator();
+        orderDetailsValidator.validate(order.getOrderDetails(), result);
         if(result.hasErrors()) {
             LOGGER.debug("errors in order add form");
             return "order/add";
@@ -91,8 +127,12 @@ public class OrderController {
         return "redirect:/order/list";
     }
 
+    /***********************************/
+    /********  ADD ORDERS  ************/
+    /***********************************/
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String initEditForm(@PathVariable Long id, Model model) {
+        LOGGER.debug("order edit form called");
         Order order = managerService.getOrder(id);
         model.addAttribute("order", order);
         return "order/edit";
@@ -101,7 +141,9 @@ public class OrderController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
     public String processEditForm(@Valid @ModelAttribute Order order, BindingResult result,
                                   RedirectAttributes redirectAttributes) {
+        LOGGER.debug("order edit form called-{}", order);
         if(result.hasErrors()) {
+            LOGGER.debug("order edit form has got errors");
             return "order/edit";
         }
         managerService.update(order);
@@ -114,6 +156,7 @@ public class OrderController {
     /***********************************/
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String initOrderList(Model model) {
+        LOGGER.debug("order list method called");
         List<Order> orderPage = managerService.findAllOrders();
         model.addAttribute("orders", orderPage);
         return "order/list";
@@ -121,6 +164,7 @@ public class OrderController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String processOrderDelete(@RequestParam Long id, RedirectAttributes redirectAttributes) {
+        LOGGER.debug("order delete method called for id-{}", id);
         Order order = managerService.getOrder(id);
         managerService.deleteOrder(order);
         redirectAttributes.addFlashAttribute("orderDeleted", true);

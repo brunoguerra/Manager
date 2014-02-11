@@ -48,14 +48,6 @@ $(document).ready(function() {
             errors++;
         }
 
-//        $.validity.start();
-//
-//        $('#state-value').match(/^[0-9]+(\.[0-9]{1,2})?$/, "Nieprawidłowy format");
-//
-//        var result = $.validity.end();
-//
-//        alert(result);
-
         if(errors == 0) {
             $.ajax({
                 url: "/item/state/" + id + "/change",

@@ -60,16 +60,18 @@
     <script th:src="@{/resources/js/plugins/dataTables/jquery.dataTables.js}"></script>
     <script th:src="@{/resources/js/plugins/dataTables/dataTables.bootstrap.js}"></script>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         $(document).ready(function() {
             $('#assortment-list').dataTable({
                 "aaSorting": [],
                 "bFilter": false,
                 "oLanguage": {
-                    "sUrl": "/resources/js/plugins/dataTables/pl.txt"
+                    "sUrl": /*[[@{/resources/js/plugins/dataTables/pl.txt}]]*/ ''
                 }
             });
         });
+        /*]]>*/
     </script>
 </div>
 

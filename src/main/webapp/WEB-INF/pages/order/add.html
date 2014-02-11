@@ -9,6 +9,10 @@
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header" th:text="#{order.add.title}">Add new document</h1>
+            <div id="missing-customer" class="alert alert-warning alert-dismissable" style="display: none;">
+                <button type="button" class="close" aria-hidden="true">&times;</button>
+                <span th:text="#{order.customer-add-message}" />
+            </div>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -28,7 +32,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12 col-lg-12">
-                            <form name="customer-form" action="#" role="form" th:action="@{/order/add}" method="post" th:object="${order}">
+                            <form name="order-form" action="#" role="form" th:action="@{/order/add}" method="post" th:object="${order}">
                                 <div class="col-md-3 col-lg-3">
                                     <div class="form-group" th:classappend="${#fields.hasErrors('docNumber')}? has-error">
                                         <label th:text="#{order.document-number}">Document Number</label>
@@ -43,56 +47,70 @@
                                         <label th:if="${#fields.hasErrors('orderDate')}" class="control-label" th:errors="*{orderDate}"></label>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-lg-3">
+                                <div class="col-md-4 col-lg-4">
                                     <div class="form-group" th:classappend="${#fields.hasErrors('customer.id')}? has-error">
                                         <label th:text="#{order.document-customer}">Customer</label>
-                                        <input class="form-control" type="text" name="customer-details" th:placeholder="#{order.customer-add-message}" autofocus="autofocus"/>
+                                        <input class="form-control" type="search" name="customer-details" th:placeholder="#{order.customer-add-message}" autofocus="autofocus" style="width: 85%;"/>
                                         <input type="hidden" th:field="*{customer.id}"/>
                                         <label th:if="${#fields.hasErrors('customer.id')}" class="control-label" th:errors="*{customer.id}"></label>
                                     </div>
                                 </div>
                                 <div class="col-md-12 col-lg-12">
-                                    <div class="col-md-3 col-lg-3" >
-                                        <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[0].item.id')}? has-error">
-                                            <label th:text="#{order.assortment}">Assortment</label>
-                                            <select class="form-control" name="orderDetails[0].item.id">
-                                                <option value="null" th:text="#{order.order-details.item-choose}"></option>
-                                                <option th:each="item : ${items}" th:value="${item.key}" th:text="${item.value}"></option>
-                                            </select>
-                                            <label th:if="${#fields.hasErrors('orderDetails[0].item.id')}" class="control-label" th:errors="*{orderDetails[0].item.id}"></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3">
-                                        <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[0].quantity')}? has-error">
-                                            <label th:text="#{order.order-details.quantity}">Quantity</label>
-                                            <input class="form-control" type="text" th:field="*{orderDetails[0].quantity}" pattern="^[0-9]+(\.[0-9]{1,2})?$"/>
-                                            <label th:if="${#fields.hasErrors('orderDetails[0].quantity')}" class="control-label" th:errors="*{orderDetails[0].quantity}"></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3">
-                                        <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[0].reason.id')}? has-error">
-                                            <label th:text="#{order.reason}">Assortment</label>
-                                            <select class="form-control" name="orderDetails[0].reason.id">
-                                                <option value="null" th:text="#{order.order-details.reason-choose}"></option>
-                                                <option th:each="reason : ${reasons}" th:value="${reason.id}" th:text="${reason.description}"></option>
-                                            </select>
-                                            <label th:if="${#fields.hasErrors('orderDetails[0].reason.id')}" class="control-label" th:errors="*{orderDetails[0].reason.id}"></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1 col-lg-1">
+                                    <div class="col-md-3 col-md-offset-9 col-lg-3 col-lg-offset-9" >
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-primary" style="margin-top: 23px;">
-                                                <i class="fa fa-plus-circle"></i>
+                                            <button type="submit" name="addRow" class="btn btn-primary" style="margin-top: 23px;">
+                                                <i class="fa fa-plus-circle"></i>  <span th:text="#{order.item-list-add}">Add position</span>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
+                                <div th:each="od, rowStat: *{orderDetails}">
+
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="col-md-3 col-lg-3" >
+                                            <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[__${rowStat.index}__].item')}? has-error">
+                                                <label th:text="#{order.assortment}">Assortment</label>
+                                                <select class="form-control" th:field="*{orderDetails[__${rowStat.index}__].item.id}">
+                                                    <option value="" th:text="#{order.order-details.item-choose}"></option>
+                                                    <option th:each="item : ${items}" th:value="${item.key}" th:text="${item.value}"></option>
+                                                </select>
+                                                <label th:if="${#fields.hasErrors('orderDetails[__${rowStat.index}__].item')}" class="control-label" th:errors="*{orderDetails[__${rowStat.index}__].item}"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[__${rowStat.index}__].quantity')}? has-error">
+                                                <label th:text="#{order.order-details.quantity}">Quantity</label>
+                                                <input class="form-control" type="text" th:field="*{orderDetails[__${rowStat.index}__].quantity}" pattern="^[0-9]+(\.[0-9]{1,2})?$"/>
+                                                <label th:if="${#fields.hasErrors('orderDetails[__${rowStat.index}__].quantity')}" class="control-label" th:errors="*{orderDetails[__${rowStat.index}__].quantity}"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            <div class="form-group" th:classappend="${#fields.hasErrors('orderDetails[__${rowStat.index}__].reason')}? has-error">
+                                                <label th:text="#{order.reason}">Assortment</label>
+                                                <select class="form-control" th:field="*{orderDetails[__${rowStat.index}__].reason.id}">
+                                                    <option value="" th:text="#{order.order-details.reason-choose}"></option>
+                                                    <option th:each="reason : ${reasons}" th:value="${reason.id}" th:text="${reason.description}" ></option>
+                                                </select>
+                                                <label th:if="${#fields.hasErrors('orderDetails[__${rowStat.index}__].reason')}" class="control-label" th:errors="*{orderDetails[__${rowStat.index}__].reason}"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3" th:if="${rowStat.index > 0}">
+                                            <div class="form-group">
+                                                <button type="submit" name="removeRow" th:value="${rowStat.index}" class="btn btn-primary" style="margin-top: 23px;">
+                                                    <i class="fa fa-minus-circle" th:title="#{delete}"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div class="col-md-12 col-lg-12">
                                     <p class="pull-right">
                                         <button type="button" class="btn btn-default btn-clear" th:text="#{clear}">Clear</button>
-                                        <input type="submit" class="btn btn-success" value="Save" th:attr="value=#{item.save}" />
+                                        <input id="submit-button" type="button" class="btn btn-success" value="Save" th:attr="value=#{item.save}" />
                                     </p>
                                 </div>
+
                             </form>
                         </div>
                     </div> <!-- row -->
@@ -108,7 +126,22 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         var currentDate = new Date();
-        var cust = /*[[${customerDetails}]]*/ '';
+        var custDetails= /*[[${customer_details}]]*/ '';
+        var custId = /*[[${customer_id}]]*/ -1;
+
+        $(document).ready(function() {
+            $('.close').on('click', function(e) {
+                $('#missing-customer').hide();
+            });
+            $('#submit-button').on('click', function(e) {
+                if($("input[name=customer\\.id]").val() > 0) {
+                    $('#order-form').submit();
+                } else {
+                    $('#missing-customer').show();
+                    $("input[name=customer-details]").focus();
+                }
+            });
+        });
 
         $(document).ready(function() {
             $('#orderDate').datepicker();
@@ -116,20 +149,23 @@
         });
 
         $(document).ready(function() {
-            if(cust != null) {
-                $("input[name=customer-details]").val(cust);
-                $("input[name=orderDetails\\[0\\]\\.item\\.id]").focus();
+            if(custDetails != null) {
+                $("input[name=customer-details]").val(custDetails);
+            }
+            if(custId > 0) {
+                $("input[name=customer\\.id]").val(custId);
             }
         });
 
         $(document).ready(function() {
             //attach autocomplete
+            var msg = /*[[#{order.customer-do-not-exist}]]*/ '';
             $("input[name=customer-details]").autocomplete({
                 minLength: 2,
                 delay: 100,
                 //define callback to format results
                 source: function (request, response) {
-                    $.getJSON("/customer/getCustomersForQuery", request, function(result) {
+                    $.getJSON(/*[[@{/customer/getCustomersForQuery}]]*/ '', request, function(result) {
                         response($.map(result, function(item) {
                             return {
                                 // following property gets displayed in drop down
@@ -143,8 +179,9 @@
 
                 //define select handler
                 select : function(event, ui) {
-                    if(ui.item.value == "Klient nie istnieje (dodaj)") {
-                        window.location.replace('/customer/add?redirect=true&target=/order/add');
+                    if(ui.item.value ==  msg) {
+                        var url = /*[[@{/customer/add?redirect=true&target=/order/add}]]*/ '';
+                        window.location.replace(url);
                         return false;
                     }
                     if (ui.item) {
@@ -152,13 +189,14 @@
                         $("#customer\\.id").val(ui.item.id);
                         $("input[name=customer-details]").val(ui.item.label);
                         $("input[name=orderDetails\\[0\\]\\.item\\.id]").focus();
+                        $('#missing-customer').hide();
                         return false;
                     }
                 },
 
                 response: function(event, ui) {
                     if (!ui.content.length) {
-                        var noResult = { value:"Klient nie istnieje (dodaj)",label:"Klient nie istnieje (dodaj)" };
+                        var noResult = { value: msg,label: msg };
                         ui.content.push(noResult);
                     }
                 }

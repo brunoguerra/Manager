@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletContext;
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -462,7 +463,13 @@ public class ManagerServiceImpl implements ManagerService {
         Role user = new Role(RoleType.USER);
         company.setRoles(Arrays.asList(new Role[] {user}));
 
-        return  companyRepo.save(company);
+        Company savedCompany = companyRepo.save(company);
+
+        //create folder for user data
+        File userFolder = new File(servletContext.getRealPath("/WEB-INF/users/") + company.getId());
+        userFolder.mkdirs();
+
+        return  savedCompany;
     }
 
     @Override
