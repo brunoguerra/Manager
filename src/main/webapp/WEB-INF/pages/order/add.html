@@ -13,6 +13,10 @@
                 <button type="button" class="close" aria-hidden="true">&times;</button>
                 <span th:text="#{order.customer-add-message}" />
             </div>
+            <div id="order-to-big" th:if="${orderToBig}" class="alert alert-warning alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <span th:text="#{order.items-to-many}" />
+            </div>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -50,7 +54,7 @@
                                 <div class="col-md-4 col-lg-4">
                                     <div class="form-group" th:classappend="${#fields.hasErrors('customer.id')}? has-error">
                                         <label th:text="#{order.document-customer}">Customer</label>
-                                        <input class="form-control" type="search" name="customer-details" th:placeholder="#{order.customer-add-message}" autofocus="autofocus" style="width: 85%;"/>
+                                        <input class="form-control deletable" type="search" name="customer-details" th:placeholder="#{order.customer-add-message}" autofocus="autofocus" style="width: 85%;"/>
                                         <input type="hidden" th:field="*{customer.id}"/>
                                         <label th:if="${#fields.hasErrors('customer.id')}" class="control-label" th:errors="*{customer.id}"></label>
                                     </div>
@@ -118,10 +122,10 @@
             </div> <!-- panel -->
         </div> <!-- col-lg-12 -->
     </div> <!-- row -->
-    <span th:text="${customerDetails}"></span>
 </div>
 
 <div layout:fragment="page-scripts">
+    <script src="http://static1.kontaktkarte.de/js/jquery.clearsearch-1.0.3.js"></script>
     <script th:src="@{/resources/js/jquery.ui.datepicker-pl.js}"></script>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -135,12 +139,22 @@
             });
             $('#submit-button').on('click', function(e) {
                 if($("input[name=customer\\.id]").val() > 0) {
-                    $('#order-form').submit();
+                    $('form[name=order-form]').submit();
                 } else {
                     $('#missing-customer').show();
                     $("input[name=customer-details]").focus();
                 }
             });
+        });
+
+        $(document).ready(function() {
+            $("input[name=customer-details]").clearSearch(
+                    {
+                        callback: function() {
+                            $("input[name=customer\\.id]").val('-1');
+                            $("input[name=customer-details]").focus();
+                        }
+                    });
         });
 
         $(document).ready(function() {

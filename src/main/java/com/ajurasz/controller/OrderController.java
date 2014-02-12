@@ -37,6 +37,7 @@ import java.util.Map;
 public class OrderController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
+    private static final int MAX_ITEMS = 5;
     private ManagerService managerService;
 
 
@@ -85,9 +86,16 @@ public class OrderController {
     public String addRow(@Validated({Order.Document.class}) @ModelAttribute Order order, BindingResult result, Model model,
                          @RequestParam(required = false, value = "customer-details") String custDetails,
                          @RequestParam(required = false, value = "customer.id") String custId) {
-        LOGGER.debug("adding new row to order");
+        //validate items and reason in custom way
         OrderDetailsValidator orderDetailsValidator = new OrderDetailsValidator();
         orderDetailsValidator.validate(order.getOrderDetails(), result);
+
+        if(order.getOrderDetails().size() >= MAX_ITEMS) {
+            LOGGER.debug("to many items in the order");
+            model.addAttribute("orderToBig", true);
+            return "order/add";
+        }
+        LOGGER.debug("adding new row to order");
         order.getOrderDetails().add(new OrderDetails());
         model.addAttribute("customer_details", custDetails);
         model.addAttribute("customer_id", custId);
