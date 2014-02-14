@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,6 +51,9 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Autowired
     private ServletContext servletContext;
+
+    @Autowired
+    Environment env;
 
     @Autowired
     public ManagerServiceImpl(CustomerRegularRepository customerRepo, ItemRepository itemRepo,
@@ -466,8 +470,12 @@ public class ManagerServiceImpl implements ManagerService {
         Company savedCompany = companyRepo.save(company);
 
         //create folder for user data
-        File userFolder = new File(servletContext.getRealPath("/WEB-INF/users/") + company.getId());
-        userFolder.mkdirs();
+        File documentPath = new File(env.getProperty("user-home-dir") + company.getId() + File.separator + "documents");
+        File invoicePath = new File(env.getProperty("user-home-dir") + company.getId() + File.separator + "invoices");
+        File reportPath = new File(env.getProperty("user-home-dir") + company.getId() + File.separator + "reports");
+        documentPath.mkdirs();
+        invoicePath.mkdirs();
+        reportPath.mkdirs();
 
         return  savedCompany;
     }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +19,12 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
  */
 @Configuration
 @ImportResource(value = "classpath:spring-security-context.xml")
+@PropertySource("classpath:app.properties")
 public class SecurityConfig {
+
+    @Autowired
+    Environment env;
+
     @Bean
     public CompanyDetailsService companyDetailsService() {
         return new CompanyDetailsServiceImpl();
@@ -32,7 +39,7 @@ public class SecurityConfig {
     public SimpleAuthenticationSuccessHandler authenticationSuccessHandler() {
         SimpleAuthenticationSuccessHandler simpleAuthenticationSuccessHandler =
                 new SimpleAuthenticationSuccessHandler();
-        simpleAuthenticationSuccessHandler.setDefaultTargetUrl("http://localhost:8080/home");
+        simpleAuthenticationSuccessHandler.setDefaultTargetUrl(env.getProperty("default-url"));
         simpleAuthenticationSuccessHandler.setAlwaysUseDefaultTargetUrl(true);
         return simpleAuthenticationSuccessHandler;
     }
